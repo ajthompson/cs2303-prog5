@@ -8,17 +8,18 @@
 
 class <typename T>Node;
 
+template <typename T>
 class Queue {
-	friend class QueueNode;
+	friend class Node<T>;
 
 private:
-	QueueNode *headPtr;	// pointer to the head of the Queue
-	QueueNode *tailPtr;	// pointer to the tail of the queue
+	Node<T> *headPtr;	// pointer to the head of the Queue
+	Node<T> *tailPtr;	// pointer to the tail of the queue
 public:
-	Queue();				// constructor
-	~Queue();			// destructor
-	void enqueue(int);	// add a node to end of the queue
-	int dequeue();		// deque the node
+	Queue<T>();				// constructor
+	~Queue<T>();			// destructor
+	void enqueue(T);		// add a node to end of the queue
+	T dequeue();			// deque the node
 };
 
 #endif

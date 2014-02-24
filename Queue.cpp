@@ -11,13 +11,15 @@
  using namespace std;
 
 /** Constructor */
-Queue::Queue() {
+template <typename T>
+Queue<T>::Queue() {
 	headPtr = NULL;
 	tailPtr = NULL;
 }
 
 /** Destructor */
-Queue::~Queue() {
+template <typename T>
+Queue<T>::~Queue() {
 	QueueNode *a, *b;
 
 	a = headPtr;
@@ -37,7 +39,8 @@ Queue::~Queue() {
  * 
  * @param data Router ID that the packet must track through.
  */
-void Queue::enqueue(int data) {
+template <typename T>
+void Queue<T>::enqueue(int data) {
 	if (headPtr == NULL) {
 		// there is nothing in the queue
 		headPtr = new QueueNode(data);	// add the node to the empty list
@@ -49,6 +52,31 @@ void Queue::enqueue(int data) {
 	}
 }
 
-int Queue::dequeue() {
-	
+/**
+ * Removes the first Node from the queue and returns its contents
+ * 
+ * @return Contents of the Node
+ */
+T Queue::dequeue() {
+	T returnVal;
+	Node<T> *tempPtr = headPtr;
+
+	if (headPtr != NULL) {
+		// if the queue has any elements
+		returnVal = headPtr->getData();
+		headPtr = headPtr->nextPtr;
+
+		if (headPtr == NULL) {
+			// the item was the only one in the list - must set tailPtr
+			// to NULL, otherwise it will be pointing to that freed mem
+			tailPtr = NULL;
+		}
+
+		delete tempPtr;		// remove the node from the list
+
+		return returnVal;
+	} else {
+		cout << "Queue is empty."
+		return 0;
+	}
 }

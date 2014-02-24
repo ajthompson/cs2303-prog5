@@ -1,14 +1,22 @@
 /**
- * RouterNode.h
+ * Packet.h
  *
- * Header file for a node of a router's queue.
- * Fields for:
+ * Contains data being sent by the routers.
  */
-#ifndef ROUTERNODE_H
-#define ROUTERNODE_H
+#ifndef PACKET_H
+#define PACKET_H
 
-class ROUTERNODE_H {
-	// friend class [List class name]
+#include "Queue.h"
+// forward declaration of Queues and Nodes
+class Queue<int>;
+
+class Packet : Queue<int> {
+private:
+	int source_id;	// ID of the source router
+	int timestamp;	// time of creation at the source router
+	int pkt_size;	// Size of the packer
+	int delay;		// not used until arrival at receiver
+public:
 	
 };
 
