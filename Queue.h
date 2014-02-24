@@ -6,7 +6,7 @@
 #ifndef QUEUE_H
 #define QUEUE_H
 
-class QueueNode;
+class <typename T>Node;
 
 class Queue {
 	friend class QueueNode;

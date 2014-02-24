@@ -6,9 +6,6 @@ Required Classes:
 		NODETYPE data - could be a packet, or a number (for SR)
 		nextPtr
 
-	
-
-
 	Sources - 
 		position[y][0]
 		id
