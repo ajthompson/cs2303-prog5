@@ -1,0 +1,66 @@
+Required Classes:
+	Queue - Use templates to use for multiple applications?
+		headPtr
+		tailPtr
+	QueueNode - Use templates to use for multiple applications?
+		NODETYPE data - could be a packet, or a number (for SR)
+		nextPtr
+
+	
+
+
+	Sources - 
+		position[y][0]
+		id
+		arrival_time -  time the source begins transmitting
+		packets - amount of packets remaining to be sent
+		packet size
+		SR - List of nodes it must travel through
+		   - possibly remove the first item (the source id) as the source id of the packet
+		Packet Queue
+
+	Mules -
+		position[y][x]
+		id
+		direction
+		Packet Queue
+
+	Receiver -
+		positon[y][DIMENSION]
+		id
+		average delay
+		packet queue
+
+	Packet -
+		source id
+		timestamp
+		packet size
+		SR
+		delay - not used until reaches a receiver - receiver's enqueue accepts this
+
+	EventList - For main event list, and secondary movement event list, and propagation list
+			  - Use sorted enqueue, so only have to iterate until the node's time remaining is no longer 0.
+		time
+		headPtr
+	EventListNode 
+		time remaining
+		- two options here 
+			1. Pointers to a target node, and a receiving list - fragmented option
+				- transmission - target is the transmitting node
+							   - receiver is the propagation list
+				- propagation - target is the propagation list
+							  - receiver is the next router on the SR, found at time
+							  	of placement on the propagation list
+				- movement - pointer to field map
+			2. Use templates to have a timeRemaining, and the type would be determined
+			   by the object in the list - more unified
+			   	- transmissionEnd - pointer to transmitting node
+			   					  - creates a propagation end event on the event list
+			   	- propagationEnd - pointer to receiving node
+			   					 - source id
+			   					 - timestamp
+			   					 - packet size
+			   					 - SR
+			   	- movement - pointer to field map
+
+	We still need two event lists to ensure that movement events always occur after any other events, and creating two would be simpler than trying to make sure movement events
