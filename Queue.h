@@ -13,6 +13,7 @@ class Queue {
 
 private:
 	QueueNode *headPtr;	// pointer to the head of the Queue
+	QueueNode *tailPtr;	// pointer to the tail of the queue
 public:
 	Queue();				// constructor
 	~Queue();			// destructor
