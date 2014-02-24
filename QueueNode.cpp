@@ -1,23 +1,19 @@
 /**
- * ListNode.cpp
+ * QueueNode.cpp
  *
  * Source file for linked list nodes
  */
-#include "ListNode.h"
+#include "QueueNode.h"
 
-/**
- * Constructor
- */
-ListNode::ListNode(int newdata) {
+/** Constructor */
+QueueNode::QueueNode(int newdata) {
 	data = newData;
 	nextPtr = NULL;
 }
 
-/**
- * Destructor
- */
-ListNode::~ListNode() {
-
+/** Destructor */
+QueueNode::~QueueNode() {
+	delete this;
 }
 
 /**
@@ -25,7 +21,7 @@ ListNode::~ListNode() {
  * 
  * @param newData New data value
  */
-void ListNode::setData(int newData) {
+void QueueNode::setData(int newData) {
 	data = newData;
 }
 
@@ -34,6 +30,6 @@ void ListNode::setData(int newData) {
  * 
  * @return stored data
  */
-int ListNode::getData() {
+int QueueNode::getData() {
 	return data;
 }
