@@ -6,7 +6,6 @@
 #ifndef PACKET_H
 #define PACKET_H
 
-#include "Node.h"
 // forward declaration of Queues and Nodes
 class Node;
 

@@ -4,6 +4,7 @@
  * Source file for packets
  */
 #include <iostream>
+#include "Node.h"
 #include "Packet.h"
  using std::cout;
  using std::endl;
