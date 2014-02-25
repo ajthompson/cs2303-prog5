@@ -17,6 +17,8 @@ private:
 	int pkt_size;	// Size of the packer
 	int delay;		// not used until arrival at receiver
 public:
+	Packet();
+	~Packet();
 	
 };
 

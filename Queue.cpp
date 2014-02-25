@@ -40,14 +40,14 @@ Queue<T>::~Queue() {
  * @param data Router ID that the packet must track through.
  */
 template <typename T>
-void Queue<T>::enqueue(int data) {
+void Queue<T>::enqueue(T data) {
 	if (headPtr == NULL) {
 		// there is nothing in the queue
-		headPtr = new QueueNode(data);	// add the node to the empty list
+		headPtr = new Node(data);	// add the node to the empty list
 		tailPtr = headPtr;				// point the tail at the node
 	} else {
 		// there is something in the queue
-		tailPtr->nextPtr = new QueueNode(data);	// add the node to the end of the list
+		tailPtr->nextPtr = new Node(data);		// add the node to the end of the list
 		tailPtr = tailPtr->nextPtr;				// point at the new tail.
 	}
 }
@@ -57,7 +57,7 @@ void Queue<T>::enqueue(int data) {
  * 
  * @return Contents of the Node
  */
-T Queue::dequeue() {
+T Queue<T>::dequeue() {
 	T returnVal;
 	Node<T> *tempPtr = headPtr;
 
@@ -79,4 +79,20 @@ T Queue::dequeue() {
 		cout << "Queue is empty."
 		return 0;
 	}
+}
+
+/**
+ * Prints out the entire queue.
+ */
+template <typename T>
+void Queue<T>::printQueue() {
+	T *currentPtr = headPtr;
+	int i = 0;
+
+	while (currentPtr != NULL) {
+		cout << "Element " << i;
+		currentPtr->printNode();
+	}
+
+	cout << "End of Queue reached." << endl;
 }

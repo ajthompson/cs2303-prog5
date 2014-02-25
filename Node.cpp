@@ -40,3 +40,11 @@ template<typename T>
 void Node<T>::setNext(T& nextPtr) {
 	this->nextPtr = nextPtr;
 }
+
+/**
+ * Prints out the node.
+ */
+template<typename T>
+void Node<T>::printNode() {
+	cout << data << endl;
+}

@@ -18,4 +18,5 @@ public:
 	T getData();		// get the data from the Node
 	void setNext(T&);	// set the next pointer
 	T* getNext();		// gets the next pointer
+	void printNode();	// prints the node
 }

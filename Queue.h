@@ -20,6 +20,7 @@ public:
 	~Queue<T>();			// destructor
 	void enqueue(T);		// add a node to end of the queue
 	T dequeue();			// deque the node
+	void printQueue();		// print the queue
 };
 
 #endif
