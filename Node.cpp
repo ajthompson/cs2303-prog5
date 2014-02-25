@@ -7,10 +7,18 @@
  using std::endl;
  using namespace std;
 
-/** Constructor */
-Node::Node(int data) {
-	this->data = data;
-	this->nextPtr = NULL;
+/** Constructors */
+Node::Node() {
+	data = 0;
+	nextPtr = NULL;
+}
+Node::Node(int nData) {
+	data = nData;
+	nextPtr = NULL;
+}
+Node::Node(int nData, Node **toPtr) {
+	this->setData(nData);
+	nextPtr = *toPtr;
 }
 
 /**
@@ -18,8 +26,8 @@ Node::Node(int data) {
  *
  * @param data Object that is stored in the node.
  */
-void Node::setData(int data) {
-	this->data = data;
+void Node::setData(int nData) {
+	data = nData;
 }
 
 /**
@@ -28,12 +36,12 @@ void Node::setData(int data) {
  * @return data of type int
  */
 int Node::getData() {
-	return this->data;
+	return data;
 }
 
 /**
  * Prints out the node.
  */
 void Node::printNode() {
-	cout << data << endl;
+	cout << "Data: " << data << endl;
 }
