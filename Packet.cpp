@@ -36,9 +36,9 @@ Packet::Packet(int id, int s_time, int size) {
 	tailPtr = NULL;
 	nextPtr = NULL;
 }
-Packet::Packet(Sender original) {
+// Packet::Packet(Sender original) {
 
-}
+// }
 
 void Packet::setID(int nID) {
 	source_id = nID;
