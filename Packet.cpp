@@ -10,6 +10,15 @@
  using std::endl;
  using namespace std;
 
+/**
+ * Packet Constructor
+ * 
+ * @param id     ID of the source router
+ * @param s_time packet timestamp
+ * @param size   packet size
+ * @param head   pointer to the head of the SR list
+ * @param tail   pointer to the tail of the SR list
+ */
 Packet::Packet(int id, int s_time, int size, Node *head, Node *tail) {
 	source_id = id;
 	timestamp = s_time;
@@ -19,10 +28,20 @@ Packet::Packet(int id, int s_time, int size, Node *head, Node *tail) {
 	nextPtr = NULL;
 }
 
+/**
+ * Sets the delay (time of arrival at receiver - timestamp)
+ * 
+ * @param t time of arrival at receiver
+ */
 void Packet::setDelay(int t) {
-	delay = t;
+	delay = t - this->timestamp;
 }
 
+/**
+ * Enqueues the integer in the SR queue
+ * 
+ * @param sr_id ID of the router to be enqueued
+ */
 void enqueue(int sr_id) {
 	if (headPtr == NULL) {
 		// the router list is empty
@@ -49,6 +68,11 @@ void enqueue(int sr_id) {
 	}
 }
 
+/**
+ * Dequeues the first router ID in the queue and returns it.
+ * 
+ * @return Router ID
+ */
 int Packet::dequeue() {
 	Node *tempPtr;
 	int returnVal;
