@@ -11,16 +11,14 @@
  using namespace std;
 
 /** Constructor */
-template <typename T>
-Queue<T>::Queue() {
+Queue::Queue() {
 	headPtr = NULL;
 	tailPtr = NULL;
 }
 
 /** Destructor */
-template <typename T>
-Queue<T>::~Queue() {
-	Node<T> *a, *b;
+Queue::~Queue() {
+	Node *a, *b;
 
 	a = headPtr;
 	// iterate through the list deleting nodes

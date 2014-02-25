@@ -8,44 +8,32 @@
  using namespace std;
 
 /** Constructor */
-template<typename T>
-Node<T>::Node(T data) {
+Node::Node(int data) {
 	this->data = data;
 	this->nextPtr = NULL;
 }
 
 /**
- * Stores an object of type T in the node.
+ * Stores an int in the node.
  *
  * @param data Object that is stored in the node.
  */
-template<typename T>
-void Node<T>::setData(T data) {
+void Node::setData(int data) {
 	this->data = data;
 }
 
 /**
- * Returns the data of type T from the node.
+ * Returns the data of type int from the node.
  *
- * @return data of type T
+ * @return data of type int
  */
-template<typename T>
-T Node<T>::getData() {
+int Node::getData() {
 	return this->data;
-}
-
-/**
- * Sets the pointer to the next node in the queue.
- */
-template<typename T>
-void Node<T>::setNext(T &nextPtr) {
-	this->nextPtr = nextPtr;
 }
 
 /**
  * Prints out the node.
  */
-template<typename T>
-void Node<T>::printNode() {
+void Node::printNode() {
 	cout << data << endl;
 }

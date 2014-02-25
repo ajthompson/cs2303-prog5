@@ -7,21 +7,15 @@
 #ifndef NODE_H
 #define NODE_H
 
-template<typename T>
 class Node {
 private:
-	T data;
-	Node<T> *nextPtr;
+	int data;
+	Node *nextPtr;
 public:
-	Node(T);			// constructor
-	void setData(T);	// set the data in the Node
-	T getData();		// get the data from the Node
-	void setNext(T&);	// set the next pointer
-	T* getNext();		// gets the next pointer
+	Node(int);			// constructor
+	void setData(int);	// set the data in the Node
+	int getData();		// get the data from the Node
 	void printNode();	// prints the node
 };
-
-// prevents compiler errors from function templates
-#include "Node.cpp"
 
 #endif
