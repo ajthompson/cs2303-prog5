@@ -47,8 +47,8 @@ void Queue<T>::enqueue(T data) {
 		tailPtr = headPtr;				// point the tail at the node
 	} else {
 		// there is something in the queue
-		tailPtr->nextPtr = new Node<T>(data);		// add the node to the end of the list
-		tailPtr = tailPtr->nextPtr;				// point at the new tail.
+		tailPtr->setNext(new Node<T>(data));	// add the node to the end of the list
+		tailPtr = tailPtr->getNext();			// point at the new tail.
 	}
 }
 

@@ -24,4 +24,7 @@ public:
 	void printQueue();		// print the queue
 };
 
+// prevents compiler errors from function templates
+#include "Queue.cpp"
+
 #endif

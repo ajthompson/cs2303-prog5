@@ -21,4 +21,7 @@ public:
 	void printNode();	// prints the node
 };
 
+// prevents compiler errors from function templates
+#include "Node.cpp"
+
 #endif

@@ -38,7 +38,7 @@ T Node<T>::getData() {
  * Sets the pointer to the next node in the queue.
  */
 template<typename T>
-void Node<T>::setNext(T& nextPtr) {
+void Node<T>::setNext(T &nextPtr) {
 	this->nextPtr = nextPtr;
 }
 
