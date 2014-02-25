@@ -4,8 +4,10 @@
  * Source file for packets
  */
 #include <iostream>
+#include <cstdlib>
 #include "Node.h"
 #include "Packet.h"
+// #include "Sender.h"
  using std::cout;
  using std::endl;
  using namespace std;
@@ -17,7 +19,6 @@
  * @param s_time packet timestamp
  * @param size   packet size
  * @param head   pointer to the head of the SR list
- * @param tail   pointer to the tail of the SR list
  */
 Packet::Packet() {
 	source_id = 0;
@@ -27,13 +28,16 @@ Packet::Packet() {
 	tailPtr = NULL;
 	nextPtr = NULL;
 }
-Packet::Packet(int id, int s_time, int size, Node *head, Node *tail) {
+Packet::Packet(int id, int s_time, int size) {
 	source_id = id;
 	timestamp = s_time;
 	pkt_size = size;
-	headPtr = head;
-	tailPtr = tail;
+	headPtr = NULL;
+	tailPtr = NULL;
 	nextPtr = NULL;
+}
+Packet::Packet(Sender original) {
+
 }
 
 void Packet::setID(int nID) {
@@ -80,15 +84,35 @@ Node *Packet::getHead() {
 Node *Packet::getTail() {
     return tailPtr;
 }
+
+Packet *Packet::getNext() {
+	return this->nextPtr;
+}
+
+void Packet::copyQueue(Packet original) {
+	Node *currentPtr = original.getHead();
+
+	while (currentPtr != NULL) {
+		this->enqueue(currentPtr->getData());
+		currentPtr = currentPtr->getNext();
+	}
+}
+
+// void Packet::copyQueue(Sender original) {
+// 	Node *currentPtr = original.getSRHead();
+
+// 	while (currentPtr != NULL) {
+// 		this->enqueue(currentPtr->getData());
+// 		currentPtr = currentPtr->getNext();
+// 	}
+// }
+
 /**
  * Enqueues the integer in the SR queue
  * 
  * @param sr_id ID of the router to be enqueued
  */
 void Packet::enqueue(int sr_id) {
-	Node *head = getHead();
-	Node *tail = getTail();
-
 	if (headPtr == NULL) {
 		// the router list is empty
 		headPtr = new Node(sr_id);
@@ -109,32 +133,6 @@ void Packet::enqueue(int sr_id) {
 			tailPtr = tailPtr->nextPtr;
 		} else {
 			cout << "Memory Allocatio Failed. Router " << sr_id;
-			cout << " Not Added." << endl;
-		}
-	}
-}
-
-void Packet::enqueue(Node **nNode) {
-	if (headPtr == NULL) {
-		// the router list is empty
-		headPtr = *nNode;
-
-		if (headPtr != NULL) {
-			// the memory was successfully allocated
-			tailPtr = headPtr;
-		} else {
-			cout << "Memory Allocation Failed. Router " << sr_id;
-			cout << " Not Added." << endl;
-		}
-	} else {
-		// the router list is not empty
-		tailPtr->nextPtr = *nNode;
-
-		if (tailPtr->nextPtr != NULL) {
-			// memory successfully allocated
-			tailPtr = tailPtr->nextPtr;
-		} else {
-			cout << "Memory Allocation Failed. Router " << sr_id;
 			cout << " Not Added." << endl;
 		}
 	}
@@ -178,7 +176,6 @@ Node *Packet::dequeueNode() {
 
 	if (tempPtr != NULL) {
 		// the queue is not empty
-		returnVal = tempPtr->data;
 		headPtr = tempPtr->nextPtr;
 
 		if (headPtr == NULL) {

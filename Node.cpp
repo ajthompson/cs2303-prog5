@@ -39,6 +39,10 @@ int Node::getData() {
 	return data;
 }
 
+Node *Node::getNext() {
+	return nextPtr;
+}
+
 /**
  * Prints out the node.
  */

@@ -1,8 +1,11 @@
-main: node_driver.o Node.o
-	g++ -o node_driver node_driver.o Node.o
+main: p_driver.o Packet.o Node.o
+	g++ -o p_driver p_driver.o Packet.o Node.o
 
-node_driver.o: node_driver.cpp Node.h
-	g++ -Wall -c node_driver.cpp
+p_driver.o: p_driver.cpp Packet.h Node.h
+	g++ -Wall -c p_driver.cpp
+
+Packet.o: Packet.cpp Packet.h Node.h
+	g++ -Wall -c Packet.cpp
 
 Node.o: Node.cpp Node.h
 	g++ -Wall -c Node.cpp

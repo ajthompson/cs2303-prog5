@@ -6,6 +6,9 @@
 #ifndef PACKET_H
 #define PACKET_H
 
+class Node;
+class Sender;
+
 class Packet {
 	friend class Node;
 	friend class Sender;
@@ -19,7 +22,8 @@ private:
 	Packet *nextPtr;	// pointer to the next packet in the queue
 public:
 	Packet();
-	Packet(int, int, int, Node*, Node*);	// constructor
+	Packet(int, int, int);			// constructor
+	// Packet(Sender);
 	// setters and getters
 	void setID(int);
 	int getID();
@@ -32,9 +36,9 @@ public:
 	Node *getHead();
 	Node *getTail();
 	Packet *getNext();
+	void copyQueue(Packet);					// copies a queue from the argument packet to this packet
 	// queue operations
 	void enqueue(int);						// enqueues another item in the SR
-	void enqueue(Node **);					// enqueues an entire node
 	int dequeue();							// dequeues the first item in the SR
 	Node *dequeueNode();					// dequeues the entire node
 	// metafunctions
