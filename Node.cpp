@@ -3,8 +3,8 @@
  */
 #include <iostream>
 #include "Node.h"
- using cout;
- using endl;
+ using std::cout;
+ using std::endl;
  using namespace std;
 
 /** Constructor */
@@ -19,6 +19,7 @@ Node<T>::Node(T data) {
  *
  * @param data Object that is stored in the node.
  */
+template<typename T>
 void Node<T>::setData(T data) {
 	this->data = data;
 }

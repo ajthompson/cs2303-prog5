@@ -6,7 +6,8 @@
 #ifndef QUEUE_H
 #define QUEUE_H
 
-class <typename T>Node;
+
+template<typename T> class Node;
 
 template <typename T>
 class Queue {

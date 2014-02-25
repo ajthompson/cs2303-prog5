@@ -19,4 +19,6 @@ public:
 	void setNext(T&);	// set the next pointer
 	T* getNext();		// gets the next pointer
 	void printNode();	// prints the node
-}
+};
+
+#endif

@@ -5,9 +5,9 @@
  */
 #include <iostream>
 #include "Queue.h"
-#include "QueueNode.h"
- using cout;
- using endl;
+#include "Node.h"
+ using std::cout;
+ using std::endl;
  using namespace std;
 
 /** Constructor */
@@ -20,7 +20,7 @@ Queue<T>::Queue() {
 /** Destructor */
 template <typename T>
 Queue<T>::~Queue() {
-	QueueNode *a, *b;
+	Node<T> *a, *b;
 
 	a = headPtr;
 	// iterate through the list deleting nodes
@@ -43,11 +43,11 @@ template <typename T>
 void Queue<T>::enqueue(T data) {
 	if (headPtr == NULL) {
 		// there is nothing in the queue
-		headPtr = new Node(data);	// add the node to the empty list
+		headPtr = new Node<T>(data);	// add the node to the empty list
 		tailPtr = headPtr;				// point the tail at the node
 	} else {
 		// there is something in the queue
-		tailPtr->nextPtr = new Node(data);		// add the node to the end of the list
+		tailPtr->nextPtr = new Node<T>(data);		// add the node to the end of the list
 		tailPtr = tailPtr->nextPtr;				// point at the new tail.
 	}
 }
@@ -57,6 +57,7 @@ void Queue<T>::enqueue(T data) {
  * 
  * @return Contents of the Node
  */
+template <typename T>
 T Queue<T>::dequeue() {
 	T returnVal;
 	Node<T> *tempPtr = headPtr;
@@ -76,7 +77,7 @@ T Queue<T>::dequeue() {
 
 		return returnVal;
 	} else {
-		cout << "Queue is empty."
+		cout << "Queue is empty.";
 		return 0;
 	}
 }
