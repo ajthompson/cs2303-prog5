@@ -6,7 +6,8 @@
 #ifndef SENDER_H
 #define SENDER_H
 
-class Packet, Node;
+class Packet;
+class Node;
 
 class Sender {
 	friend class Packet;
@@ -26,7 +27,7 @@ public:
 	Sender();							// constructor
 	Sender(int, int, int, int, int);	// constructor
 	/** Setter functions */
-	void setX(int);
+	void setX();
 	void setY(int);
 	void setID(int);
 	void setArrivalTime(int);
@@ -46,7 +47,7 @@ public:
 	/** Queue operations */
 	void srEnqueue(int);	// enqueues an int to the SR
 	int srDequeue();		// dequeues an int from the SR
-	void pktEnqueue();		// enqueues a packet
+	void pktEnqueue(int);		// enqueues a packet
 	Packet *pktDequeue();	// dequeues a packet and returns a pointer to the packet
 	/** Miscellaneous Operations */
 	int nCount();
@@ -54,4 +55,6 @@ public:
 	void printNodes();
 	void printPackets();
 	void printSender();
-}
+};
+
+#endif

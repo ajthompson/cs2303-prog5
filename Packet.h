@@ -23,7 +23,7 @@ private:
 public:
 	Packet();
 	Packet(int, int, int);			// constructor
-	Packet(Sender, int);
+	Packet(Sender*, int);
 	// setters and getters
 	void setID(int);
 	int getID();

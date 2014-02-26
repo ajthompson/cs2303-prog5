@@ -2,7 +2,7 @@
 * @Author: ajthompson
 * @Date:   2014-02-25 10:16:11
 * @Last Modified by:   ajthompson
-* @Last Modified time: 2014-02-25 22:22:12
+* @Last Modified time: 2014-02-26 10:22:35
 */
 
 #include <iostream>
@@ -157,12 +157,12 @@ Node *Sender::getSRTail() {
 }
 
 /** Gets the head of the packet queue */
-Node *Sender::getPktHead() {
+Packet *Sender::getPktHead() {
 	return pktHeadPtr;
 }
 
 /** Gets the tail of the packet queue */
-Node *Sender::getPktTail() {
+Packet *Sender::getPktTail() {
 	return pktTailPtr;
 }
 
@@ -184,7 +184,7 @@ void Sender::srEnqueue(int nVal) {
 			// the memory was successfully allocated
 			srTailPtr = srHeadPtr;
 		} else {
-			cout << "Memory Allocation Failed. Router " << sr_id;
+			cout << "Memory Allocation Failed. Router " << nVal;
 			cout << " Not Added." << endl;
 			cout << "Quitting the program." << endl;
 			exit(1);
@@ -197,7 +197,7 @@ void Sender::srEnqueue(int nVal) {
 			// memory successfully allocated
 			srTailPtr = srTailPtr->nextPtr;
 		} else {
-			cout << "Memory Allocation Failed. Router " << sr_id;
+			cout << "Memory Allocation Failed. Router " << nVal;
 			cout << " Not Added." << endl;
 			cout << "Quitting the program." << endl;
 			exit(1);
@@ -244,7 +244,7 @@ int Sender::srDequeue() {
 void Sender::pktEnqueue(int t) {
 	if (pktHeadPtr == NULL) {
 		// the queue is empty
-		pktHeadPtr = new Packet(*this);
+		pktHeadPtr = new Packet(this, t);
 
 		if (pktHeadPtr == NULL) {
 			cout << "Memory Allocation Failed. Packet Not Added." << endl;
@@ -253,7 +253,7 @@ void Sender::pktEnqueue(int t) {
 		}
 	} else {
 		// the queue is not empty
-		pktTailPtr->nextPtr = new Packet(*this);
+		pktTailPtr->nextPtr = new Packet(this, t);
 
 		if (pktTailPtr->nextPtr != NULL) {
 			// memory allocation succeeded
@@ -272,7 +272,7 @@ void Sender::pktEnqueue(int t) {
  * @return A pointer to the first packet in the queue.
  */
 Packet *Sender::pktDequeue() {
-	Node *tempPtr;
+	Packet *tempPtr;
 
 	tempPtr = pktHeadPtr;
 

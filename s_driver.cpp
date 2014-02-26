@@ -2,7 +2,7 @@
 * @Author: ajthompson
 * @Date:   2014-02-25 17:13:17
 * @Last Modified by:   ajthompson
-* @Last Modified time: 2014-02-25 22:50:36
+* @Last Modified time: 2014-02-26 10:17:02
 *
 * Tests for Senders
 */
@@ -53,15 +53,15 @@ int main(){
     cout << "	GETTING X" << endl;
     cout << fillSender->getX() << endl;
     cout << "	GETTING Y" << endl;
-    cout << fillSender->setY(y) << endl;
+    cout << fillSender->getY() << endl;
     cout << "	GETTING SOURCE ID" << endl;
-    cout << fillSender->setID(source_id) << endl;
+    cout << fillSender->getID() << endl;
     cout << "	GETTING ARRIVAL TIME" << endl;
-    cout << fillSender->setArrivalTime(t_arrive) << endl;
+    cout << fillSender->getArrivalTime() << endl;
     cout << "	GETTING PACKET COUNT" << endl;
-    cout << fillSender->setPktCount(pkt_count) << endl;
+    cout << fillSender->getPktCount() << endl;
     cout << "	GETTING PACKET SIZE" << endl;
-    cout << fillSender->setPktSize(pkt_size) << endl;
+    cout << fillSender->getPktSize() << endl;
     cout << "	GETTING SRHEAD" << endl;
     cout << fillSender->getSRHead() << endl;
     cout << "	GETTING SRTAIL" << endl;
@@ -74,6 +74,55 @@ int main(){
     fillSender->printSender();
 
     cout << "ADDING NODES TO FILLSENDER" << endl;
+    for (int i = 0; i < 7; ++i) {
+    	fillSender->srEnqueue(numbers[i]);
+    	cout << "Node " << i << " containing " << numbers[i] << " added" << endl;
+    	cout << fillSender->nCount() << " nodes in queue" << endl;
+    	fillSender->printNodes();
+    }
+    cout << "FINISHED ADDING NODES TO FILLSENDER" << endl;
+
+    cout << "ADDING PACKET TO FILLSENDER" << endl;
+    fillSender->pktEnqueue(t);
+    cout << "PACKET ADDED TO FILLSENDER AT TIME " << t << endl;
+    cout << "THERE ARE NOW " << fillSender->pCount() << " PACKETS IN FILLSENDER" << endl;
+
+    cout << "PRINTING PACKET" << endl;
+    fillSender->printPackets();
+
+    cout << "PRINTING FILLSENDER" << endl;
+    fillSender->printSender();
+
+    cout << "DEQUEUING AND PRINTING PACKET" << endl;
+    fillSender->pktDequeue()->printPacket();
+
+    cout << "PRINTING FILLSENDER" << endl;
+    fillSender->printSender();
+
+    cout << "DEQUEUING AND PRINTING NODE" << endl;
+    cout << "Dequeued node contains " << fillSender->srDequeue() << endl;
+
+    cout << "PRINTING FILLSENDER" << endl;
+
+    cout << "ADDING PACKET TO FILLSENDER" << endl;
+    fillSender->pktEnqueue(t);
+    cout << "PACKET ADDED TO FILLSENDER AT TIME " << t << endl;
+    cout << "THERE ARE NOW " << fillSender->pCount() << " PACKETS IN FILLSENDER" << endl;
+
+    cout << "PRINTING PACKET" << endl;
+    fillSender->printPackets();
+
+    cout << "PRINTING FILLSENDER" << endl;
+    fillSender->printSender();
+
+    cout << "DEQUEUING AND PRINTING PACKET" << endl;
+    fillSender->pktDequeue()->printPacket();
+
+    cout << "PRINTING FILLSENDER" << endl;
+    fillSender->printSender();
+
+    cout << "-------------------------------------------------------------------------" << endl;
+    cout << "TESTING COMPLETE" << endl;
 
     return 0;
 }
