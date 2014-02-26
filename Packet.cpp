@@ -7,7 +7,7 @@
 #include <cstdlib>
 #include "Node.h"
 #include "Packet.h"
-// #include "Sender.h"
+#include "Sender.h"
  using std::cout;
  using std::endl;
  using namespace std;
@@ -98,14 +98,14 @@ void Packet::copyQueue(Packet original) {
 	}
 }
 
-// void Packet::copyQueue(Sender original) {
-// 	Node *currentPtr = original.getSRHead();
+void Packet::copyQueue(Sender original) {
+	Node *currentPtr = original.getSRHead();
 
-// 	while (currentPtr != NULL) {
-// 		this->enqueue(currentPtr->getData());
-// 		currentPtr = currentPtr->getNext();
-// 	}
-// }
+	while (currentPtr != NULL) {
+		this->enqueue(currentPtr->getData());
+		currentPtr = currentPtr->getNext();
+	}
+}
 
 /**
  * Enqueues the integer in the SR queue
@@ -121,7 +121,7 @@ void Packet::enqueue(int sr_id) {
 			// the memory was successfully allocated
 			tailPtr = headPtr;
 		} else {
-			cout << "Memory Allocatio Failed. Router " << sr_id;
+			cout << "Memory Allocation Failed. Router " << sr_id;
 			cout << " Not Added." << endl;
 		}
 	} else {
@@ -132,7 +132,7 @@ void Packet::enqueue(int sr_id) {
 			// memory successfully allocated
 			tailPtr = tailPtr->nextPtr;
 		} else {
-			cout << "Memory Allocatio Failed. Router " << sr_id;
+			cout << "Memory Allocation Failed. Router " << sr_id;
 			cout << " Not Added." << endl;
 		}
 	}
