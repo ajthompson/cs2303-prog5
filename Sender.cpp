@@ -2,7 +2,7 @@
 * @Author: ajthompson
 * @Date:   2014-02-25 10:16:11
 * @Last Modified by:   ajthompson
-* @Last Modified time: 2014-02-25 21:31:25
+* @Last Modified time: 2014-02-25 22:07:15
 */
 
 #include <iostream>
@@ -57,7 +57,7 @@ Sender::Sender(int y, int s_id, int t, int count, int size) {
 /**
  * Sets the x position to 0, because senders can only exist on the left side of the field
  */
-void setX() {
+void Sender::setX() {
 	xPos = 0;
 }
 
@@ -66,7 +66,7 @@ void setX() {
  * 
  * @param y New y position
  */
-void setY(int y) {
+void Sender::setY(int y) {
 	yPos = y;
 }
 
@@ -75,7 +75,7 @@ void setY(int y) {
  * 
  * @param nID New ID
  */
-void setID(int nID) {
+void Sender::setID(int nID) {
 	id = nID;
 }
 
@@ -84,7 +84,7 @@ void setID(int nID) {
  * 
  * @param t 
  */
-void setArrivalTime(int t) {
+void Sender::setArrivalTime(int t) {
 	arrival_time = t;
 }
 
@@ -93,7 +93,7 @@ void setArrivalTime(int t) {
  * 
  * @param c The number of packets to be sent by the node
  */
-void setPktCount(int c) {
+void Sender::setPktCount(int c) {
 	pkt_count = c;
 }
 
@@ -104,7 +104,7 @@ void setPktCount(int c) {
  * 
  * @param s The new value for packet size
  */
-void setPktSize(int s) {
+void Sender::setPktSize(int s) {
 	if (s > 0 && s <= 3) {
 		pkt_size = s;
 	} else {
@@ -117,52 +117,52 @@ void setPktSize(int s) {
 ////////////////////////
 
 /** Gets the x position */
-int getX() {
+int Sender::getX() {
 	return xPos;
 }
 
 /** Gets the Y position */
-int getY() {
+int Sender::getY() {
 	return yPos;
 }
 
 /** Gets the ID of the sender */
-int getID() {
+int Sender::getID() {
 	return id;
 }
 
 /** Gets the time of beginning transmission */
-int getArrivalTime() {
+int Sender::getArrivalTime() {
 	return arrival_time;
 }
 
 /** Gets the amount of packets that are remaining to be sent */
-int getPktCount() {
+int Sender::getPktCount() {
 	return pkt_count;
 }
 
 /** Gets the size of the packets being sent by the node */
-int getPktSize() {
+int Sender::getPktSize() {
 	return pkt_size;
 }
 
 /** Gets the head of the SR queue */
-Node *getSRHead() {
+Node *Sender::getSRHead() {
 	return srHeadPtr;
 }
 
 /** Gets the tail of the SR queue */
-Node *getSRTail() {
+Node *Sender::getSRTail() {
 	return srTailPtr;
 }
 
 /** Gets the head of the packet queue */
-Node *getPktHead() {
+Node *Sender::getPktHead() {
 	return pktHeadPtr;
 }
 
 /** Gets the tail of the packet queue */
-Node *getPktTail() {
+Node *Sender::getPktTail() {
 	return pktTailPtr;
 }
 
@@ -175,7 +175,7 @@ Node *getPktTail() {
  * 
  * @param nVal new SR ID to be added
  */
-void srEnqueue(int nVal) {
+void Sender::srEnqueue(int nVal) {
 	if (srHeadPtr == NULL) {
 		// the router list is empty
 		srHeadPtr = new Node(nVal);
@@ -186,6 +186,8 @@ void srEnqueue(int nVal) {
 		} else {
 			cout << "Memory Allocation Failed. Router " << sr_id;
 			cout << " Not Added." << endl;
+			cout << "Quitting the program." << endl;
+			exit(1);
 		}
 	} else {
 		// the router list is not empty
@@ -197,6 +199,8 @@ void srEnqueue(int nVal) {
 		} else {
 			cout << "Memory Allocation Failed. Router " << sr_id;
 			cout << " Not Added." << endl;
+			cout << "Quitting the program." << endl;
+			exit(1);
 		}
 	}
 }
@@ -207,7 +211,7 @@ void srEnqueue(int nVal) {
  * 
  * @return SR ID contained within first (now deleted) node
  */
-int srDequeue() {
+int Sender::srDequeue() {
 	Node *tempPtr;
 	int returnVal;
 
@@ -232,11 +236,58 @@ int srDequeue() {
 	}
 }
 
-void pktEnqueue() {
+/**
+ * Enqueues a new packet on the sender, basing it off of the sender stats.
+ * 
+ * @param t System time, time of packet creation
+ */
+void Sender::pktEnqueue(int t) {
 	if (pktHeadPtr == NULL) {
 		// the queue is empty
 		pktHeadPtr = new Packet(*this);
 
-		if ()
+		if (pktHeadPtr == NULL) {
+			cout << "Memory Allocation Failed. Packet Not Added." << endl;
+			cout << "Quitting the program." << endl;
+			exit(1);
+		}
+	} else {
+		// the queue is not empty
+		pktTailPtr->nextPtr = new Packet(*this);
+
+		if (pktTailPtr->nextPtr != NULL) {
+			// memory allocation succeeded
+			pktTailPtr = pktTailPtr->nextPtr;
+		} else {
+			cout << "Memory Allocation Failed. Packet Not Added." << endl;
+			cout << "Quitting the program." << endl;
+			exit(1);
+		}
+	}
+}
+
+/**
+ * Dequeues the first packet in the queue and returns.
+ * 
+ * @return A pointer to the first packet in the queue.
+ */
+Packet *Sender::pktDequeue() {
+	Node *tempPtr;
+
+	tempPtr = pktHeadPtr;
+
+	if (tempPtr != NULL) {
+		// the queue is not empty
+		pktHeadPtr = tempPtr->nextPtr;
+
+		if (pktHeadPtr == NULL) {
+			// the list is now empty
+			pktTailPtr = pktHeadPtr;
+		}
+		return tempPtr;
+	} else {
+		cout << "List is empty.  No items dequeued." << endl;
+		cout << "Quitting the program." << endl;
+		exit(1);
 	}
 }

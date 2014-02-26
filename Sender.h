@@ -47,7 +47,7 @@ public:
 	void srEnqueue(int);	// enqueues an int to the SR
 	int srDequeue();		// dequeues an int from the SR
 	void pktEnqueue();		// enqueues a packet
-	Packet* pktDequeue();	// dequeues a packet and returns a pointer to the packet
+	Packet *pktDequeue();	// dequeues a packet and returns a pointer to the packet
 	/** Miscellaneous Operations */
 	int nCount();
 	int pCount();
