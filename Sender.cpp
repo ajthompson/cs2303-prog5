@@ -2,7 +2,7 @@
 * @Author: ajthompson
 * @Date:   2014-02-25 10:16:11
 * @Last Modified by:   ajthompson
-* @Last Modified time: 2014-02-25 22:07:15
+* @Last Modified time: 2014-02-25 22:22:12
 */
 
 #include <iostream>
@@ -290,4 +290,78 @@ Packet *Sender::pktDequeue() {
 		cout << "Quitting the program." << endl;
 		exit(1);
 	}
+}
+
+/**
+ * Counts the number of SR nodes in the queue
+ * 
+ * @return Number of nodes in the queue
+ */
+int Sender::nCount() {
+	Node *currentPtr = srHeadPtr;
+	int length = 0;
+	while (currentPtr != NULL) {
+		++length;
+		currentPtr = currentPtr->nextPtr;
+	}
+
+	return length;
+}
+
+/**
+ * Counts the number of packets in the queue
+ * 
+ * @return Number of packets in the queue
+ */
+int Sender::pCount() {
+	Packet *currentPtr = pktHeadPtr;
+	int length = 0;
+	while (currentPtr != NULL) {
+		++length;
+		currentPtr = currentPtr->nextPtr;
+	}
+
+	return length;
+}
+
+/** Prints out the queue of SR nodes */
+void Sender::printNodes() {
+	Node *currentPtr = srHeadPtr;
+
+	cout << "Beginning of SR queue." << endl;
+	while (currentPtr != NULL) {
+		currentPtr->printNode();
+		currentPtr = currentPtr->nextPtr;
+	}
+	cout << "End of SR queue." << endl;
+}
+
+/** Prints out the queue of packets */
+void Sender::printPackets() {
+	Packet *currentPtr = pktHeadPtr;
+
+	cout << "Beginning of Packet queue." << endl;
+	while (currentPtr != NULL) {
+		currentPtr->printPacket();
+		currentPtr = currentPtr->nextPtr;
+	}
+	cout << "End of Packet queue." << endl;
+}
+
+/** Prints out the Sender */
+void Sender::printSender() {
+	cout << "Printing Sender " << getID() << endl;
+	cout << "X: " << getX() << endl;
+	cout << "Y: " << getY() << endl;
+	cout << "ID: " << getID() << endl;
+	cout << "Arrival Time: " << getArrivalTime() << endl;
+	cout << "Packet Count Remaining: " << getPktCount() << endl;
+	cout << "Packet Size: " << getPktSize() << endl;
+	cout << "SR HeadPtr: " << getSRHead() << endl;
+	cout << "SR TailPtr: " << getSRTail() << endl;
+	cout << "Packet HeadPtr: " << getPktHead() << endl;
+	cout << "Packet TailPtr: " << getPktTail() << endl;
+	printNodes();
+	printPackets();
+	cout << "Finished Printing Sender " << getID() << endl;
 }

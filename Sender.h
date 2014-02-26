@@ -53,4 +53,5 @@ public:
 	int pCount();
 	void printNodes();
 	void printPackets();
+	void printSender();
 }
