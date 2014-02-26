@@ -23,7 +23,7 @@ private:
 public:
 	Packet();
 	Packet(int, int, int);			// constructor
-	Packet(Sender);
+	Packet(Sender, int);
 	// setters and getters
 	void setID(int);
 	int getID();
@@ -37,6 +37,7 @@ public:
 	Node *getTail();
 	Packet *getNext();
 	void copyQueue(Packet);					// copies a queue from the argument packet to this packet
+	void copyQueue(Sender);
 	// queue operations
 	void enqueue(int);						// enqueues another item in the SR
 	int dequeue();							// dequeues the first item in the SR
@@ -44,7 +45,6 @@ public:
 	// metafunctions
 	int nLength();
 	void printPacket();
-	
 };
 
 #endif

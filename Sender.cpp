@@ -2,10 +2,11 @@
 * @Author: ajthompson
 * @Date:   2014-02-25 10:16:11
 * @Last Modified by:   ajthompson
-* @Last Modified time: 2014-02-25 20:45:00
+* @Last Modified time: 2014-02-25 21:31:25
 */
 
 #include <iostream>
+#include <cstdlib>
 #include "Sender.h"
 #include "Packet.h"
 #include "Node.h"
@@ -145,18 +146,22 @@ int getPktSize() {
 	return pkt_size;
 }
 
+/** Gets the head of the SR queue */
 Node *getSRHead() {
 	return srHeadPtr;
 }
 
+/** Gets the tail of the SR queue */
 Node *getSRTail() {
 	return srTailPtr;
 }
 
+/** Gets the head of the packet queue */
 Node *getPktHead() {
 	return pktHeadPtr;
 }
 
+/** Gets the tail of the packet queue */
 Node *getPktTail() {
 	return pktTailPtr;
 }
@@ -165,6 +170,11 @@ Node *getPktTail() {
 /// QUEUE OPERATIONS ///
 ////////////////////////
 
+/**
+ * Enqueus a SR ID at the end of the SR queue
+ * 
+ * @param nVal new SR ID to be added
+ */
 void srEnqueue(int nVal) {
 	if (srHeadPtr == NULL) {
 		// the router list is empty
@@ -188,5 +198,45 @@ void srEnqueue(int nVal) {
 			cout << "Memory Allocation Failed. Router " << sr_id;
 			cout << " Not Added." << endl;
 		}
+	}
+}
+
+/**
+ * Dequeues the first node from the SR queue, returns the value, and deletes it
+ * to free the memory
+ * 
+ * @return SR ID contained within first (now deleted) node
+ */
+int srDequeue() {
+	Node *tempPtr;
+	int returnVal;
+
+	tempPtr = srHeadPtr;
+
+	if (tempPtr != NULL) {
+		// the queue is not empty
+		returnVal = tempPtr->data;
+		srHeadPtr = tempPtr->nextPtr;
+
+		if (srHeadPtr == NULL) {
+			// the list is now empty
+			srTailPtr = srHeadPtr;
+		}
+		// deallocate the memory
+		delete tempPtr;
+		return returnVal;
+	} else {
+		cout << "List is empty.  No items dequeued." << endl;
+		cout << "Quitting the program." << endl;
+		exit(1);
+	}
+}
+
+void pktEnqueue() {
+	if (pktHeadPtr == NULL) {
+		// the queue is empty
+		pktHeadPtr = new Packet(*this);
+
+		if ()
 	}
 }

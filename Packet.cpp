@@ -36,9 +36,13 @@ Packet::Packet(int id, int s_time, int size) {
 	tailPtr = NULL;
 	nextPtr = NULL;
 }
-// Packet::Packet(Sender original) {
-
-// }
+Packet::Packet(Sender original, int t) {
+	source_id = original.getID();
+	timestamp = t;
+	pkt_size = original.getSize();
+	// copy the Sender's SR queue to the packet
+	this->copyQueue(original);
+}
 
 void Packet::setID(int nID) {
 	source_id = nID;
