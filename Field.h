@@ -6,13 +6,18 @@
  * When a particular point is 0, it is empty, otherwise it is the position
  * of a router.
  */
+#ifndef DEBUG
+ #define DEBUG 0
+#endif
 
 #ifndef FIELD_H_
 #define FIELD_H_
 
+#include <vector>
+
 class Field {
 private:
-	vector<vector<int> > field;
+	std::vector<std::vector<int> > field;
 	int maxDigits;
 	int width;
 	int height;
@@ -23,8 +28,10 @@ public:
 	void setMaxDigits(int);
 	void setWidth(int);
 	void setHeight(int);
-	void setPos(int, int, int);
+	void setPos(int x, int y, int Val=0);
+	void updateSize();
 	/** Getters */
+	std::vector<std::vector<int> > getField();
 	int getMaxDigits();
 	int getWidth();
 	int getHeight();

@@ -2,7 +2,7 @@
 * @Author: ajthompson
 * @Date:   2014-02-25 10:16:11
 * @Last Modified by:   alecthompson
-* @Last Modified time: 2014-02-26 13:56:29
+* @Last Modified time: 2014-02-26 17:07:37
 */
 
 #include <iostream>
@@ -10,6 +10,8 @@
 #include <cstdlib>
 #include <iomanip>
 #include "Field.h"
+using std::cout;
+using std::endl;
 using std::vector;
 using std::exit;
 using namespace std;
@@ -22,15 +24,15 @@ using namespace std;
  */
 Field::Field(int dim, int dMax) {
 	// set the max amount of digits for a source id
-	setMaxDigits(dMax)
+	this->setMaxDigits(dMax);
 
-	setWidth(dim);
-	setHeight(dim);
+	this->setWidth(dim);
+	this->setHeight(dim);
 
 	// sets the field to dimensions of DIMENSION +2, DIMENSION
-	field.resize(dim + 2);
+	this->field.resize(dim + 2);
 	for (int i = 0; i < dim + 2; ++i) {
-		field[i].resize(dim);
+		this->field[i].resize(dim);
 	}
 }
 
@@ -85,8 +87,29 @@ void Field::setHeight(int dimension) {
  * @param y		 Y position
  * @param newVal New value to insert
  */
-void Field::setPos(int x, int y, int newVal=0) {
+void Field::setPos(int x, int y, int newVal) {
+	if (DEBUG) {
+		cout << "adding value " << newVal << " at position";
+		cout << " (" << x << "," << y << ")" << endl;
+	}
 	field[x][y] = newVal;
+	if (DEBUG) {
+		cout << "added value " << newVal << " at position";
+		cout << " (" << x << "," << y << ")" << endl;
+	}
+}
+
+/**
+ * Updates the size of the 2D vector to be consistent with the height
+ * and width settings.
+ *
+ * WARNING: WHEN DECREASING SIZE, HIGHER INDICES WILL BE TRUNCATED
+ */
+void Field::updateSize() {
+	this->field.resize(getWidth());
+	for (int i = 0; i < getWidth(); ++i) {
+		this->field[i].resize(getHeight());
+	}
 }
 
 ////////////////////////
@@ -124,8 +147,6 @@ int Field::getVal(int x, int y) {
  * @param y   y position of val
  */
 void Field::getPos(int val, int &x, int &y) {
-	int returnVal;
-
 	if (val < 1) {
 		cout << "Value is less than 1. This could be an invalid input ";
 		cout << "or any unused point." << endl;
@@ -146,7 +167,7 @@ void Field::getPos(int val, int &x, int &y) {
 	x = 0;
 	y = 0;
 
-	finish:
+	finish:;
 }
 
 //////////////////////
@@ -157,7 +178,7 @@ void Field::getPos(int val, int &x, int &y) {
  * Prints the field
  */
 void Field::printField() {
-	/** Print out the top line of the field */
+	/** Print out the top border of the field */
 	cout << "/";
 	for (int w = 0; w < getWidth(); ++w) {
 		for (int m = 0; m < getMaxDigits(); ++m) {
@@ -175,11 +196,20 @@ void Field::printField() {
 					cout << ".";
 				}
 			} else {
-					cout << setfill(0x30) << setw(getMaxDigits());
+					cout << setfill('0') << setw(getMaxDigits());
 					cout << getVal(w, h);
 			}
 			cout << setw(1);
 		}
 		cout << "|" << endl;
 	}
+
+	/** Print out the bottom border of the field */
+	cout << "\\";
+	for (int w = 0; w < getWidth(); ++w) {
+		for (int m = 0; m < getMaxDigits(); ++m) {
+			cout << "-";
+		}
+	}
+	cout << "/" << endl;
 }
