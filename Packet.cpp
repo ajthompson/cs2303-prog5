@@ -8,9 +8,10 @@
 #include "Node.h"
 #include "Packet.h"
 #include "Sender.h"
- using std::cout;
- using std::endl;
- using namespace std;
+using std::cout;
+using std::endl;
+using std::exit;
+using namespace std;
 
 /**
  * Packet Constructor

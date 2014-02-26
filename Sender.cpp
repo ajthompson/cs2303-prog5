@@ -1,8 +1,8 @@
 /* 
 * @Author: ajthompson
 * @Date:   2014-02-25 10:16:11
-* @Last Modified by:   ajthompson
-* @Last Modified time: 2014-02-26 10:22:35
+* @Last Modified by:   alecthompson
+* @Last Modified time: 2014-02-26 13:40:17
 */
 
 #include <iostream>
@@ -10,6 +10,9 @@
 #include "Sender.h"
 #include "Packet.h"
 #include "Node.h"
+using std::cout;
+using std::endl;
+using std::exit;
 using namespace std;
 
 /**
