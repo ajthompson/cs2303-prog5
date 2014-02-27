@@ -2,7 +2,7 @@
 * @Author: ajthompson
 * @Date:   2014-02-27 09:41:37
 * @Last Modified by:   alecthompson
-* @Last Modified time: 2014-02-27 14:08:57
+* @Last Modified time: 2014-02-27 14:49:59
 */
 
 #include <iostream>
@@ -25,7 +25,6 @@ using namespace std;
  */
 EventList::EventList(int s, int m, int r, int d) {
 	int counter = 1;
-	int numLine = s + m + r;
 	string line;	// store input strings
 	// store values to put into routers
 	int x, y, s_id, a_time, packets, pkt_size, sr_size, sr_val;
@@ -41,7 +40,7 @@ EventList::EventList(int s, int m, int r, int d) {
 	muleList.resize(m);
 	receveiverList.resize(r);
 	// create the field
-	fieldPtr = new Field(d, numLine);
+	fieldPtr = new Field(d, s+m+r);
 	// initialize the event list to empty
 	headPtr = NULL;
 
@@ -76,20 +75,20 @@ EventList::EventList(int s, int m, int r, int d) {
 		}
 	}
 
-	// // iterate through the vector creating the receivers
-	// for (int i = 0; i < r; ++i) {
-	// 	x = d - 1;
-	// 	y = rand() % d;
-	// 	if (checkReceiverPos(x, y, i)) {
-	// 		receiverList[i] = new Receiver();
-	// 		receiverList[i]->setX();
-	// 		receiverList[i]->setY(y);
-	// 		receiverList[i]->setID(counter);
-	// 		++counter;	// increment counter
-	// 	} else {
-	// 		--i;	// decrement i to retry this value with a different position
-	// 	}
-	// }
+	// iterate through the vector creating the receivers
+	for (int i = 0; i < r; ++i) {
+		x = d - 1;
+		y = rand() % d;
+		if (checkReceiverPos(x, y, i)) {
+			receiverList[i] = new Receiver();
+			receiverList[i]->setX();
+			receiverList[i]->setY(y);
+			receiverList[i]->setID(counter);
+			++counter;	// increment counter
+		} else {
+			--i;	// decrement i to retry this value with a different position
+		}
+	}
 	
 	cout << "Enter source data in the form:" << endl;
 	cout << "SourceID arrival_time packets pkt_size SR_size SR" << endl;
@@ -218,7 +217,7 @@ Sender *EventList::findReceiver(int id) {
  * @param tL   	Packet Size 				Propagation Time
  *
  *  			Propagation to Receiver End	Move Mules
- * @param eT   	T_END_FROM_M				P_END_TO_M
+ * @param eT   	P_END_TO R					P_END_TO_M
  * @param sPtr 	NULL						NULL
  * @param mPtr 	NULL						NULL
  * @param rPtr 	Pointer to target receiver	NULL
@@ -251,14 +250,14 @@ void EventList::insertEvent(EventType eT, Sender *sPtr, Mule *mPtr, Receiver *rP
 		if (eT == MOVE) {
 			// iterator for MOVE events
 			// places events after all events with the same time left
-			while (currentPtr->getTime() <= tL && currentPtr != NULL) {
+			while ((currentPtr->getTime() <= tL) && (currentPtr != NULL)) {
 				previousPtr = currentPtr;
 				currentPtr = currentPtr->nextPtr;
 			}
 		} else {
 			// iterator for non-move events, 
 			// places them before all events with the same time left
-			while (currentPtr->getTime() < tL && currentPtr != NULL) {
+			while ((currentPtr->getTime() < tL) && (currentPtr != NULL)) {
 				previousPtr = currentPtr;
 				currentPtr = currentPtr->nextPtr;
 			}
@@ -286,32 +285,101 @@ void EventList::insertEvent(EventType eT, Sender *sPtr, Mule *mPtr, Receiver *rP
 /// PROCESSING ///
 //////////////////
 
+/** Checks if the current position is held by a sender */
 bool EventList::checkSenderPos(int x, int y, int num) {
 	bool isSame = true;
 	for (int i = 0; i < num; ++i) {
-		if (x == (senderList[i]->getX()) && y == (senderList[i]->getY())) {
+		if ((x == (senderList[i]->getX())) && y == ((senderList[i]->getY()))) {
 			returnVal &= false;
 		}
 	}
 	return isSame;
 }
 
+/** Checks if the current position is held by a mule */
 bool EventList::checkMulePos(int x, int y, int num) {
 	bool isSame = true;
 	for (int i = 0; i < num; ++i) {
-		if (x == (muleList[i]->getX()) && y == (muleList[i]->getY())) {
+		if ((x == (muleList[i]->getX())) && y == ((muleList[i]->getY()))) {
 			returnVal &= false;
 		}
 	}
 	return isSame;
 }
 
+/** Checks if the current position is held by a receiver */
 bool EventList::checkReceiverPos(int x, int y, int num) {
 	bool isSame = true;
 	for (int i = 0; i < num; ++i) {
-		if (x == (receiverList[i]->getX()) && y == (receiverList[i]->getY())) {
+		if ((x == (receiverList[i]->getX())) && (y == (receiverList[i]->getY()))) {
 			returnVal &= false;
 		}
 	}
 	return isSame;
+}
+
+/**
+ * Calculates the propagation time of the packet using the formula:
+ *
+ * 		pTime = ceil (log2(sqrt((x2-x1)^2 + (y2-y1)^2))));
+ * 
+ * @param  x1 X position of sending router
+ * @param  y1 Y position of sending router
+ * @param  x2 X position of receiving router
+ * @param  y2 Y position of receiving router
+ * @return    Propagation time of packet
+ */
+int EventList::calcPropagation(int x1, int y1, int x2, int y2) {
+	return ceil(log2(sqrt(pow(x2-x1, 2) + pow(y2-y1, 2))));
+}
+
+/** Processes the event list */
+void EventList::processList() {
+	Event *currentPtr = headPtr;
+	Event *tempPtr;
+
+	// iterate through the list
+	while (currentPtr != NULL) {
+		if (currentPtr->getTime() == 0){
+			// if the event's timer is complete
+			switch (currentPtr->getType()) {
+				case SENDER_INIT:
+					senderInit(currentPtr);
+					break;
+				case T_END_FROM_S:
+					tEndSender(currentPtr);
+					break;
+				case T_END_FROM_M:
+					tEndMule(currentPtr);
+					break;
+				case P_END_TO_M:
+					pEndMule(currentPtr);
+					break;
+				case P_END_TO_R:
+					pEndReceiver(currentPtr);
+					break;
+				case MOVE:
+					eListMove();
+					break;
+				default:
+					break;
+			}
+			// change the head pointer
+			headPtr = currentPtr->nextPtr;
+			delete currentPtr; 
+			currentPtr = headPtr;
+		} else {
+			// the event's timer is still going
+			currentPtr->setTime(currentPtr->getTime() - 1);
+			currentPtr = currentPtr->nextPtr;
+		}
+	}
+}
+
+/** Initializes the sender with a packet and sets up a transmission finish event */
+void EventList::senderInit(Event *ePtr) {
+	Sender *sPtr = ePtr->getSender();
+	sPtr->pktEnqueue(t);	// create a new packet with timestamp t
+	sPtr->getPktHead()->setDelay();
+	insertEvent()
 }

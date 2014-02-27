@@ -57,4 +57,11 @@ public:
 	bool checkMulePos(int, int, int);
 	bool checkReceiverPos(int, int, int);
 	int calcPropagation(int, int, int, int);
+	void processList();
+	void senderInit(Event*);
+	void tEndSender(Event*);
+	void tEndMule(Event*);
+	void pEndMule(Event*);
+	void pEndReceiver(Event*);
+	void eListMove();
 }
