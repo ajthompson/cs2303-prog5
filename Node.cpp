@@ -19,7 +19,7 @@ Node::Node(int nData) {
 Node::Node(int nData, Node **toPtr) {
 	this->setData(nData);
 	nextPtr = *toPtr;
-}
+}	
 
 /**
  * Stores an int in the node.
@@ -37,6 +37,10 @@ void Node::setData(int nData) {
  */
 int Node::getData() {
 	return data;
+}
+
+Node *Node::getNext() {
+	return nextPtr;
 }
 
 /**

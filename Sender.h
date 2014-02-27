@@ -6,7 +6,8 @@
 #ifndef SENDER_H
 #define SENDER_H
 
-class Packet, Node;
+class Packet;
+class Node;
 
 class Sender {
 	friend class Packet;
@@ -21,14 +22,39 @@ private:
 	Node *srHeadPtr;	// pointer to the head of the SR queue
 	Node *srTailPtr;	// pointer to the tail of the SR queue
 	Packet *pktHeadPtr;	// pointer to the head of the packet queue
-						// there should only ever be one packet in a senders queue
-						// completion of transmission triggers the addition of another
-						// therefore no tailPtr is needed
+	Packet *pktTailPtr;	// pointer to the tail of the packet queue
 public:
+	Sender();							// constructor
 	Sender(int, int, int, int, int);	// constructor
-	~Sender();				// deconstructor
+	/** Setter functions */
+	void setX();
+	void setY(int);
+	void setID(int);
+	void setArrivalTime(int);
+	void setPktCount(int);
+	void setPktSize(int);
+	/** Getter functions */
+	int getX();
+	int getY();
+	int getID();
+	int getArrivalTime();
+	int getPktCount();
+	int getPktSize();
+	Node *getSRHead();
+	Node *getSRTail();
+	Packet *getPktHead();
+	Packet *getPktTail();
+	/** Queue operations */
 	void srEnqueue(int);	// enqueues an int to the SR
 	int srDequeue();		// dequeues an int from the SR
-	void pktEnqueue(int);	// enqueues a packet
-	Packet* pktDequeue();	// dequeues a packet and returns a pointer to the packet
-}
+	void pktEnqueue(int);		// enqueues a packet
+	Packet *pktDequeue();	// dequeues a packet and returns a pointer to the packet
+	/** Miscellaneous Operations */
+	int nCount();
+	int pCount();
+	void printNodes();
+	void printPackets();
+	void printSender();
+};
+
+#endif

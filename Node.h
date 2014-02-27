@@ -19,6 +19,7 @@ public:
 	Node(int, Node **);	// constructor
 	void setData(int);	// set the data in the Node
 	int getData();		// get the data from the Node
+	Node *getNext();
 	void printNode();	// prints the node
 };
 
