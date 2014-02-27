@@ -23,14 +23,16 @@ private:
 	int timeLeft;			// time remaining until the event occurs
 	Event *nextPtr;			// pointer to next event in list
 public:
-	/** Constructors for each event type */
-	Event(type, Sender*, int);			// sender init/sender transmission end
-	Event(type, Mule*, Packet*, int);	// propagation to mule end
-	Event(type, Mule*, int);			// mule transmission end
-	Event(type, Receiver*, Packet*, int);	// propagation to receiver end;
+	/** Constructor */
+	Event();
 	/** Setter Functions */
-	void setType(type);
+	void setType(EventType);
+	void setSender(Sender*);
+	void setMule(Mule*);
+	void setReceiver(Receiver*);
+	void setPacket(Packet*);
 	void setTime(int);
+	void setNext(Event*);
 	/** Getter Functions */
 	type getType();
 	Sender *getSender();
@@ -41,4 +43,6 @@ public:
 	Event *getNext();
 	/** Processing */
 	void printEvent();
-}
+};
+
+#endif
