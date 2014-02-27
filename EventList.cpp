@@ -2,7 +2,7 @@
 * @Author: ajthompson
 * @Date:   2014-02-27 09:41:37
 * @Last Modified by:   ajthompson
-* @Last Modified time: 2014-02-27 11:09:36
+* @Last Modified time: 2014-02-27 12:11:43
 */
 
 #include <iostream>
@@ -28,6 +28,7 @@ EventList::EventList(int s, int m, int r, int d) {
 	string line;	// store input strings
 	// store values to put into routers
 	int x, y, s_id, a_time, packets, pkt_size, sr_size, sr_val;
+	Sender *updatePtr;	// stores the packet found with a given ID
 	// set program time to 0
 	t = 0;
 	// resize vectors for the proper amount of routers
@@ -70,7 +71,7 @@ EventList::EventList(int s, int m, int r, int d) {
 		}
 	}
 
-	// // iterate through the vector creating the senders
+	// // iterate through the vector creating the receivers
 	// for (int i = 0; i < r; ++i) {
 	// 	x = d - 1;
 	// 	y = rand() % d;
@@ -86,8 +87,14 @@ EventList::EventList(int s, int m, int r, int d) {
 	// }
 	
 	cout << "Enter source data in the form:" << endl;
-	cout << "SourceID"
-	// read in input file and assign data to senders
+	cout << "SourceID arrival_time packets pkt_size SR_size SR" << endl;
+	cout << "SourceID - ID of source router this applys to" << endl;
+	cout << "arrival_time - Time the source router arrives and begins transmitting" << endl;
+	cout << "packets - number of packets to be sent" << endl;
+	cout << "pkt_size - size of packets to be sent" << endl;
+	cout << "SR_size - number of routers the packet must be sent through, including this one" << endl;
+	cout << "SR - route the packets must take - includes the source router" << endl;
+	// read in input file and assign data to senders - based on
 	// @author Pete Becker
 	// 	http://stackoverflow.com/questions/15092172/c-reading-fixed-number-of-lines-of-integers-with-unknown-number-of-integers-in
 	// 	Feb 26, 2013
@@ -95,14 +102,37 @@ EventList::EventList(int s, int m, int r, int d) {
 		istringstream in(line);
 		in >> s_id;
 		in >> a_time;
+		in >> packets;
+		in >> pkt_size;
+		in >> sr_size;
+
+		// find the necessary sender and set values
+		updatePtr = findSender(s_id, s);
+		updatePtr->setArrivalTime(a_time);
+		updatePtr->setPktCount(packets);
+		updatePtr->setPktSize(pkt_size);
+		for (int i = 0; i < sr_size; ++i) {
+			in >> sr_val;
+			updatePtr->srEnqueue(sr_val);
+			insertEvent(SENDER_INIT, updatePtr, NULL, NULL, NULL, arrival_time);
+		}
 	}
+}
+
+////////////////////////
+/// GETTER FUNCTIONS ///
+////////////////////////
+
+/** Gets the pointer to the sender with the given ID */
+Sender *EventList::findSender(int id, int numSender) {
+
 }
 
 //////////////////
 /// PROCESSING ///
 //////////////////
 
-bool checkSenderPos(int x, int y, int num) {
+bool EventList::checkSenderPos(int x, int y, int num) {
 	bool isSame = true;
 	for (int i = 0; i < num; ++i) {
 		if (x == (senderList[i]->getX()) && y == (senderList[i]->getY())) {
@@ -112,7 +142,7 @@ bool checkSenderPos(int x, int y, int num) {
 	return isSame;
 }
 
-bool checkMulePos(int x, int y, int num) {
+bool EventList::checkMulePos(int x, int y, int num) {
 	bool isSame = true;
 	for (int i = 0; i < num; ++i) {
 		if (x == (muleList[i]->getX()) && y == (muleList[i]->getY())) {
@@ -122,7 +152,7 @@ bool checkMulePos(int x, int y, int num) {
 	return isSame;
 }
 
-bool checkReceiverPos(int x, int y, int num) {
+bool EventList::checkReceiverPos(int x, int y, int num) {
 	bool isSame = true;
 	for (int i = 0; i < num; ++i) {
 		if (x == (receiverList[i]->getX()) && y == (receiverList[i]->getY())) {

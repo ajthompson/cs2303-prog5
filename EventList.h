@@ -45,10 +45,9 @@ public:
 	void setTime(int);
 	void incTime(int);
 	/** Getters */
-
+	Sender *findSender(int);
 	/** List Operations */
-	void insertSorted();
-	void push();
+	void insertEvent(EventType, Sender*, Mule*, Receiver*, Packet*, int);
 	/** Processing */
 	bool checkSenderPos(int, int, int);
 	bool checkMulePos(int, int, int);
