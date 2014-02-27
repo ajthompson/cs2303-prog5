@@ -32,7 +32,10 @@ class EventList {
 	friend class Mule;
 	friend class Receiver;
 private:
-	static int t;	// simulation time
+	int t;	// simulation time
+	int numSenders;
+	int numMules;
+	int numReceivers;
 	static std::vector<Sender> senderList;
 	static std::vector<Mule> muleList;
 	static std::vector<Receiver> receiverList;
@@ -43,8 +46,9 @@ public:
 	EventList(int, int, int, int);
 	/** Setters */
 	void setTime(int);
-	void incTime(int);
+	void incTime();
 	/** Getters */
+	int getTime();
 	Sender *findSender(int);
 	/** List Operations */
 	void insertEvent(EventType, Sender*, Mule*, Receiver*, Packet*, int);
@@ -52,4 +56,5 @@ public:
 	bool checkSenderPos(int, int, int);
 	bool checkMulePos(int, int, int);
 	bool checkReceiverPos(int, int, int);
+	int calcPropagation(int, int, int, int);
 }

@@ -45,28 +45,39 @@ Packet::Packet(Sender *original, int t) {
 	this->copyQueue(*original);
 }
 
+/** Sets the packets ID */
 void Packet::setID(int nID) {
 	source_id = nID;
 }
 
+/** Gets the packets ID */
 int Packet::getID() {
 	return source_id;
 }
 
+/** Sets the packets timestamp */
 void Packet::setTimestamp(int t) {
 	timestamp = t;
 }
 
+/** Gets the packets timestamp */
 int Packet::getTimestamp() {
 	return timestamp;
 }
 
+/** Sets the packets size */
 void Packet::setSize(int s) {
 	pkt_size = s;
 }
 
+/** Gets the packets size */
 int Packet::getSize() {
 	return pkt_size;
+}
+
+/** Sets the packets propagation time (calculated in EventList) */
+void Packet::setProp(int pTime) {
+	delay = pTime;
 }
 
 /**

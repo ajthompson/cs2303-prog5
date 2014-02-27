@@ -16,7 +16,8 @@ private:
 	int source_id;		// ID of the source router
 	int timestamp;		// time of creation at the source router
 	int pkt_size;		// Size of the packet
-	int delay;			// not used until arrival at receiver
+	int delay;			// used before arrival at receiver to hold propagation time
+						// used after for time of completion
 	Node *headPtr;		// pointer to the head of the SR
 	Node *tailPtr;		// pointer to the tail of the SR
 	Packet *nextPtr;	// pointer to the next packet in the queue
@@ -31,6 +32,7 @@ public:
 	int getTimestamp();
 	void setSize(int);
 	int getSize();
+	void setProp(int);
 	void setDelay(int);						// sets the delay
 	int getDelay();							// get the delay
 	Node *getHead();

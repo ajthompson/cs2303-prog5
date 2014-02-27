@@ -1,8 +1,8 @@
 /* 
 * @Author: ajthompson
 * @Date:   2014-02-27 09:41:37
-* @Last Modified by:   ajthompson
-* @Last Modified time: 2014-02-27 12:11:43
+* @Last Modified by:   alecthompson
+* @Last Modified time: 2014-02-27 14:08:57
 */
 
 #include <iostream>
@@ -11,6 +11,7 @@
 #include <cstdlib>	// for srand and rand
 #include <ctime>	// for time(NULL) for srand
 #include <string>
+#include <cmath>
 #include "EventList.h"
 using namespace std;
 
@@ -31,6 +32,10 @@ EventList::EventList(int s, int m, int r, int d) {
 	Sender *updatePtr;	// stores the packet found with a given ID
 	// set program time to 0
 	t = 0;
+	// set the amount of routers
+	numSenders = s;
+	numMules = m;
+	numReceivers = r;
 	// resize vectors for the proper amount of routers
 	senderList.resize(s);
 	muleList.resize(m);
@@ -117,15 +122,164 @@ EventList::EventList(int s, int m, int r, int d) {
 			insertEvent(SENDER_INIT, updatePtr, NULL, NULL, NULL, arrival_time);
 		}
 	}
+
+	// set the first move event
+	insertEvent(MOVE, NULL, NULL, NULL, NULL, 10);
+}
+
+////////////////////////
+/// SETTER FUNCTIONS ///
+////////////////////////
+
+/** Sets the time to the given value */
+void EventList::setTime(int nTime) {
+	t = nTime;
+}
+
+/** Increments the time by 1 */
+void EventList::incTime() {
+	++t;
 }
 
 ////////////////////////
 /// GETTER FUNCTIONS ///
 ////////////////////////
 
-/** Gets the pointer to the sender with the given ID */
-Sender *EventList::findSender(int id, int numSender) {
+/** Gets the simulation time */
+int EventList::getTime() {
+	return t;
+}
 
+/** Gets the pointer to the sender with the given ID */
+Sender *EventList::findSender(int id) {
+	Sender *returnPtr = NULL;
+	for (int i = 0; i < numSenders; ++i) {
+		if (id == senderList[i]->getID()) {
+			returnPtr = senderList[i];
+		}
+	}
+	if (returnPtr == NULL) {
+		cout << "Sender with that ID not found.  Returning NULL" << endl;
+	}
+
+	return returnPtr;
+}
+
+/** Gets the pointer to the mule with the given ID */
+Sender *EventList::findMule(int id) {
+	Sender *returnPtr = NULL;
+	for (int i = 0; i =< numMules; ++i) {
+		if (id == muleList[i]->getID()) {
+			returnPtr = muleList[i];
+		}
+	}
+	if (returnPtr == NULL) {
+		cout << "Sender with that ID not found.  Returning NULL" << endl;
+	}
+	return returnPtr;
+}
+
+/** Gets the pointer to the receiver with the given ID */
+Sender *EventList::findReceiver(int id) {
+	Sender *returnPtr = NULL;
+	for (int i = 0; i =< numReceivers; ++i) {
+		if (id == muleList[i]->getID()) {
+			returnPtr = muleList[i];
+		}
+	}
+	if (returnPtr == NULL) {
+		cout << "Sender with that ID not found.  Returning NULL" << endl;
+	}
+	return returnPtr;
+}
+
+///////////////////////
+/// LIST OPERATIONS ///
+///////////////////////
+
+/**
+ * Creates an event and adds it to the list.  No event needs all data fields.
+ * The fields to use for each event type are below:
+ *
+ * 				Sender initialization		Sender Transmission End
+ * @param eT   	SENDER_INIT					T_END_FROM_S
+ * @param sPtr 	Pointer to target sender 	Pointer to Target Sender
+ * @param mPtr 	NULL						NULL
+ * @param rPtr 	NULL						NULL
+ * @param pPtr 	NULL						NULL
+ * @param tL   	Sender Time of Arrival		Sender.pkt_size
+ *
+ *  			Mule Transmission End		Propagation to Mule End
+ * @param eT   	T_END_FROM_M				P_END_TO_M
+ * @param sPtr 	NULL						NULL
+ * @param mPtr 	Pointer to target mule		Pointer to target mule
+ * @param rPtr 	NULL						NULL
+ * @param pPtr 	NULL						Pointer to target packet
+ * @param tL   	Packet Size 				Propagation Time
+ *
+ *  			Propagation to Receiver End	Move Mules
+ * @param eT   	T_END_FROM_M				P_END_TO_M
+ * @param sPtr 	NULL						NULL
+ * @param mPtr 	NULL						NULL
+ * @param rPtr 	Pointer to target receiver	NULL
+ * @param pPtr 	Pointer to targer packet	NULL
+ * @param tL   	Propagation time			10
+ */
+void EventList::insertEvent(EventType eT, Sender *sPtr, Mule *mPtr, Receiver *rPtr, Packet pPtr, int tL) {
+	Event *currentPtr = headPtr;
+	Event *previousPtr = NULL;
+
+	if (headPtr == NULL) {
+		// if the list is empty
+		headPtr = new Event();
+
+		if (headPtr != NULL) {
+			// memory was successfully allocated
+			// set the event's fields
+			headPtr->setType(eT);
+			headPtr->setSender(sPtr);
+			headPtr->setMule(mPtr);
+			headPtr->setReceiver(rPtr);
+			headPtr->setPacket(pPtr);
+			headPtr->setTime(tL);
+			headPtr->setNext(NULL);
+		} else {
+			cout << "Memory allocation failed - event not created" << endl;
+		}
+	} else {
+		// the list is not empty
+		if (eT == MOVE) {
+			// iterator for MOVE events
+			// places events after all events with the same time left
+			while (currentPtr->getTime() <= tL && currentPtr != NULL) {
+				previousPtr = currentPtr;
+				currentPtr = currentPtr->nextPtr;
+			}
+		} else {
+			// iterator for non-move events, 
+			// places them before all events with the same time left
+			while (currentPtr->getTime() < tL && currentPtr != NULL) {
+				previousPtr = currentPtr;
+				currentPtr = currentPtr->nextPtr;
+			}
+		}
+
+		// create the new event
+		previousPtr->nextPtr = new Event();
+
+		if (previousPtr->nextPtr != NULL) {
+			// memory allocation was successful
+			previousPtr->nextPtr->setType(eT);
+			previousPtr->nextPtr->setSender(sPtr);
+			previousPtr->nextPtr->setMule(mPtr);
+			previousPtr->nextPtr->setReceiver(rPtr);
+			previousPtr->nextPtr->setPacket(pPtr);
+			previousPtr->nextPtr->setTime(tL);
+			previousPtr->nextPtr->setNext(currentPtr);
+		} else {
+			cout << "Memory allocation failed - event not created" << endl;
+		}
+	}
 }
 
 //////////////////
