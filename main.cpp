@@ -2,7 +2,7 @@
 * @Author: ajthompson
 * @Date:   2014-02-26 20:54:43
 * @Last Modified by:   ajthompson
-* @Last Modified time: 2014-02-26 21:12:37
+* @Last Modified time: 2014-02-26 21:14:10
 */
 
 #include <iostream>
@@ -39,6 +39,10 @@ int main(int argc, char *argv[]) {
 
 		// create the event list
 		EList = new EventList(senders, mules, receivers, dimension);
+		// initialize the event list
+		EList->initEventList();
+		// run the simulation
+		EList->simulate();
 	}
 
 	return 0;
