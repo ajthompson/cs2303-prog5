@@ -2,7 +2,7 @@
 * @Author: ajthompson
 * @Date:   2014-02-26 21:58:44
 * @Last Modified by:   ajthompson
-* @Last Modified time: 2014-02-27 09:20:29
+* @Last Modified time: 2014-02-27 09:39:57
 */
 
 #include <iostream>
@@ -86,4 +86,55 @@ Receiver *Event::getReceiver() {
 /** Gets the pointer to a packet */
 Packet *Event::getPacket() {
 	return pktPtr;
+}
+
+/** Gets the time remaining */
+int Event::getTime() {
+	return timeLeft();
+}
+
+/** Gets the pointer to the next event in the event list */
+Event *Event::getNext() {
+	return nextPtr;
+}
+
+//////////////////
+/// PROCESSING ///
+//////////////////
+
+/** Prints the event */
+void printEvent() {
+	cout << "Event Type: ";
+	switch (getType()) {
+		case SENDER_INIT:
+			cout << "Initializing Sender" << endl;
+			break;
+		case T_END_FROM_S:
+			cout << "Sender Transmission Complete" << endl;
+			break;
+		case T_END_FROM_M:
+			cout << "Mule Transmission Complete" << endl;
+			break;
+		case P_END_TO_M:
+			cout << "Propagation to Mule Complete" << endl;
+			break;
+		case P_END_TO_R:
+			cout << "Propagation to Receiver Complete" << endl;
+			break;
+		case MOVE:
+			cout << "Moving Mules" << endl;
+			break:
+		default:
+			break;
+	}
+	cout << "Sender Pointer: " << getSender() << endl;
+	getSender()->printSender();
+	cout << "Mule Pointer: " << getMule() << endl;
+	getMule()->printMule();
+	cout << "Receiver Pointer: " << getReceiver() << endl;
+	getReceiver()->printReceiver();
+	cout << "Packet Pointer: " << getPacket() << endl;
+	getPacket()->printPacket();
+	cout << "Time Remaining: " << getTime() << endl;
+	cout << "Next Event Pointer: " << getNext() << endl; 
 }

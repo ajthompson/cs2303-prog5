@@ -30,16 +30,15 @@ private:
 	static int t;	// simulation time
 	static std::vector<Sender> senderList;
 	static std::vector<Mule> muleList;
-	static std::vector<Receiver> muleList;
+	static std::vector<Receiver> receiverList;
 	Field *fieldPtr;	// pointer to the field
 	Event *headPtr;		// pointer to the head of the event list
 public:
 	/** Constructor */
-	Field(int, int, int, int);
+	EventList(int, int, int, int);
 	/** Setters */
 	void setTime(int);
 	void incTime(int);
-
 	/** Getters */
 
 	/** List Operations */
