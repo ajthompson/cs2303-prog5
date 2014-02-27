@@ -34,7 +34,7 @@ public:
 	void setTime(int);
 	void setNext(Event*);
 	/** Getter Functions */
-	type getType();
+	EventType getType();
 	Sender *getSender();
 	Mule *getMule();
 	Receiver *getReceiver();

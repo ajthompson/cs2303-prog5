@@ -14,6 +14,11 @@
 #include <vector>
 #include "Field.h"
 #include "Event.h"
+#include "Packet.h"
+#include "Mule.h"
+#include "Sender.h"
+#include "Receiver.h"
+#include "Node.h"
 
 // forward declarations of necessary classes
 class Event;
@@ -43,5 +48,9 @@ public:
 
 	/** List Operations */
 	void insertSorted();
-	void push()
+	void push();
+	/** Processing */
+	bool checkSenderPos(int, int, int);
+	bool checkMulePos(int, int, int);
+	bool checkReceiverPos(int, int, int);
 }
