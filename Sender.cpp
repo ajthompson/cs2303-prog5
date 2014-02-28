@@ -2,7 +2,7 @@
 * @Author: ajthompson
 * @Date:   2014-02-25 10:16:11
 * @Last Modified by:   ajthompson
-* @Last Modified time: 2014-02-28 13:49:51
+* @Last Modified time: 2014-02-28 14:06:46
 */
 
 #include <iostream>
@@ -376,6 +376,7 @@ void Sender::printSender() {
 /*---------------------------------Static_Stuff---------------------------------*/
 /*---------------------------------Static_Stuff---------------------------------*/
 /*---------------------------------Static_Stuff---------------------------------*/
+// Author: Troy Hughes
 int Sender::total_senders = -1;
 int Sender::field_length  = -1;
 int *Sender::yVals = new int[1];

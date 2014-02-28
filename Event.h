@@ -9,8 +9,8 @@
 
 class EventList;
 class Sender;
-// class Mule;
-// class Receiver;
+class Mule;
+class Receiver;
 class Packet;
 
 typedef enum {SENDER_INIT, T_END_FROM_S, T_END_FROM_M, P_END_TO_M, P_END_TO_R,
@@ -21,8 +21,8 @@ class Event {
 private:
 	EventType type;			// type of event
 	Sender *senderPtr;		// pointer to a sender
-	// Mule *mulePtr;			// pointer to a mule
-	// Receiver *receiverPtr;	// pointer to a receiver
+	Mule *mulePtr;			// pointer to a mule
+	Receiver *receiverPtr;	// pointer to a receiver
 	Packet *pktPtr;			// pointer to a packet
 	int timeLeft;			// time remaining until the event occurs
 	Event *nextPtr;			// pointer to next event in list
@@ -32,16 +32,16 @@ public:
 	/** Setter Functions */
 	void setType(EventType);
 	void setSender(Sender*);
-	// void setMule(Mule*);
-	// void setReceiver(Receiver*);
+	void setMule(Mule*);
+	void setReceiver(Receiver*);
 	void setPacket(Packet*);
 	void setTime(int);
 	void setNext(Event*);
 	/** Getter Functions */
 	EventType getType();
 	Sender *getSender();
-	// Mule *getMule();
-	// Receiver *getReceiver();
+	Mule *getMule();
+	Receiver *getReceiver();
 	Packet *getPacket();
 	int getTime();
 	Event *getNext();

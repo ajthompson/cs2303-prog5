@@ -2,7 +2,7 @@
 * @Author: ajthompson
 * @Date:   2014-02-26 21:58:44
 * @Last Modified by:   ajthompson
-* @Last Modified time: 2014-02-27 21:50:07
+* @Last Modified time: 2014-02-28 14:05:11
 */
 
 #include <iostream>
@@ -37,15 +37,15 @@ void Event::setSender(Sender *sPtr) {
 	senderPtr = sPtr;
 }
 
-// /** Sets the pointer to a mule */
-// void Event::setMule(Mule *mPtr) {
-// 	mulePtr = mPtr;
-// }
+/** Sets the pointer to a mule */
+void Event::setMule(Mule *mPtr) {
+	mulePtr = mPtr;
+}
 
-// /** Sets the pointer to a receiver */
-// void Event::setReceiver(Receiver *rPtr) {
-// 	receiverPtr = rPtr;
-// }
+/** Sets the pointer to a receiver */
+void Event::setReceiver(Receiver *rPtr) {
+	receiverPtr = rPtr;
+}
 
 /** Sets the pointer to a packet */
 void Event::setPacket(Packet *pPtr) {
@@ -76,15 +76,15 @@ Sender *Event::getSender() {
 	return senderPtr;
 }
 
-// /** Gets the pointer to a mule */
-// Mule *Event::getMule() {
-// 	return mulePtr;
-// }
+/** Gets the pointer to a mule */
+Mule *Event::getMule() {
+	return mulePtr;
+}
 
-// /** Gets the pointer to a receiver */
-// Receiver *Event::getReceiver() {
-// 	return receiverPtr;
-// }
+/** Gets the pointer to a receiver */
+Receiver *Event::getReceiver() {
+	return receiverPtr;
+}
 
 /** Gets the pointer to a packet */
 Packet *Event::getPacket() {

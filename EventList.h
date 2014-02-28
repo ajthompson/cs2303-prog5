@@ -50,6 +50,8 @@ public:
 	/** Getters */
 	int getTime();
 	Sender *findSender(int);
+	Mule *findMule(int);
+	Receiver *findReceiver(int);
 	/** List Operations */
 	void insertEvent(EventType, Sender*, Mule*, Receiver*, Packet*, int);
 	/** Processing */
@@ -58,6 +60,7 @@ public:
 	bool checkReceiverPos(int, int, int);
 	int calcPropagation(int, int, int, int);
 	void processList();
+	/** Process submethods */
 	void senderInit(Event*);
 	void tEndSender(Event*);
 	void tEndMule(Event*);

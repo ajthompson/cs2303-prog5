@@ -2,7 +2,7 @@
 * @Author: ajthompson
 * @Date:   2014-02-27 09:41:37
 * @Last Modified by:   ajthompson
-* @Last Modified time: 2014-02-28 13:53:12
+* @Last Modified time: 2014-02-28 14:50:23
 */
 
 #include <iostream>
@@ -46,25 +46,20 @@ EventList::EventList(int s, int m, int r, int d) {
 
 	// iterate through the vector creating the senders
 	for (int i = 0; i < s; ++i) {
-		x = 0;
-		y = rand() % d;
-			senderList[i] = new Sender(counter);
-			++counter;	// increment counter
-		}
+		senderList[i] = new Sender(counter);
+		++counter;	// increment counter
 	}
 
 	// iterate through the vector creating the mules
 	for (int i = 0; i < m; ++i) {
 		muleList[i] = new Mule(counter);
 		++counter;	// increment counter
-		}
 	}
 
 	// iterate through the vector creating the receivers
 	for (int i = 0; i < r; ++i) {
-			receiverList[i] = new Receiver(counter, s);
-			++counter;	// increment counter
-		}
+		receiverList[i] = new Receiver(counter, s);
+		++counter;	// increment counter
 	}
 	
 	cout << "Enter source data in the form:" << endl;
@@ -75,10 +70,13 @@ EventList::EventList(int s, int m, int r, int d) {
 	cout << "pkt_size - size of packets to be sent" << endl;
 	cout << "SR_size - number of routers the packet must be sent through, including this one" << endl;
 	cout << "SR - route the packets must take - includes the source router" << endl;
-	// read in input file and assign data to senders - based on
+	// read in input file and assign data to senders - created by:
 	// @author Pete Becker
 	// 	http://stackoverflow.com/questions/15092172/c-reading-fixed-number-of-lines-of-integers-with-unknown-number-of-integers-in
 	// 	Feb 26, 2013
+	// 	
+	// 	Modified by Alec Thompson, Feb 27th, 2014
+	// 		- changed while loop to a for loop
 	while(getline(cin, line)) {
 		istringstream in(line);
 		in >> s_id;
@@ -179,7 +177,7 @@ Sender *EventList::findReceiver(int id) {
  *
  * 				Sender initialization		Sender Transmission End
  * @param eT   	SENDER_INIT					T_END_FROM_S
- * @param sPtr 	Pointer to target sender 	Pointer to Target Sender
+ * @param sPtr 	Pointer to target sender 	Pointer to Transmitting Sender
  * @param mPtr 	NULL						NULL
  * @param rPtr 	NULL						NULL
  * @param pPtr 	NULL						NULL
@@ -266,8 +264,10 @@ void EventList::insertEvent(EventType eT, Sender *sPtr, Mule *mPtr, Receiver *rP
 bool EventList::checkSenderPos(int x, int y, int num) {
 	bool isSame = true;
 	for (int i = 0; i < num; ++i) {
-		if ((x == (senderList[i]->getX())) && y == ((senderList[i]->getY()))) {
-			returnVal &= false;
+		if (senderList[i] != NULL) {
+			if ((x == (senderList[i]->getX())) && y == ((senderList[i]->getY()))) {
+				returnVal &= false;
+			}
 		}
 	}
 	return isSame;
@@ -277,8 +277,10 @@ bool EventList::checkSenderPos(int x, int y, int num) {
 bool EventList::checkMulePos(int x, int y, int num) {
 	bool isSame = true;
 	for (int i = 0; i < num; ++i) {
-		if ((x == (muleList[i]->getX())) && y == ((muleList[i]->getY()))) {
-			returnVal &= false;
+		if (muleList[i] != NULL) {
+			if ((x == (muleList[i]->getX())) && y == ((muleList[i]->getY()))) {
+				returnVal &= false;
+			}
 		}
 	}
 	return isSame;
@@ -288,8 +290,10 @@ bool EventList::checkMulePos(int x, int y, int num) {
 bool EventList::checkReceiverPos(int x, int y, int num) {
 	bool isSame = true;
 	for (int i = 0; i < num; ++i) {
-		if ((x == (receiverList[i]->getX())) && (y == (receiverList[i]->getY()))) {
-			returnVal &= false;
+		if (receiverList[i] != NULL) {
+			if ((x == (receiverList[i]->getX())) && (y == (receiverList[i]->getY()))) {
+				returnVal &= false;
+			}
 		}
 	}
 	return isSame;
@@ -356,12 +360,69 @@ void EventList::processList() {
 /** Initializes the sender with a packet and sets up a transmission finish event */
 void EventList::senderInit(Event *ePtr) {
 	Sender *sPtr = ePtr->getSender();
+	Mule *mPtr;		// store target mule
 	int Sx, Sy, Mx, My;	// to store x and y values of the sender and goal mule
 	sPtr->pktEnqueue(t);	// create a new packet with timestamp t
-	sPtr->getPktHead()->srDequeue();	// remove source id from packet SR queue
+	sPtr->getPktHead()->dequeue();	// remove source id from packet SR queue
 	// get sender location
 	Sx = sPtr->getX();
 	Sy = sPtr->getY();
-	sPtr->getPktHead()->setDelay(calcPropagation());
-	insertEvent()
+	// get target location
+	mPtr = findMule(sPtr->getPktHead()->getHead()->getData());
+	Mx = mPtr->m_getX();
+	My = mPtr->m_getY();
+	// insert propagation time into packet delay field
+	sPtr->getPktHead()->setProp(calcPropagation(Sx, Sy, Mx, My));
+	// insert a "Sender Transmission End" event into the list
+	insertEvent(T_END_FROM_S, sPtr, NULL, NULL, NULL, sPtr->getPktSize());
+}
+
+/**
+ * Dequeues the packet from the sender, and inserts it into a propagation event
+ * Decrements the senders remaining packet count.
+ * Then, if the sender still has to send more packets, then another packet and 
+ * transmission event are created.  Otherwise the sender's location in the 
+ * senderList vector is set to NULL, it is cleared from the field, and the
+ * sender is deleted
+ * 
+ * @param ePtr Pointer to the event
+ */
+void tEndSender(Event *ePtr) {
+	// set up object pointers
+	Sender *sPtr = ePtr->getSender();
+	Packet *pPtr = sPtr->pktDequeue();
+	int Sx, Sy, Mx, My;	// to store x and y values of the sender and goal mule
+	Mule *mPtr = findMule(pPtr->dequeue());	// removes the first SR value from the list
+
+	// decrement sender's packet counter
+	sPtr->setPktCount(sPtr->getPktCount() - 1);
+
+	// create a new propagation event
+	insertEvent(P_END_TO_M, NULL, mPtr, NULL, pPtr, pPtr->getDelay());
+
+	// determine what the sender does next
+	if (sPtr->getPktCount() > 0) {
+		// sender still has more packets to send, create a new packet
+		sPtr->pktEnqueue(t);
+		// dequeue first node of the packet's SR queue
+		sPtr->getPktHead()->dequeue();
+		// get sender coordinates
+		Sx = sPtr->getX();
+		Sy = sPtr->getY();
+		// get new target mule and find its position
+		mPtr = findMule(sPtr->getPktHead()->getHead()->getData());
+		Mx = mPtr->m_getX();
+		My = mPtr->m_getY();
+		// insert propagation time into packet delay field
+		sPtr->getPktHead()->setProp(calcPropagation(Sx, Sy, Mx, My));
+		// insert a transmission complete event
+		insertEvent(T_END_FROM_S, sPtr, NULL, NULL, NULL, sPtr->getPktSize());
+	} else {
+		// set the sender's position in the field to 0
+		field.setPos(sPtr->getX(), sPtr->getY());
+		// set the pointer in the array to NULL
+		senderList[sPtr->getID() - 1] = NULL;
+		// delete the sender
+		delete *sPtr;
+	}
 }
