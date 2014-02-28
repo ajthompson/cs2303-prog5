@@ -2,7 +2,7 @@
 * @Author: ajthompson
 * @Date:   2014-02-27 09:41:37
 * @Last Modified by:   ajthompson
-* @Last Modified time: 2014-02-28 14:50:23
+* @Last Modified time: 2014-02-28 16:44:53
 */
 
 #include <iostream>
@@ -315,7 +315,7 @@ int EventList::calcPropagation(int x1, int y1, int x2, int y2) {
 }
 
 /** Processes the event list */
-void EventList::processList() {
+void EventList::processList(Event) {
 	Event *currentPtr = headPtr;
 	Event *tempPtr;
 
@@ -385,7 +385,7 @@ void EventList::senderInit(Event *ePtr) {
  * senderList vector is set to NULL, it is cleared from the field, and the
  * sender is deleted
  * 
- * @param ePtr Pointer to the event
+ * @param ePtr Pointer to sender transmission end event
  */
 void tEndSender(Event *ePtr) {
 	// set up object pointers
@@ -425,4 +425,74 @@ void tEndSender(Event *ePtr) {
 		// delete the sender
 		delete *sPtr;
 	}
+}
+
+/**
+ * Determines whether the target router of the packet in the event is a
+ * reveiver or mule, and then inserts the appropriate propagation event
+ * 
+ * @param ePtr Pointer to mule transmission end event.
+ */
+void tEndMule(Event *ePtr) {
+	// set up object pointers
+	Mule *mPtr1 = ePtr->getMule();		// transmitting mule
+	Packet *pPtr = mPtr1->pktDequeue();	// transmitted packet
+	Mule *mPtr2;
+	Receiver *rPtr;
+	int t_id = pPtr->dequeue();	// set target router id
+
+	// determine whether the target router is a receiver or mule
+	if (t_id > numSenders + numMules) {	// target is a receiver
+		// find the address of target receiver
+		rPtr = findReceiver(t_id);
+		// create a new propagation to receiver event
+		insertEvent(P_END_TO_R, NULL, NULL, rPtr, pPtr, pPtr->getDelay());
+	} else {	// target is a mule
+		// find the address of target mule
+		mPtr2 = findMule(t_id);
+		// create a new propagation to mule event
+		insertEvent(P_END_TO_M, NULL, mPtr2, NULL, pPtr, pPtr->getDelay());
+	}
+}
+
+/**
+ * Calculates the propagation time to the next target router, sets the delay
+ * as that and enqueues it in the mule.  It then creates a transmission from
+ * mule end event.
+ * 
+ * @param ePtr Pointer to the propagation to mule event
+ */
+void pEndMule(Event *ePtr) {
+	// set up location variables
+	int Mx, My, Tx, Ty;
+	// set up object pointers
+	Mule *mPtr = ePtr->getMule();
+	Packet *pPtr = ePtr->getPacket();
+	Mule *tPtr;
+	Receiver *rPtr;
+	// set transmitting mule location values
+	Mx = mPtr->m_getX();
+	My = mPtr->m_getY();
+	// get next packet target node to calculate new propagation delay
+	int t_id = pPtr->getHead()->getData();
+	// determine whether new target is a mule or receiver
+	if (t_id > numSenders + numMules) {	// target is a receiver
+		rPtr = findReceiver(t_id);
+		Tx = rPtr->getX();
+		Ty = rPtr->getY();
+	} else {	// target is a mule
+		tPtr = findMule(t_id);
+		Tx = tPtr->m_getX();
+		Ty = tPtr->m_getY();
+	}
+	// set propagation delay
+	pPtr->setProp(calcPropagation(Mx, My, Tx, Ty));
+	// enqueue packet in mule
+	mPtr->pktEnqueue(pPtr);
+	// insert a mule transmission end event
+	insertEvent(T_END_FROM_M, NULL, mPtr, NULL, NULL, pPtr->getSize());
+}
+
+void pEndReceiver(Event *ePtr) {
+	
 }
