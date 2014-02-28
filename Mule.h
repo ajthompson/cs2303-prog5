@@ -51,6 +51,7 @@ public:
     int m_getX();
     int m_getY();
     int pLength();
+    void pPrint();
     void pktEnqueue(Packet *);
     Packet* pktDequeue();
     Packet *getHead();

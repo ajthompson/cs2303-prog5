@@ -52,6 +52,7 @@ int main(void){
     cout << mule2.check_NSpace() << endl;
     cout << mule3.check_NSpace() << endl;
     cout << mule4.check_NSpace() << endl;
+    cout << "Now we watch them move"    << endl;
     for (int i = 0; i < 10; i++){
         mule1.moveMule();
         mule2.moveMule();
@@ -75,6 +76,30 @@ int main(void){
         mule10.print_Mule();
         cout << "next" << endl;
     }
+    
+    Packet *testP1;
+    Packet *testP2;
+    Packet *testP3;
+    Packet *testP4;
+    
+    testP1 = new Packet(1, 23, 3);
+    testP2 = new Packet(4, 22, 3);
+    testP3 = new Packet(8, 21, 3);
+    cout << "After adding 3 packets to mule1, lets print it"    << endl;
+    mule1.pktEnqueue(testP1);
+    mule1.pktEnqueue(testP2);
+    mule1.pktEnqueue(testP3);
+    mule1.pPrint();
+    for (int i = 0; i < 3; i++){
+        cout << "Now let's remove one and print it" << endl;
+        mule2.pktEnqueue(mule1.pktDequeue());
+        cout << "mule1: " << endl;
+        mule1.pPrint();
+        cout << "Mule2: " << endl;
+        mule2.pPrint();
+    }
+    
+    
     
     
 }

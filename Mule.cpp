@@ -46,6 +46,21 @@ int Mule::m_getX(){
 int Mule::m_getY(){
     return (yPos);
 }
+
+Packet *Mule::getHead(){
+    /*	Author: Troy Hughes
+     * 		This function returns the head node
+     */
+	return pktHeadPtr;
+}
+
+
+Packet *Mule::getTail(){
+    /*	Author: Troy Hughes
+     * 		This function returns the tail node
+     */
+	return pktTailPtr;
+}
 /*---------------------------------init_Function---------------------------------*/
 /*---------------------------------init_Function---------------------------------*/
 /*---------------------------------init_Function---------------------------------*/
@@ -246,10 +261,12 @@ Packet *Mule::pktDequeue() {
 		to_return = (getHead());
 		this->pktHeadPtr = this->pktTailPtr;
 		this->pktTailPtr = NULL;
+        to_return->nextPtr = NULL;
 		return to_return;
 	}else if (pLength() > 0){
 		to_return = (getHead());
 		this->pktHeadPtr = (this->pktHeadPtr)->nextPtr;
+        to_return->nextPtr = NULL;
 		return to_return;
 	}else {
 		cout << "Error in Remove node" << endl;
@@ -271,23 +288,17 @@ int Mule::pLength(){
 	return qLength;
 }
 
-/*	Getter Functions	*/
-Packet *Mule::getHead(){
+
+void Mule::pPrint(){
     /*	Author: Troy Hughes
-     * 		This function returns the head node
+     * 		This prints the whole path
      */
-	return pktHeadPtr;
+	Packet *tmp = getHead();
+	for (int i = 0; i < pLength(); i++){
+		cout << "Source ID: " << tmp->source_id <<  "Timestamp: " << tmp->timestamp << "Packet Size: " << tmp->pkt_size << "Delay: " << tmp->delay <<  "Nodes: " << endl;
+		tmp = tmp->nextPtr;
+	}
 }
-
-
-Packet *Mule::getTail(){
-    /*	Author: Troy Hughes
-     * 		This function returns the tail node
-     */
-	return pktTailPtr;
-}
-/*	End of Getter Functions	*/
-
 
 
 
