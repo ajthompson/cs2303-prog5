@@ -7,8 +7,8 @@
 #ifndef MULE_H_
 #define MULE_H_
 
-class Packet;
-class Node;
+#include "Packet.h"
+#include "Node.h"
 
 struct point{
     int xPoint;
@@ -50,6 +50,11 @@ public:
     void changeDir();
     int m_getX();
     int m_getY();
+    int pLength();
+    void pktEnqueue(Packet *);
+    Packet* pktDequeue();
+    Packet *getHead();
+    Packet *getTail();
     
     
     

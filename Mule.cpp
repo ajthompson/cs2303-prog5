@@ -12,20 +12,33 @@
 using std::cout;
 using std::endl;
 
-
+/*---------------------------------Constructors---------------------------------*/
+/*---------------------------------Constructors---------------------------------*/
+/*---------------------------------Constructors---------------------------------*/
+/*---------------------------------Constructors---------------------------------*/
 Mule::Mule(int ID_input) {
     SR_ID = ID_input;
 	init_positions();
     mule_dir = retDirection();
     num_mule = count;
+    pktHeadPtr = NULL;
+    pktTailPtr = NULL;
     count++;
 
 }
-
+/*---------------------------------Destructors---------------------------------*/
+/*---------------------------------Destructors---------------------------------*/
+/*---------------------------------Destructors---------------------------------*/
+/*---------------------------------Destructors---------------------------------*/
+/*---------------------------------Destructors---------------------------------*/
 Mule::~Mule() {
 	
 }
-
+/*---------------------------------Getters---------------------------------*/
+/*---------------------------------Getters---------------------------------*/
+/*---------------------------------Getters---------------------------------*/
+/*---------------------------------Getters---------------------------------*/
+/*---------------------------------Getters---------------------------------*/
 int Mule::m_getX(){
     return (xPos + 1);
     
@@ -33,7 +46,11 @@ int Mule::m_getX(){
 int Mule::m_getY(){
     return (yPos);
 }
-
+/*---------------------------------init_Function---------------------------------*/
+/*---------------------------------init_Function---------------------------------*/
+/*---------------------------------init_Function---------------------------------*/
+/*---------------------------------init_Function---------------------------------*/
+/*---------------------------------init_Function---------------------------------*/
 void Mule::init_positions(){
     int tempX, tempY;
     tempX = Mule::l_op[Mule::count].xPoint;
@@ -59,10 +76,20 @@ direction Mule::retDirection(){
     }
 }
 
+/*---------------------------------automatic Printers---------------------------------*/
+/*---------------------------------automatic Printers---------------------------------*/
+/*---------------------------------automatic Printers---------------------------------*/
+/*---------------------------------automatic Printers---------------------------------*/
+/*---------------------------------automatic Printers---------------------------------*/
+
 void Mule::print_Mule(){
     cout<< "Mule: Xpos: " << xPos << " Ypos: " << yPos << endl;
 }
-
+/*---------------------------------Mover_Functions---------------------------------*/
+/*---------------------------------Mover_Functions---------------------------------*/
+/*---------------------------------Mover_Functions---------------------------------*/
+/*---------------------------------Mover_Functions---------------------------------*/
+/*---------------------------------Mover_Functions---------------------------------*/
 
 NEXT Mule::check_NSpace(){
     int xPt = this->xPos;
@@ -180,8 +207,96 @@ void Mule::changeDir(){
     }
     
 }
+/*---------------------------------Packet_Queue---------------------------------*/
+/*---------------------------------Packet_Queue---------------------------------*/
+/*---------------------------------Packet_Queue---------------------------------*/
+/*---------------------------------Packet_Queue---------------------------------*/
+/*---------------------------------Packet_Queue---------------------------------*/
+
+void Mule::pktEnqueue(Packet *toQueue) {
+    Packet *h_packet = getHead();
+	Packet *t_packet = getTail();
+	if (h_packet == NULL){
+		this->pktHeadPtr = toQueue;
+		this->pktTailPtr = NULL;
+	}else if(t_packet == NULL){
+		this->pktHeadPtr->nextPtr = toQueue;
+		this->pktTailPtr = this->pktHeadPtr->nextPtr;
+		this->pktTailPtr->nextPtr = NULL;
+	}else{
+		((this->pktTailPtr)->nextPtr) = toQueue;
+		this->pktTailPtr = ((this->pktTailPtr)->nextPtr);
+		((this->pktTailPtr)->nextPtr) = NULL;
+	}
+}
+
+/**
+ * Dequeues the first packet in the queue and returns.
+ *
+ * @return A pointer to the first packet in the queue.
+ */
+Packet *Mule::pktDequeue() {
+	Packet *to_return = NULL;
+	if(pLength() == 1){
+		to_return = (getHead());
+		this->pktHeadPtr = NULL;
+		this->pktTailPtr = NULL;
+		return to_return;
+	}else if(pLength() == 2){
+		to_return = (getHead());
+		this->pktHeadPtr = this->pktTailPtr;
+		this->pktTailPtr = NULL;
+		return to_return;
+	}else if (pLength() > 0){
+		to_return = (getHead());
+		this->pktHeadPtr = (this->pktHeadPtr)->nextPtr;
+		return to_return;
+	}else {
+		cout << "Error in Remove node" << endl;
+		cout << "Quitting the Program" << endl;
+		exit(1);
+	}
+}
+
+int Mule::pLength(){
+    /*	Author: Troy Hughes
+     * 		This function returns the length of the path
+     */
+	Packet *tmp = getHead();
+	int qLength = 0;
+	while (tmp != NULL){
+		qLength++;
+		tmp = tmp->nextPtr;
+	}
+	return qLength;
+}
+
+/*	Getter Functions	*/
+Packet *Mule::getHead(){
+    /*	Author: Troy Hughes
+     * 		This function returns the head node
+     */
+	return pktHeadPtr;
+}
 
 
+Packet *Mule::getTail(){
+    /*	Author: Troy Hughes
+     * 		This function returns the tail node
+     */
+	return pktTailPtr;
+}
+/*	End of Getter Functions	*/
+
+
+
+
+
+/*---------------------------------Static_Stuff---------------------------------*/
+/*---------------------------------Static_Stuff---------------------------------*/
+/*---------------------------------Static_Stuff---------------------------------*/
+/*---------------------------------Static_Stuff---------------------------------*/
+/*---------------------------------Static_Stuff---------------------------------*/
 
 
 /*  Initialize the Static variables */
