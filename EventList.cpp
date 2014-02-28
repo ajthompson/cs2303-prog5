@@ -2,7 +2,7 @@
 * @Author: ajthompson
 * @Date:   2014-02-27 09:41:37
 * @Last Modified by:   ajthompson
-* @Last Modified time: 2014-02-28 16:44:53
+* @Last Modified time: 2014-02-28 16:54:54
 */
 
 #include <iostream>
@@ -494,5 +494,14 @@ void pEndMule(Event *ePtr) {
 }
 
 void pEndReceiver(Event *ePtr) {
+
+}
+
+/**
+ * Iterate through all the mules and move them in the appropriate direction.
+ * If the new position is a wall, they bounce off in the other direction, if
+ * it is a mule, they "hop" over it to the spot on the other size.
+ */
+void eListMove() {
 	
 }
