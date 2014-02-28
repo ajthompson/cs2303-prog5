@@ -13,8 +13,12 @@ using std::cout;
 using std::endl;
 
 
-Mule::Mule() {
-	this->init_positions();
+Mule::Mule(int ID_input) {
+    SR_ID = ID_input;
+	init_positions();
+    mule_dir = retDirection();
+    num_mule = count;
+    count++;
 
 }
 
@@ -22,76 +26,37 @@ Mule::~Mule() {
 	
 }
 
+int Mule::m_getX(){
+    return (xPos + 1);
+    
+}
+int Mule::m_getY(){
+    return (yPos);
+}
 
 void Mule::init_positions(){
-    int tempX = -11;
-    int tempY = -11;
-    int tempC;
-    if (count > (field_length-1) || count > (total_mules-1)){
-        count = 0;
-    }
-    if (xVals[count] == -1){
-        count++;
-        this->init_positions();
-    }else{
-        /*  Sets them to the x or y value in the list of shuffled list  */
-        if (count%2 == 1){
-            tempX = xVals[count];
-            tempY = yVals[rand() % (field_length)];
-        }
-        else{
-            tempY = yVals[count];
-            tempX = xVals[rand() % (field_length)];
-            while (tempX == -1){
-                tempX = xVals[rand() % (field_length)];
-            }
-        }
-        
-        tempC = count;
-        while(!not_used(tempX, tempY)){
-            count++;
-            if (xVals[count] == -1){
-                count++;
-            }
-            if (count%2 == 1){
-                tempX = xVals[count];
-                tempY = yVals[rand() % (field_length)];
-                
-            }
-            else{
-                tempY = yVals[count];
-                tempX = xVals[rand() % (field_length)];
-                while (tempX == -1){
-                    tempX = xVals[rand() % (field_length)];
-                }
-            }
-            
-        }
-        count = tempC;
-        
-        this->xPos = tempX;
-        this->yPos = tempY;
-    }
+    int tempX, tempY;
+    tempX = Mule::l_op[Mule::count].xPoint;
+    tempY = Mule::l_op[Mule::count].yPoint;
+    this->xPos = tempX;
+    this->yPos = tempY;
 }
-int Mule::not_used(int xpt, int ypt){
-    int tmp = -1;
-    for (int i = 0; i < total_mules; i++){
-        if (l_op[i].xPoint < 0){            /*  Tells us when we've hit the end of used parts of the list   */
-            tmp = i;
-        }
-        if (xpt == l_op[i].xPoint || ypt == l_op[i].yPoint){    /*Checks if the point has been used yet, if so return 0 */
-            return 0;
-        }
-        else if(tmp == i){   /*  if you've hit the end of the list AND its' not been used, then return 1 and put it in the list  */
-            l_op[i].xPoint = xpt;
-            l_op[i].yPoint = ypt;
-            return 1;
-        }
-        else{
-            continue;
-        }
+
+direction Mule::retDirection(){
+    int dir = count % 4;
+    switch(dir){
+        case 0:
+            return NORTH;
+        case 1:
+            return SOUTH;
+        case 2:
+            return EAST;
+        case 3:
+            return WEST;
+        default:
+            cout << "THERE'S A PROBLEM IN THE RETURN DIRECTION FUNCTION" << endl;
+            return NORTH;
     }
-    return 0;  // It should never get here.
 }
 
 void Mule::print_Mule(){
@@ -99,9 +64,122 @@ void Mule::print_Mule(){
 }
 
 
+NEXT Mule::check_NSpace(){
+    int xPt = this->xPos;
+    int yPt = this->yPos;
+    direction mule_dir = this->mule_dir;
+    switch (mule_dir) {
+        case NORTH:
+            if (yPt -1 < 0){
+                return WALL;
+            }else if (!not_used(xPt, yPt-1)){
+                return MULE;
+            }else
+                return NOTHING;
+            break;
+        case SOUTH:
+            if (yPt+1 > field_length){
+                return WALL;
+            }else if (!not_used(xPt, yPt+1)){
+                return MULE;
+            }else
+                return NOTHING;
+            break;
+        case WEST:
+            if (xPt -1 < 0){
+                return WALL;
+            }else if (!not_used(xPt-1, yPt)){
+                return MULE;
+            }else
+                return NOTHING;
+            break;
+        case EAST:
+            if (xPt+1 > field_length){
+                return WALL;
+            }else if (!not_used(xPt+1, yPt)){
+                return MULE;
+            }else
+                return NOTHING;
+            break;
+        default:
+            cout << "HUGE ASS ERROR IN check_NSpace() in Mule Class" << endl;
+            break;
+    }
+    
+}
 
-
-
+void Mule::moveMule(){
+    switch (check_NSpace()) {
+        case WALL:
+            this->changeDir();
+            break;
+        case MULE:
+            this->mule_Inc();
+            this->moveMule();
+            break;
+        case NOTHING:
+            this->mule_Inc();
+            break;
+        default:
+            cout << "ERROR in moveMule()" << endl;
+            break;
+    }
+}
+void Mule::mule_Inc(){
+    direction dir = this->mule_dir;
+    int xPt = this->xPos;
+    int yPt = this->yPos;
+    switch (dir) {
+        case NORTH:
+            this->xPos = xPt;
+            this->yPos = (yPt - 1);
+            l_op[this->num_mule].xPoint = this->xPos;
+            l_op[this->num_mule].yPoint = this->yPos;
+            break;
+        case SOUTH:
+            this->xPos = xPt;
+            this->yPos = (yPt + 1);
+            l_op[this->num_mule].xPoint = this->xPos;
+            l_op[this->num_mule].yPoint = this->yPos;
+            break;
+        case WEST:
+            this->xPos = (xPt - 1);
+            this->yPos = yPt;
+            l_op[this->num_mule].xPoint = this->xPos;
+            l_op[this->num_mule].yPoint = this->yPos;
+            break;
+        case EAST:
+            this->xPos = (xPt + 1);
+            this->yPos = yPt;
+            l_op[this->num_mule].xPoint = this->xPos;
+            l_op[this->num_mule].yPoint = this->yPos;
+            break;
+        default:
+            cout << "HUGE ASS ERROR IN changeDir() in Mule Class" << endl;
+            break;
+    }
+}
+void Mule::changeDir(){
+    direction dir = this->mule_dir;
+    switch (dir) {
+        case NORTH:
+            this->mule_dir = SOUTH;
+            break;
+        case SOUTH:
+            this->mule_dir = NORTH;
+            break;
+        case WEST:
+            this->mule_dir = EAST;
+            break;
+        case EAST:
+            this->mule_dir = WEST;
+            break;
+        default:
+            cout << "HUGE ASS ERROR IN changeDir() in Mule Class" << endl;
+            break;
+    }
+    
+}
 
 
 
@@ -113,34 +191,24 @@ int *Mule::yVals = new int[1];
 int Mule::total_mules = 0;
 int Mule::count = 0;
 int Mule::field_length = 0;
+
 /*  Static Methods  */
 void Mule::make_FieldVals(int total, int size_field){
     free(xVals);
     free(yVals);
     free(l_op);
-    l_op = new struct point[total];
+    l_op = new struct point[total]; //Create a list of points of length to be the total number of mules
     xVals = new int[size_field];
     yVals = new int[size_field];
     total_mules = total;
     field_length = size_field;
-    
-    //Initalize the struct to all -2
-    for (int i = 0; i < total; i++){
-        l_op[i].xPoint = -2;
-        l_op[i].yPoint = -2;
-    }
+
     
     srand(time(NULL));
     /*  Fills the 'field' with a value for every x or y possible*/
     for (int i = 0; i < size_field; i++){
-        if (i == 0 || (i == (size_field-1))){
-            xVals[i] = -1;      // Doesnt allow 0 or size_field because cannot put mules there
-            yVals[i] = i;
-        }
-        else{
-            xVals[i] = i;
-            yVals[i] = i;
-        }
+        xVals[i] = i;
+        yVals[i] = i;
     }
     /*  Below function is a Fisher-Yates shuffel. Found it on the internet  */
     for (int i = size_field - 1; i > 0; --i)
@@ -164,10 +232,65 @@ void Mule::print_FieldVals(){
     
 }
 
+void Mule::fill_listOP(){
+    int tempX;
+    int tempY;
+    //Initalize the struct to all -2
+    for (int i = 0; i < total_mules; i++){
+        l_op[i].xPoint = -2;
+        l_op[i].yPoint = -2;
+    }
+    getPoint(&tempX, &tempY);
+    /*See if it's in the list   */
+        /* If it is then get a new one  */
+        /* If it's not then store it in the list at the next point  */
+    for (int j = 0; j < total_mules; j++){
+        while(!not_used(tempX, tempY)){
+            getPoint(&tempX, &tempY);
+        }
+        for (int i = 0; i < total_mules; i++){
+            if (l_op[i].xPoint == -2){
+                l_op[i].xPoint = tempX;
+                l_op[i].yPoint = tempY;
+                break;
+            }
+        }
+    }
+}
+
+void Mule::getPoint(int *point1, int *point2){
+    if (field_length > total_mules){
+        *point1 = xVals[rand() % (total_mules)];
+        *point2 = yVals[rand() % (total_mules)];
+    }else{
+        *point1 = xVals[rand() % (field_length)];
+        *point2 = yVals[rand() % (field_length)];
+    }
+    if (*point1 == -1 || *point2 == -1){
+        getPoint(point1, point2);
+    }
     
-    
-    
-    
+}
+
+int Mule::not_used(int xpt, int ypt){
+    int returnVal;
+    for (int i = 0; i < total_mules; i++){
+        if (xpt == l_op[i].xPoint && ypt == l_op[i].yPoint){    /*Checks if the point has been used yet, if so return 0 */
+            returnVal = 0;
+            break;
+        }
+        else{
+            returnVal = 1;
+        }
+    }
+    return returnVal;
+}
+
+void Mule::print_MuleLoc(){
+    for (int i = 0; i < total_mules; i++){
+        cout << "(" << l_op[i].xPoint << "," << l_op[i].yPoint << ")" << endl;
+    }
+}
     
     
     
