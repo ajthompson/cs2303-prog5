@@ -2,7 +2,7 @@
 * @Author: ajthompson
 * @Date:   2014-02-26 21:58:44
 * @Last Modified by:   ajthompson
-* @Last Modified time: 2014-02-27 21:49:10
+* @Last Modified time: 2014-02-27 21:50:07
 */
 
 #include <iostream>
@@ -147,4 +147,4 @@ void Event::printEvent() {
 	cout << "Time Remaining: " << getTime() << endl;
 	cout << "Next Event Pointer: " << getNext() << endl; 
 	cout << "--------------------------------------------------------" << endl;
-}ls
+}
