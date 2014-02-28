@@ -10,10 +10,12 @@
 #include "Packet.h"
 #include "Node.h"
 
+/*  Global information -- May be a problem because of multiple definition. Working to fix   */
 struct point{
     int xPoint;
     int yPoint;
 };
+/*  Global stuff that only Mules have to worry about    */
 enum direction {NORTH = 0, SOUTH = 1, EAST = 2, WEST = 3};
 enum NEXT {NOTHING = -1, WALL = -2, MULE = -3};
 
@@ -25,37 +27,37 @@ private:
     
     static int *xVals;          /* A static field of all the possible x positions of the mules  */
     static int *yVals;          /* A static field of all the possible y positions of the mules  */
-    static int total_mules;     /* A counter knowing the total number of mules  */
-    static int field_length;    /* Lets us know the length of the field */
+    static int total_mules;     /* A counter knowing the total number of mules                  */
+    static int field_length;    /* Lets us know the length of the field                         */
     
-    direction mule_dir;         /*  Direction of the Mule   */
-    int SR_ID;                  /*  The id of the Mule  */
-    int num_mule;               /*  This is the number mule that was made   */
-    int xPos;                   /*  X position of the Mule  */
-    int yPos;                   /*  Y position of the Mule  */
-	Packet *pktHeadPtr;         /*  First packet in the queue of the Mule   */
-	Packet *pktTailPtr;         /*  Last packet in the queue of the Mule   */
+    direction mule_dir;         /*  Direction of the Mule                                       */
+    int SR_ID;                  /*  The id of the Mule                                          */
+    int num_mule;               /*  This is the number mule that was made                       */
+    int xPos;                   /*  X position of the Mule                                      */
+    int yPos;                   /*  Y position of the Mule                                      */
+	Packet *pktHeadPtr;         /*  First packet in the queue of the Mule                       */
+	Packet *pktTailPtr;         /*  Last packet in the queue of the Mule                        */
     
     /*  Make sure to add one on the getter for the mule for x   */
     
 public:
 	Mule(int);
-    direction retDirection();   /*  Returns the psuedo random value that is the direction   */
+    direction retDirection();   /*  Returns the psuedo random value that is the direction       */
 	virtual ~Mule();
-    void init_positions();      /*  Initalizes the positions of the mules   */
-    void print_Mule();          /*  Prints a mule */
-    NEXT check_NSpace();
-    void moveMule();
-    void mule_Inc();
-    void changeDir();
-    int m_getX();
-    int m_getY();
-    int pLength();
-    void pPrint();
-    void pktEnqueue(Packet *);
-    Packet* pktDequeue();
-    Packet *getHead();
-    Packet *getTail();
+    void init_positions();      /*  Initalizes the positions of the mules                       */
+    void print_Mule();          /*  Prints a mule                                               */
+    NEXT check_NSpace();        /*  Checks what is next to this mule                            */
+    void moveMule();            /*  Switch statement for moving a mule                          */
+    void mule_Inc();            /*  Program that increments the mule                            */
+    void changeDir();           /*  Changes the direction of the mule                           */
+    int m_getX();               /*  Get's the x value of the mule                               */
+    int m_getY();               /*  Get's the y value of the mule                               */
+    int pLength();              /*  gets the length of the queue of the mule                    */
+    void pPrint();              /*  Prints the queue of the mule                                */
+    void pktEnqueue(Packet *);  /*  Queue's a packet                                            */
+    Packet* pktDequeue();       /*  Dequeues a packet                                           */
+    Packet *getHead();          /*  Gets the head of the a packet                               */
+    Packet *getTail();          /*  Gets the tail of the queue                                  */
     
     
     

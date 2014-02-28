@@ -9,14 +9,14 @@
 class Packet;
 class Node;
 
-struct point{
-    int xPoint;
-    int yPoint;
-};
+#include "Shared.h"
+
 
 class Sender {
+    
 	friend class Packet;
 	friend class Node;
+    friend class Receiver;
 private:
     // Static Figures
     static int total_senders;    /*  Total number of senders */
@@ -76,6 +76,7 @@ public:
     static int num_senders;
     
     // Functions
+    static int getTotNumSend();
     static void init_sender(int, int);
     static void fill_listOP();
     static void getPoint(int *);

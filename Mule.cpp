@@ -7,7 +7,7 @@
 #include <iostream>
 #include <cstdlib>
 #include "Mule.h"
-//#include "Packet.h"
+/#include "Packet.h"
 #include "Node.h"
 using std::cout;
 using std::endl;
@@ -17,20 +17,20 @@ using std::endl;
 /*---------------------------------Constructors---------------------------------*/
 /*---------------------------------Constructors---------------------------------*/
 Mule::Mule(int ID_input) {
-    SR_ID = ID_input;
-	init_positions();
-    mule_dir = retDirection();
-    num_mule = count;
-    pktHeadPtr = NULL;
-    pktTailPtr = NULL;
-    count++;
+    SR_ID = ID_input;                   /*  Generates the Mule ID               */
+	init_positions();                   /*  Sets the positions for the Mule     */
+    mule_dir = retDirection();          /*  Sets the direction for the Mule     */
+    num_mule = count;                   /*  Sets the count of the mule          */
+    pktHeadPtr = NULL;                  /*  Nulls the head pointer              */
+    pktTailPtr = NULL;                  /*  Nulls the tail pointer              */
+    count++;                            /*  Increments the counter              */
 
 }
-/*---------------------------------Destructors---------------------------------*/
-/*---------------------------------Destructors---------------------------------*/
-/*---------------------------------Destructors---------------------------------*/
-/*---------------------------------Destructors---------------------------------*/
-/*---------------------------------Destructors---------------------------------*/
+/*---------------------------------Destructors----------------------------------*/
+/*---------------------------------Destructors----------------------------------*/
+/*---------------------------------Destructors----------------------------------*/
+/*---------------------------------Destructors----------------------------------*/
+/*---------------------------------Destructors----------------------------------*/
 Mule::~Mule() {
 	
 }
@@ -39,8 +39,8 @@ Mule::~Mule() {
 /*---------------------------------Getters---------------------------------*/
 /*---------------------------------Getters---------------------------------*/
 /*---------------------------------Getters---------------------------------*/
-int Mule::m_getX(){
-    return (xPos + 1);
+int Mule::m_getX(){                      /* Returns the X position for the Mule */
+    return (xPos + 1);                   /* Adds one to reflect full field locale*/
     
 }
 int Mule::m_getY(){
@@ -107,17 +107,18 @@ void Mule::print_Mule(){
 /*---------------------------------Mover_Functions---------------------------------*/
 
 NEXT Mule::check_NSpace(){
+/*  Creates an x and y position and the current direction   */
     int xPt = this->xPos;
     int yPt = this->yPos;
     direction mule_dir = this->mule_dir;
     switch (mule_dir) {
         case NORTH:
-            if (yPt -1 < 0){
-                return WALL;
-            }else if (!not_used(xPt, yPt-1)){
+            if (yPt -1 < 0){                            /*  If the point is at the top wall     */
+                return WALL;                            /*  Return WALL                         */
+            }else if (!not_used(xPt, yPt-1)){           /*  If it's used, return MULE           */
                 return MULE;
             }else
-                return NOTHING;
+                return NOTHING;                         /*  Else return NOTHING                 */
             break;
         case SOUTH:
             if (yPt+1 > field_length){
@@ -152,15 +153,15 @@ NEXT Mule::check_NSpace(){
 
 void Mule::moveMule(){
     switch (check_NSpace()) {
-        case WALL:
+        case WALL:                          /*  If you're at a wall change direction    */
             this->changeDir();
             break;
-        case MULE:
+        case MULE:                          /*  If you're on a mule, move over the mule, then move again    */
             this->mule_Inc();
             this->moveMule();
             break;
         case NOTHING:
-            this->mule_Inc();
+            this->mule_Inc();               /*  Else move the mule  */
             break;
         default:
             cout << "ERROR in moveMule()" << endl;
@@ -291,7 +292,7 @@ int Mule::pLength(){
 
 void Mule::pPrint(){
     /*	Author: Troy Hughes
-     * 		This prints the whole path
+     * 		This prints the whole queue
      */
 	Packet *tmp = getHead();
 	for (int i = 0; i < pLength(); i++){
@@ -385,6 +386,7 @@ void Mule::fill_listOP(){
 }
 
 void Mule::getPoint(int *point1, int *point2){
+    /*  modulo off the smaller of the two values to avoid a later seg vault */
     if (field_length > total_mules){
         *point1 = xVals[rand() % (total_mules)];
         *point2 = yVals[rand() % (total_mules)];

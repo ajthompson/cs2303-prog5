@@ -380,7 +380,7 @@ int Sender::total_senders = -1;
 int Sender::field_length  = -1;
 int *Sender::yVals = new int[1];
 int Sender::num_senders = 0;
-point *Sender::l_op = new struct point[1];
+point *Sender::l_op = new point[1];
 
 void Sender::init_sender(int tot_sndrs, int fld_lngth){
     total_senders = tot_sndrs;
@@ -454,6 +454,12 @@ void Sender::print_SendLoc(){
     }
 }
 
+
+// STATIC GETTER:
+int Sender::getTotNumSend(){
+    return total_senders;
+    
+}
 
 
 
