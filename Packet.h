@@ -13,6 +13,7 @@ class Packet {
 	friend class Event;
 	friend class Node;
 	friend class Sender;
+    friend class Mule;
 private:
 	int source_id;		// ID of the source router
 	int timestamp;		// time of creation at the source router
