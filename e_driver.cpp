@@ -2,13 +2,14 @@
 * @Author: ajthompson
 * @Date:   2014-02-27 20:34:19
 * @Last Modified by:   ajthompson
-* @Last Modified time: 2014-02-27 21:10:37
+* @Last Modified time: 2014-02-27 21:26:13
 */
 
 #include <iostream>
 #include "Event.h"
 #include "Packet.h"
 #include "Sender.h"
+#include "Node.h"
 using namespace std;
 
 int main(){

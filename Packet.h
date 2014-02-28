@@ -10,6 +10,7 @@ class Node;
 class Sender;
 
 class Packet {
+	friend class Event;
 	friend class Node;
 	friend class Sender;
 private:

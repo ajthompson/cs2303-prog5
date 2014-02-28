@@ -1,11 +1,20 @@
-main: f_driver.o Field.o
-	g++ -o f_driver f_driver.o Field.o
+main: e_driver.o Event.o Sender.o Packet.o Node.o
+	g++ -o e_driver e_driver.o Event.o Sender.o Packet.o Node.o
 
-f_driver.o: f_driver.cpp Field.h
-	g++ -Wall -c f_driver.cpp
+e_driver.o: e_driver.cpp
+	g++ -Wall -c e_driver.cpp
 
-Field.o: Field.cpp Field.h
-	g++ -Wall -c Field.cpp
+Event.o: Event.cpp
+	g++ -Wall -c Event.cpp
+
+Sender.o: Sender.cpp
+	g++ -Wall -c Sender.cpp
+
+Packet.o: Packet.cpp
+	g++ -Wall -c Packet.cpp
+
+Node.o: Node.cpp
+	g++ -Wall -c Node.cpp
 
 clean:
 	rm *.o

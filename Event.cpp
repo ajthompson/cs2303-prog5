@@ -2,18 +2,19 @@
 * @Author: ajthompson
 * @Date:   2014-02-26 21:58:44
 * @Last Modified by:   ajthompson
-* @Last Modified time: 2014-02-27 20:48:52
+* @Last Modified time: 2014-02-27 21:43:05
 */
 
 #include <iostream>
 #include "Event.h"
 #include "Sender.h"
 #include "Packet.h"
+#include "Node.h"
 using namespace std;
 
 /** Event Constructor */
 Event::Event() {
-	type = 0;
+	type = MOVE;
 	senderPtr = NULL;
 	// mulePtr = NULL;
 	// receiverPtr = NULL;
@@ -92,7 +93,7 @@ Packet *Event::getPacket() {
 
 /** Gets the time remaining */
 int Event::getTime() {
-	return timeLeft();
+	return timeLeft;
 }
 
 /** Gets the pointer to the next event in the event list */
@@ -126,19 +127,23 @@ void Event::printEvent() {
 			break;
 		case MOVE:
 			cout << "Moving Mules" << endl;
-			break:
+			break;
 		default:
 			cout << "NO TYPE" << endl;
 			break;
 	}
 	cout << "Sender Pointer: " << getSender() << endl;
-	getSender()->printSender();
-	cout << "Mule Pointer: " << getMule() << endl;
-	getMule()->printMule();
-	cout << "Receiver Pointer: " << getReceiver() << endl;
-	getReceiver()->printReceiver();
+	if (getSender() != NULL) 
+		getSender()->printSender();
+	// cout << "Mule Pointer: " << getMule() << endl;
+	// if (getMule() != NULL)	
+	// 	getMule()->printMule();
+	// cout << "Receiver Pointer: " << getReceiver() << endl;
+	// if (getReceiver() != NULL)
+	// 	getReceiver()->printReceiver();
 	cout << "Packet Pointer: " << getPacket() << endl;
-	getPacket()->printPacket();
+	if (getPacket() != NULL)
+		getPacket()->printPacket();
 	cout << "Time Remaining: " << getTime() << endl;
 	cout << "Next Event Pointer: " << getNext() << endl; 
 	cout << "--------------------------------------------------------" << endl;
