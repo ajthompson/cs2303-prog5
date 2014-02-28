@@ -29,6 +29,8 @@ Receiver::Receiver(int ID_input, int num_senders) {
     num_receivers++;                                  /* Increments for next construction     */
 }
 
+
+
 Receiver::Receiver(){
     rec_num = num_receivers;
     setID(0);
