@@ -24,7 +24,7 @@ int main(){
 
 	cout << "CREATING SENDERS" << endl;
     Sender *emptySender = new Sender();
-    Sender *fillSender = new Sender(y, source_id, t_arrive, pkt_count, pkt_size);
+    Sender *fillSender = new Sender(source_id, t_arrive, pkt_count, pkt_size);
     cout << "SENDERS CREATED" << endl;
 
     cout << "PRINTING EMPTYSENDER" << endl;
@@ -120,7 +120,12 @@ int main(){
 
     cout << "PRINTING FILLSENDER" << endl;
     fillSender->printSender();
-
+    
+    cout << "Testing Static Placement of all the Senders" << endl;
+    Sender::init_sender(10, 10);
+    Sender::fill_listOP();
+    Sender::print_SendLoc();
+    
     cout << "-------------------------------------------------------------------------" << endl;
     cout << "TESTING COMPLETE" << endl;
 

@@ -9,10 +9,23 @@
 class Packet;
 class Node;
 
+struct point{
+    int xPoint;
+    int yPoint;
+};
+
 class Sender {
 	friend class Packet;
 	friend class Node;
 private:
+    // Static Figures
+    static int total_senders;    /*  Total number of senders */
+    static int field_length;     /*  Total height of the field   */
+    static int *yVals;           /* A static field of all the possible y positions of the mules  */
+    
+    
+    
+    // Statics done
 	int xPos;			// x position of sender, initializes to 0
 	int yPos;			// y position of sender
 	int id;				// ID number of sender
@@ -25,7 +38,7 @@ private:
 	Packet *pktTailPtr;	// pointer to the tail of the packet queue
 public:
 	Sender();							// constructor
-	Sender(int, int, int, int, int);	// constructor
+	Sender( int, int, int, int);        // constructor
 	/** Setter functions */
 	void setX();
 	void setY(int);
@@ -55,6 +68,19 @@ public:
 	void printNodes();
 	void printPackets();
 	void printSender();
+    
+    
+    /*  Static Members  */
+    // Variables
+    static struct point *l_op;
+    static int num_senders;
+    
+    // Functions
+    static void init_sender(int, int);
+    static void fill_listOP();
+    static void getPoint(int *);
+    static int not_used(int );
+    static void print_SendLoc();
 };
 
 #endif

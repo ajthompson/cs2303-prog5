@@ -62,9 +62,11 @@ public:
     
     
     /*  These Methods are used to initialize the shared mule values */
-    
+    // Variables
     static struct point *l_op;                  /*  To become a list of all the used points  */
     static int count;                           /*  A counter for knowing the current number of mules    */
+    
+    // Functions
     static int not_used(int, int);              /*  Checks if a point has been used yet */
     static void make_FieldVals(int, int);       /*  Function initializes the mules field info   */
     static void print_FieldVals();              /*  Prints the possible values after they've been shuffled  */

@@ -320,9 +320,9 @@ int Mule::field_length = 0;
 
 /*  Static Methods  */
 void Mule::make_FieldVals(int total, int size_field){
-    free(xVals);
-    free(yVals);
-    free(l_op);
+    delete(xVals);
+    delete(yVals);
+    delete(l_op);
     l_op = new struct point[total]; //Create a list of points of length to be the total number of mules
     xVals = new int[size_field];
     yVals = new int[size_field];

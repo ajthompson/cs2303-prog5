@@ -20,7 +20,7 @@ using namespace std;
  */
 Sender::Sender() {
 	setX();
-	setY(0);
+	setY(l_op[num_senders].yPoint);
 	setID(0);
 	setArrivalTime(0);
 	setPktCount(0);
@@ -29,6 +29,7 @@ Sender::Sender() {
 	srTailPtr = NULL;
 	pktHeadPtr = NULL;
 	pktTailPtr = NULL;
+    
 }
 
 /**
@@ -40,9 +41,9 @@ Sender::Sender() {
  * @param count Packets remaining to be transmitted
  * @param size  Size of the packets to be sent
  */
-Sender::Sender(int y, int s_id, int t, int count, int size) {
+Sender::Sender(int s_id, int t, int count, int size) {
 	setX();
-	setY(y);
+	setY(l_op[num_senders].yPoint);
 	setID(s_id);
 	setArrivalTime(t);
 	setPktCount(count);
@@ -51,6 +52,7 @@ Sender::Sender(int y, int s_id, int t, int count, int size) {
 	srTailPtr = NULL;
 	pktHeadPtr = NULL;
 	pktTailPtr = NULL;
+    num_senders++;
 }
 
 ////////////////////////
@@ -368,3 +370,90 @@ void Sender::printSender() {
 	printPackets();
 	cout << "Finished Printing Sender " << getID() << endl;
 }
+
+/*---------------------------------Static_Stuff---------------------------------*/
+/*---------------------------------Static_Stuff---------------------------------*/
+/*---------------------------------Static_Stuff---------------------------------*/
+/*---------------------------------Static_Stuff---------------------------------*/
+/*---------------------------------Static_Stuff---------------------------------*/
+int Sender::total_senders = -1;
+int Sender::field_length  = -1;
+int *Sender::yVals = new int[1];
+int Sender::num_senders = 0;
+point *Sender::l_op = new struct point[1];
+
+void Sender::init_sender(int tot_sndrs, int fld_lngth){
+    total_senders = tot_sndrs;
+    field_length = fld_lngth;
+    delete(yVals);
+    delete(l_op);
+    l_op = new struct point[total_senders];
+    yVals = new int[field_length];
+    // Initalize the number of possible locations for the senders
+    for (int i = 0; i < field_length; i++) {
+        yVals[i] = i;
+    }
+    /*  Below function is a Fisher-Yates shuffel. Found it on the internet  */
+    for (int i = field_length - 1; i > 0; --i)
+    {
+        std::swap(yVals[i], yVals[rand() % (i + 1)]);
+    }
+    /*  This algorythm is not mine, it is somebody elses    */
+    
+}
+
+void Sender::fill_listOP(){
+    int tempY;
+    //Initalize the struct to all -2
+    for (int i = 0; i < total_senders; i++){
+        l_op[i].yPoint = -2;
+        l_op[i].xPoint = 0;
+    }
+    getPoint(&tempY);
+    /*See if it's in the list   */
+    /* If it is then get a new one  */
+    /* If it's not then store it in the list at the next point  */
+    for (int j = 0; j < total_senders; j++){
+        while(!not_used(tempY)){
+            getPoint(&tempY);
+        }
+        for (int i = 0; i < total_senders; i++){
+            if (l_op[i].yPoint == -2){
+                l_op[i].yPoint = tempY;
+                break;
+            }
+        }
+    }
+}
+
+void Sender::getPoint(int *point2){
+    if (field_length > num_senders){
+        *point2 = yVals[rand() % (total_senders)];
+    }else{
+        *point2 = yVals[rand() % (total_senders)];
+    }
+}
+
+int Sender::not_used(int ypt){
+    int returnVal;
+    for (int i = 0; i < total_senders; i++){
+        if (ypt == l_op[i].yPoint){    /*Checks if the point has been used yet, if so return 0 */
+            returnVal = 0;
+            break;
+        }
+        else{
+            returnVal = 1;
+        }
+    }
+    return returnVal;
+}
+
+void Sender::print_SendLoc(){
+    for (int i = 0; i < total_senders; i++){
+        cout << "(" << l_op[i].xPoint << "," << l_op[i].yPoint << ")" << endl;
+    }
+}
+
+
+
+
