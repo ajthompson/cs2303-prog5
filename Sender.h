@@ -24,7 +24,7 @@ private:
 	Packet *pktHeadPtr;	// pointer to the head of the packet queue
 	Packet *pktTailPtr;	// pointer to the tail of the packet queue
 public:
-	Sender();							// constructor
+	Sender(int);							// constructor
 	Sender(int, int, int, int, int);	// constructor
 	/** Setter functions */
 	void setX();

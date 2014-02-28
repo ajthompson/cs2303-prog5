@@ -2,19 +2,21 @@
 * @Author: ajthompson
 * @Date:   2014-02-26 21:58:44
 * @Last Modified by:   ajthompson
-* @Last Modified time: 2014-02-27 09:39:57
+* @Last Modified time: 2014-02-27 20:48:52
 */
 
 #include <iostream>
 #include "Event.h"
+#include "Sender.h"
+#include "Packet.h"
 using namespace std;
 
 /** Event Constructor */
 Event::Event() {
 	type = 0;
 	senderPtr = NULL;
-	mulePtr = NULL;
-	receiverPtr = NULL;
+	// mulePtr = NULL;
+	// receiverPtr = NULL;
 	pktPtr = NULL;
 	timeLeft = 0;
 	nextPtr = NULL;
@@ -34,15 +36,15 @@ void Event::setSender(Sender *sPtr) {
 	senderPtr = sPtr;
 }
 
-/** Sets the pointer to a mule */
-void Event::setMule(Mule *mPtr) {
-	mulePtr = mPtr;
-}
+// /** Sets the pointer to a mule */
+// void Event::setMule(Mule *mPtr) {
+// 	mulePtr = mPtr;
+// }
 
-/** Sets the pointer to a receiver */
-void Event::setReceiver(Receiver *rPtr) {
-	receiverPtr = rPtr;
-}
+// /** Sets the pointer to a receiver */
+// void Event::setReceiver(Receiver *rPtr) {
+// 	receiverPtr = rPtr;
+// }
 
 /** Sets the pointer to a packet */
 void Event::setPacket(Packet *pPtr) {
@@ -73,15 +75,15 @@ Sender *Event::getSender() {
 	return senderPtr;
 }
 
-/** Gets the pointer to a mule */
-Mule *Event::getMule() {
-	return mulePtr;
-}
+// /** Gets the pointer to a mule */
+// Mule *Event::getMule() {
+// 	return mulePtr;
+// }
 
-/** Gets the pointer to a receiver */
-Receiver *Event::getReceiver() {
-	return receiverPtr;
-}
+// /** Gets the pointer to a receiver */
+// Receiver *Event::getReceiver() {
+// 	return receiverPtr;
+// }
 
 /** Gets the pointer to a packet */
 Packet *Event::getPacket() {
@@ -103,7 +105,8 @@ Event *Event::getNext() {
 //////////////////
 
 /** Prints the event */
-void printEvent() {
+void Event::printEvent() {
+	cout << "--------------------------------------------------------" << endl;
 	cout << "Event Type: ";
 	switch (getType()) {
 		case SENDER_INIT:
@@ -125,6 +128,7 @@ void printEvent() {
 			cout << "Moving Mules" << endl;
 			break:
 		default:
+			cout << "NO TYPE" << endl;
 			break;
 	}
 	cout << "Sender Pointer: " << getSender() << endl;
@@ -137,4 +141,5 @@ void printEvent() {
 	getPacket()->printPacket();
 	cout << "Time Remaining: " << getTime() << endl;
 	cout << "Next Event Pointer: " << getNext() << endl; 
+	cout << "--------------------------------------------------------" << endl;
 }

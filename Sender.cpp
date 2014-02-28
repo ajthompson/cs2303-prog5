@@ -1,8 +1,8 @@
 /* 
 * @Author: ajthompson
 * @Date:   2014-02-25 10:16:11
-* @Last Modified by:   alecthompson
-* @Last Modified time: 2014-02-27 14:42:34
+* @Last Modified by:   ajthompson
+* @Last Modified time: 2014-02-27 20:29:31
 */
 
 #include <iostream>
@@ -18,10 +18,10 @@ using namespace std;
 /**
  * Constructs an empty sender
  */
-Sender::Sender() {
+Sender::Sender(int s_id) {
 	setX();
 	setY(0);
-	setID(0);
+	setID(s_id);
 	setArrivalTime(0);
 	setPktCount(0);
 	setPktSize(1);

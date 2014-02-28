@@ -1,8 +1,8 @@
 /* 
 * @Author: ajthompson
 * @Date:   2014-02-27 09:41:37
-* @Last Modified by:   alecthompson
-* @Last Modified time: 2014-02-27 14:49:59
+* @Last Modified by:   ajthompson
+* @Last Modified time: 2014-02-27 20:29:12
 */
 
 #include <iostream>
@@ -49,10 +49,7 @@ EventList::EventList(int s, int m, int r, int d) {
 		x = 0;
 		y = rand() % d;
 		if (checkSenderPos(x, y, i)) {
-			senderList[i] = new Sender();
-			senderList[i]->setX();
-			senderList[i]->setY(y);
-			senderList[i]->setID(counter);
+			senderList[i] = new Sender(counter);
 			++counter;	// increment counter
 		} else {
 			--i;	// decrement i to retry this value with a different position
@@ -61,17 +58,8 @@ EventList::EventList(int s, int m, int r, int d) {
 
 	// iterate through the vector creating the mules
 	for (int i = 0; i < m; ++i) {
-		x = 1 + rand() % d;
-		y = rand() % d;
-		if (checkMulePos(x, y, i)) {
-			muleList[i] = new Mule();
-			muleList[i]->setX(x);
-			muleList[i]->setY(y);
-			muleList[i]->setID(counter);
-			muleList[i]->setDir(muleList[i]->randDir());
-			++counter;	// increment counter
-		} else {
-			--i;	// decrement i to retry this sender with a different position
+		muleList[i] = new Mule(counter);
+		++counter;	// increment counter
 		}
 	}
 
@@ -81,8 +69,6 @@ EventList::EventList(int s, int m, int r, int d) {
 		y = rand() % d;
 		if (checkReceiverPos(x, y, i)) {
 			receiverList[i] = new Receiver();
-			receiverList[i]->setX();
-			receiverList[i]->setY(y);
 			receiverList[i]->setID(counter);
 			++counter;	// increment counter
 		} else {
