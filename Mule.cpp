@@ -7,8 +7,9 @@
 #include <iostream>
 #include <cstdlib>
 #include "Mule.h"
-/#include "Packet.h"
+#include "Packet.h"
 #include "Node.h"
+#include "Shared.h"
 using std::cout;
 using std::endl;
 
@@ -151,6 +152,7 @@ NEXT Mule::check_NSpace(){
             break;
         default:
             cout << "HUGE ASS ERROR IN check_NSpace() in Mule Class" << endl;
+            return ERROR;
             break;
     }
     

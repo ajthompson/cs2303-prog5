@@ -2,7 +2,7 @@
 * @Author: ajthompson
 * @Date:   2014-02-26 20:54:43
 * @Last Modified by:   ajthompson
-* @Last Modified time: 2014-02-27 21:51:49
+* @Last Modified time: 2014-03-02 14:53:17
 */
 
 #include <iostream>
@@ -24,7 +24,7 @@ int main(int argc, char *argv[]) {
 		cout << "sources - number of source routers" << endl;
 		cout << "receivers - number of receiver routers" << endl;
 		cout << "mules - number of mobile mule routers" << endl;
-		cout << "dimension - one side of the two-dimensional MANET field"
+		cout << "dimension - one side of the two-dimensional MANET field" << endl;
 	} else {
 		// retrieve the strings from argv
 		sourceStr = argv[1];
@@ -46,7 +46,7 @@ int main(int argc, char *argv[]) {
 		// create the event list
 		EList = new EventList(senders, mules, receivers, dimension);
 		// run the simulation
-		EList->simulate();
+		EList->processList();
 	}
 
 	return 0;

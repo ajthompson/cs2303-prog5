@@ -10,14 +10,14 @@
 #include "Packet.h"
 #include "Node.h"
 
-/*  Global information -- May be a problem because of multiple definition. Working to fix   */
-struct point{
-    int xPoint;
-    int yPoint;
-};
+// //  Global information -- May be a problem because of multiple definition. Working to fix   
+// struct point{
+//     int xPoint;
+//     int yPoint;
+// };
 /*  Global stuff that only Mules have to worry about    */
 enum direction {NORTH = 0, SOUTH = 1, EAST = 2, WEST = 3};
-enum NEXT {NOTHING = -1, WALL = -2, MULE = -3};
+enum NEXT {NOTHING = -1, WALL = -2, MULE = -3, ERROR = -4};
 
 
 class Mule {

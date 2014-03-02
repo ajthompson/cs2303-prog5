@@ -96,7 +96,6 @@ void Receiver::print_Receiver(){
     cout<< "Receiver ID: " << getID()<< " Location: " << "(" << getX() << "," << getY() << ") "  << " Number of Senders: " << getTotNumSenders() << endl;
 }
 void Receiver::print_R_Data(){
-    int last_sender;
     cout << "---------------------------------------" << endl;
     cout << "---------------------------------------" << endl;
     print_Receiver();

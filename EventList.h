@@ -36,9 +36,9 @@ private:
 	int numSenders;
 	int numMules;
 	int numReceivers;
-	static std::vector<Sender> senderList;
-	static std::vector<Mule> muleList;
-	static std::vector<Receiver> receiverList;
+	std::vector<Sender *> senderList;
+	std::vector<Mule *> muleList;
+	std::vector<Receiver *> receiverList;
 	Field *fieldPtr;	// pointer to the field
 	Event *headPtr;		// pointer to the head of the event list
 public:

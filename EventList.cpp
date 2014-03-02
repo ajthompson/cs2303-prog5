@@ -2,7 +2,7 @@
 * @Author: ajthompson
 * @Date:   2014-02-27 09:41:37
 * @Last Modified by:   ajthompson
-* @Last Modified time: 2014-03-02 14:25:00
+* @Last Modified time: 2014-03-02 15:09:57
 */
 
 #include <iostream>
@@ -38,7 +38,7 @@ EventList::EventList(int s, int m, int r, int d) {
 	// resize vectors for the proper amount of routers
 	senderList.resize(s);
 	muleList.resize(m);
-	receveiverList.resize(r);
+	receiverList.resize(r);
 	// create the field
 	fieldPtr = new Field(d, s+m+r);
 	// initialize the event list to empty
@@ -86,14 +86,14 @@ EventList::EventList(int s, int m, int r, int d) {
 		in >> sr_size;
 
 		// find the necessary sender and set values
-		updatePtr = findSender(s_id, s);
+		updatePtr = findSender(s_id);
 		updatePtr->setArrivalTime(a_time);
 		updatePtr->setPktCount(packets);
 		updatePtr->setPktSize(pkt_size);
 		for (int i = 0; i < sr_size; ++i) {
 			in >> sr_val;
 			updatePtr->srEnqueue(sr_val);
-			insertEvent(SENDER_INIT, updatePtr, NULL, NULL, NULL, arrival_time);
+			insertEvent(SENDER_INIT, updatePtr, NULL, NULL, NULL, a_time);
 		}
 	}
 
@@ -140,29 +140,29 @@ Sender *EventList::findSender(int id) {
 }
 
 /** Gets the pointer to the mule with the given ID */
-Sender *EventList::findMule(int id) {
-	Sender *returnPtr = NULL;
-	for (int i = 0; i =< numMules; ++i) {
-		if (id == muleList[i]->getID()) {
+Mule *EventList::findMule(int id) {
+	Mule *returnPtr = NULL;
+	for (int i = 0; i < numMules; ++i) {
+		if (id == muleList[i]->m_getID()) {
 			returnPtr = muleList[i];
 		}
 	}
 	if (returnPtr == NULL) {
-		cout << "Sender with that ID not found.  Returning NULL" << endl;
+		cout << "Mule with that ID not found.  Returning NULL" << endl;
 	}
 	return returnPtr;
 }
 
 /** Gets the pointer to the receiver with the given ID */
-Sender *EventList::findReceiver(int id) {
-	Sender *returnPtr = NULL;
-	for (int i = 0; i =< numReceivers; ++i) {
-		if (id == muleList[i]->getID()) {
-			returnPtr = muleList[i];
+Receiver *EventList::findReceiver(int id) {
+	Receiver *returnPtr = NULL;
+	for (int i = 0; i < numReceivers; ++i) {
+		if (id == receiverList[i]->getID()) {
+			returnPtr = receiverList[i];
 		}
 	}
 	if (returnPtr == NULL) {
-		cout << "Sender with that ID not found.  Returning NULL" << endl;
+		cout << "Receiver with that ID not found.  Returning NULL" << endl;
 	}
 	return returnPtr;
 }
@@ -199,7 +199,7 @@ Sender *EventList::findReceiver(int id) {
  * @param pPtr 	Pointer to targer packet	NULL
  * @param tL   	Propagation time			10
  */
-void EventList::insertEvent(EventType eT, Sender *sPtr, Mule *mPtr, Receiver *rPtr, Packet pPtr, int tL) {
+void EventList::insertEvent(EventType eT, Sender *sPtr, Mule *mPtr, Receiver *rPtr, Packet *pPtr, int tL) {
 	Event *currentPtr = headPtr;
 	Event *previousPtr = NULL;
 
@@ -278,7 +278,7 @@ int EventList::calcPropagation(int x1, int y1, int x2, int y2) {
 }
 
 /** Processes the event list */
-void EventList::processList(Event) {
+void EventList::processList() {
 	Event *currentPtr = headPtr;
 	Event *tempPtr;
 
@@ -321,7 +321,7 @@ void EventList::processList(Event) {
 		}
 	}
 	printReceivers();
-	field->printField();
+	fieldPtr->printField();
 }
 
 /** Initializes the sender with a packet and sets up a transmission finish event */
@@ -338,7 +338,7 @@ void EventList::senderInit(Event *ePtr) {
 	mPtr = findMule(sPtr->getPktHead()->getHead()->getData());
 	Mx = mPtr->m_getX();
 	My = mPtr->m_getY();
-	// insert propagation time into packet delay field
+	// insert propagation time into packet delay fieldPtr
 	sPtr->getPktHead()->setProp(calcPropagation(Sx, Sy, Mx, My));
 	// insert a "Sender Transmission End" event into the list
 	insertEvent(T_END_FROM_S, sPtr, NULL, NULL, NULL, sPtr->getPktSize());
@@ -349,12 +349,12 @@ void EventList::senderInit(Event *ePtr) {
  * Decrements the senders remaining packet count.
  * Then, if the sender still has to send more packets, then another packet and 
  * transmission event are created.  Otherwise the sender's location in the 
- * senderList vector is set to NULL, it is cleared from the field, and the
+ * senderList vector is set to NULL, it is cleared from the fieldPtr, and the
  * sender is deleted
  * 
  * @param ePtr Pointer to sender transmission end event
  */
-void tEndSender(Event *ePtr) {
+void EventList::tEndSender(Event *ePtr) {
 	// set up object pointers
 	Sender *sPtr = ePtr->getSender();
 	Packet *pPtr = sPtr->pktDequeue();
@@ -380,13 +380,13 @@ void tEndSender(Event *ePtr) {
 		mPtr = findMule(sPtr->getPktHead()->getHead()->getData());
 		Mx = mPtr->m_getX();
 		My = mPtr->m_getY();
-		// insert propagation time into packet delay field
+		// insert propagation time into packet delay fieldPtr
 		sPtr->getPktHead()->setProp(calcPropagation(Sx, Sy, Mx, My));
 		// insert a transmission complete event
 		insertEvent(T_END_FROM_S, sPtr, NULL, NULL, NULL, sPtr->getPktSize());
 	} else {
-		// set the sender's position in the field to 0
-		field.setPos(sPtr->getX(), sPtr->getY());
+		// set the sender's position in the fieldPtr to 0
+		fieldPtr->setPos(sPtr->getX(), sPtr->getY());
 		// set the pointer in the array to NULL
 		senderList[sPtr->getID() - 1] = NULL;
 		// delete the sender
@@ -400,7 +400,7 @@ void tEndSender(Event *ePtr) {
  * 
  * @param ePtr Pointer to mule transmission end event.
  */
-void tEndMule(Event *ePtr) {
+void EventList::tEndMule(Event *ePtr) {
 	// set up object pointers
 	Mule *mPtr1 = ePtr->getMule();		// transmitting mule
 	Packet *pPtr = mPtr1->pktDequeue();	// transmitted packet
@@ -429,7 +429,7 @@ void tEndMule(Event *ePtr) {
  * 
  * @param ePtr Pointer to the propagation to mule event
  */
-void pEndMule(Event *ePtr) {
+void EventList::pEndMule(Event *ePtr) {
 	// set up location variables
 	int Mx, My, Tx, Ty;
 	// set up object pointers
@@ -461,8 +461,8 @@ void pEndMule(Event *ePtr) {
 }
 
 /** Passes the packet to the target redeiver that then processes it */
-void pEndReceiver(Event *ePtr) {
-	ePtr->getReceiver()->pPacketDelay(ePtr->getPacket());
+void EventList::pEndReceiver(Event *ePtr) {
+	ePtr->getReceiver()->pPacketDelay(ePtr->getPacket(), t);
 }
 
 /**
@@ -470,17 +470,17 @@ void pEndReceiver(Event *ePtr) {
  * If the new position is a wall, they bounce off in the other direction, if
  * it is a mule, they "hop" over it to the spot on the other size.
  */
-void eListMove() {
+void EventList::eListMove() {
 	for (int i = 0; i < numMules; ++i) {
-		// clear the current position of the mule in the field map
-		field->setPos(muleList[i]->m_getX(), muleList[i]->m_getY());
+		// clear the current position of the mule in the fieldPtr map
+		fieldPtr->setPos(muleList[i]->m_getX(), muleList[i]->m_getY());
 		// move the mule
 		muleList[i]->moveMule();
 		// set new position in the map
-		field->setPos(muleList[i]->m_getX(), muleList[i]->m_getY(), muleList[i]->m_getID());
+		fieldPtr->setPos(muleList[i]->m_getX(), muleList[i]->m_getY(), muleList[i]->m_getID());
 	}
-	// print the field
-	field->printField();
+	// print the fieldPtr
+	fieldPtr->printField();
 }
 
 /////////////////////////
@@ -493,7 +493,7 @@ bool EventList::checkSenderPos(int x, int y, int num) {
 	for (int i = 0; i < num; ++i) {
 		if (senderList[i] != NULL) {
 			if ((x == (senderList[i]->getX())) && y == ((senderList[i]->getY()))) {
-				returnVal &= false;
+				isSame &= false;
 			}
 		}
 	}
@@ -505,8 +505,8 @@ bool EventList::checkMulePos(int x, int y, int num) {
 	bool isSame = true;
 	for (int i = 0; i < num; ++i) {
 		if (muleList[i] != NULL) {
-			if ((x == (muleList[i]->getX())) && y == ((muleList[i]->getY()))) {
-				returnVal &= false;
+			if ((x == (muleList[i]->m_getX())) && y == ((muleList[i]->m_getY()))) {
+				isSame &= false;
 			}
 		}
 	}
@@ -519,7 +519,7 @@ bool EventList::checkReceiverPos(int x, int y, int num) {
 	for (int i = 0; i < num; ++i) {
 		if (receiverList[i] != NULL) {
 			if ((x == (receiverList[i]->getX())) && (y == (receiverList[i]->getY()))) {
-				returnVal &= false;
+				isSame &= false;
 			}
 		}
 	}
