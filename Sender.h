@@ -13,7 +13,7 @@ class Node;
 
 
 class Sender {
-	friend class Event;
+    friend class Event;
 	friend class Packet;
 	friend class Node;
     friend class Receiver;
@@ -37,7 +37,8 @@ private:
 	Packet *pktHeadPtr;	// pointer to the head of the packet queue
 	Packet *pktTailPtr;	// pointer to the tail of the packet queue
 public:
-	Sender(int);				// constructor
+
+    Sender(int);				// constructor
 	Sender(int, int, int, int);	// constructor
 	~Sender();					// destructor
 	/** Setter functions */

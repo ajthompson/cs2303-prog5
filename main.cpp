@@ -39,6 +39,7 @@ int main(int argc, char *argv[]) {
 
 		// TROY PUT RANDOMIZATION STUFF HERE
 
+
 		// create the event list
 		EList = new EventList(senders, mules, receivers, dimension);
 		// run the simulation

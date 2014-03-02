@@ -24,9 +24,18 @@ Receiver::Receiver(int ID_input, int num_senders) {
     setY();                                           /* Sets the Y                           */
     avgDpS = new float[num_senders];                  /* Initializes the Average D per Sendr  */
     numPacketsPS = new int[num_senders];              /* Initializes the Num Pkts per Sendr   */
+    senderNumber = new int[num_senders];              /* List of all the senders numbers      */
+    for (int i = 0; i < num_senders; i++){
+        avgDpS[i] = -1;                                /*   Initializes the lists to -1 */
+        numPacketsPS[i] = -1;
+        senderNumber[i] = -1;
+    }
+    numPackets = 0;
     totalAvgDelay = 0;                                /* Initializes the tot avg delay        */
-    numSndrs = num_senders;                           /* Stores the number of senders to this */
+    tot_numSenders = num_senders;                           /* Stores the number of senders to this */
+    numSenders = 0;
     num_receivers++;                                  /* Increments for next construction     */
+    
 }
 
 
@@ -37,7 +46,14 @@ Receiver::Receiver(){
     setX();
     setY();
     avgDpS = new float[1];
-    numSndrs = 0;
+    numPacketsPS = new int[1];
+    senderNumber = new int[1];
+    for (int i = 0; i < 1; i++){
+        avgDpS[i] = -1;
+        numPacketsPS[i] = -1;
+        senderNumber[i] = -1;
+    }
+    tot_numSenders = 0;
     num_receivers++;
 
 }
@@ -56,9 +72,17 @@ int Receiver::getY(){
 int Receiver::getID(){
     return SR_ID;
 }
-int Receiver::getNumSendrs(){
-    return numSndrs;
-    
+int Receiver::getNumSenders(){
+    return numSenders;
+}
+int Receiver::getTotNumSenders(){
+    return tot_numSenders;
+}
+float Receiver::getTAD(){
+    return totalAvgDelay;
+}
+int Receiver::getTNP(){
+    return numPackets;
 }
 
 
@@ -70,10 +94,18 @@ int Receiver::getNumSendrs(){
 
 void Receiver::print_Receiver(){
 /*  This prints some the receiver's fields   */
-    cout << "(" << getX() << "," << getY() << ")" << "ID: " << getID() << " Numm of Senders: " << getNumSendrs() << endl;
-
+    cout << "(" << getX() << "," << getY() << ")" << "ID: " << getID() << " Numm of Senders: " << getTotNumSenders() << endl;
 }
-
+void Receiver::print_R_Data(){
+    int last_sender;
+    cout << "Overall Average Packet Delay Time: "   << getTAD() << endl;
+    cout << "Overall Number of Received Packets: "  << getTNP() << endl;
+    for (int i = 0; i < tot_numSenders; i++){
+        cout << "Sender Number: " << senderNumber[i] << endl;
+        cout << "   Number of Packets: " << numPacketsPS[i] << endl;
+        cout << "   Average Delay/Sender: "<< avgDpS[i] << endl;
+    }
+}
 
 /*---------------------------------Setters---------------------------------*/
 /*---------------------------------Setters---------------------------------*/
@@ -168,10 +200,50 @@ void Receiver::print_FieldVals(){
 void Receiver::pPacketDelay(Packet *toProcess, int time){
 /*  Calculates the delay of one packet  -   Does not return becuae of how much more neeeds to be done   */
     int timeStamp, delay;
-    timeStamp = toProcess->getTimestamp();
-    delay = time - timeStamp;
+    int found = 0;
+    int senderLocation = -1;
+    timeStamp = toProcess->getTimestamp();              /*  Get the timestamp from the packet   */
+    delay = time - timeStamp;                           /*  Calculate the delay                 */
+    
+    for (int i = 0; i < tot_numSenders; i++){                 /*  Find/put the sender ID in the list  */
+        if (senderNumber[i] == toProcess->getID() && found == 0){       /*  If you find the number in the list  */
+            senderLocation = i;
+            found = 1;                                   /*  Set senderLocation to i     */
+            break;
+        }
+        if (senderNumber[i] == -1 && senderLocation < 0){                      /* If you dont, then you'll find an -1 */
+            senderNumber[i] = toProcess->getID();                 /* Store this ID in the list    */
+            senderLocation = i;                                 /* Set the senderLocation to i  */
+            break;
+        }
+        
+    }
+    cout << "Made it to this part of the program" << endl;
+    /*  Setting the overall values  */
+    if (getTNP() == 0){
+        totalAvgDelay = delay;
+        numSenders = 1;
+        numPackets = 1;
+    }else{
+        totalAvgDelay = ((totalAvgDelay*getNumSenders()) + delay)/(getNumSenders() +1);
+        numSenders++;
+        numPackets++;
+    }
+    /*  Sets the individual stats   */
+    if (numPacketsPS[senderLocation] < 0){              /* If you've never stored something there  */
+        avgDpS[senderLocation] = delay;                /* Run the calculations    */
+        numPacketsPS[senderLocation] = 1;
+    }else{                                               /* else run diff calculation   */
+        avgDpS[senderLocation] = (((avgDpS[senderLocation] * (numPacketsPS[senderLocation])) + delay) /(numPacketsPS[senderLocation] + 1));
+        numPacketsPS[senderLocation] = numPacketsPS[senderLocation] + 1;
+    }
+    /*  Free the packet */
+    
     
 }
+
+
+
 
 
 
