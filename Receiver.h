@@ -33,11 +33,13 @@ private:
     float totalAvgDelay;        /*  Total average delay time of all the packets from any sender */
     int numPackets;             /*  Total number of packets sent to this receiver   */
     int *numPacketsPS;           /*  Pointer to an array of int's that represent the number of packets per Sender    */
+    int *senderNumber;          /*  List of all the numbers for each of the senders, used as a reference for storage of the average delay and the sender number */
 	int xPos;                   /*  The X position of this receiver     */
 	int yPos;                   /*  The Y position of this receiver     */
 	int SR_ID;                  /*  The id of this receiver             */
     int rec_num;                /*  The number receiver that this is    */
-    int numSndrs;               /*  Number of senders to this Receiver  */
+    int tot_numSenders;               /*  Number of senders to this Receiver  */
+    int numSenders;              /*  Number of senders at a given time   */
     
 public:
 	Receiver();					/*  Constructor: Should never use this one -- It doesnt allow us to reset the number of senders easily making calculations dificult */
@@ -52,10 +54,14 @@ public:
 	int getX();
 	int getY();
 	int getID();
-    int getNumSendrs();         /*  This works though                   */
+    int getNumSenders();         /*  This works though                   */
+    int getTotNumSenders();
+    float getTAD();             /*  Get the total average delay of all the points in this receiver  */
+    int getTNP();               /*  Get the total number of points in this receiver */
 	
 	/** Miscellaneous Operations */
     void print_Receiver();
+    void print_R_Data();
     
     /** Packet Processing   **/
     void pPacketDelay(Packet *toProcess, int time);
