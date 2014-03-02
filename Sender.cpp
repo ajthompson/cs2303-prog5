@@ -2,7 +2,11 @@
 * @Author: ajthompson
 * @Date:   2014-02-25 10:16:11
 * @Last Modified by:   ajthompson
+<<<<<<< HEAD
 * @Last Modified time: 2014-02-27 21:26:46
+=======
+* @Last Modified time: 2014-02-28 13:49:51
+>>>>>>> master
 */
 
 #include <iostream>
@@ -20,13 +24,8 @@ using namespace std;
  */
 Sender::Sender(int s_id) {
 	setX();
-<<<<<<< HEAD
 	setY(l_op[num_senders].yPoint);
-	setID(0);
-=======
-	setY(0);
 	setID(s_id);
->>>>>>> 540f4ace2f8d529784ac008375cdce61a4961801
 	setArrivalTime(0);
 	setPktCount(0);
 	setPktSize(1);

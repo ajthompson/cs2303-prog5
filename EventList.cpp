@@ -2,7 +2,7 @@
 * @Author: ajthompson
 * @Date:   2014-02-27 09:41:37
 * @Last Modified by:   ajthompson
-* @Last Modified time: 2014-02-27 20:29:12
+* @Last Modified time: 2014-02-28 13:53:12
 */
 
 #include <iostream>
@@ -48,32 +48,23 @@ EventList::EventList(int s, int m, int r, int d) {
 	for (int i = 0; i < s; ++i) {
 		x = 0;
 		y = rand() % d;
-		if (checkSenderPos(x, y, i)) {
 			senderList[i] = new Sender(counter);
 			++counter;	// increment counter
-		} else {
-			--i;	// decrement i to retry this value with a different position
-		}
+		
 	}
 
 	// iterate through the vector creating the mules
 	for (int i = 0; i < m; ++i) {
 		muleList[i] = new Mule(counter);
 		++counter;	// increment counter
-		}
+		
 	}
 
 	// iterate through the vector creating the receivers
 	for (int i = 0; i < r; ++i) {
-		x = d - 1;
-		y = rand() % d;
-		if (checkReceiverPos(x, y, i)) {
-			receiverList[i] = new Receiver();
-			receiverList[i]->setID(counter);
+			receiverList[i] = new Receiver(counter, s);
 			++counter;	// increment counter
-		} else {
-			--i;	// decrement i to retry this value with a different position
-		}
+		
 	}
 	
 	cout << "Enter source data in the form:" << endl;
@@ -365,7 +356,12 @@ void EventList::processList() {
 /** Initializes the sender with a packet and sets up a transmission finish event */
 void EventList::senderInit(Event *ePtr) {
 	Sender *sPtr = ePtr->getSender();
+	int Sx, Sy, Mx, My;	// to store x and y values of the sender and goal mule
 	sPtr->pktEnqueue(t);	// create a new packet with timestamp t
-	sPtr->getPktHead()->setDelay();
+	sPtr->getPktHead()->srDequeue();	// remove source id from packet SR queue
+	// get sender location
+	Sx = sPtr->getX();
+	Sy = sPtr->getY();
+	sPtr->getPktHead()->setDelay(calcPropagation());
 	insertEvent()
 }

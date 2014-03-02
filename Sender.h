@@ -13,11 +13,7 @@ class Node;
 
 
 class Sender {
-<<<<<<< HEAD
-    
-=======
-	friend class Event;
->>>>>>> 540f4ace2f8d529784ac008375cdce61a4961801
+    friend class Event;
 	friend class Packet;
 	friend class Node;
     friend class Receiver;
@@ -25,7 +21,7 @@ private:
     // Static Figures
     static int total_senders;    /*  Total number of senders */
     static int field_length;     /*  Total height of the field   */
-    static int *yVals;           /* A static field of all the possible y positions of the mules  */
+    static int *yVals;           /* A static field of all the possible y positions of the senders  */
     
     
     
@@ -41,13 +37,9 @@ private:
 	Packet *pktHeadPtr;	// pointer to the head of the packet queue
 	Packet *pktTailPtr;	// pointer to the tail of the packet queue
 public:
-<<<<<<< HEAD
-	Sender();							// constructor
-	Sender( int, int, int, int);        // constructor
-=======
-	Sender(int);							// constructor
-	Sender(int, int, int, int, int);	// constructor
->>>>>>> 540f4ace2f8d529784ac008375cdce61a4961801
+
+    Sender(int);				// constructor
+	Sender(int, int, int, int);	// constructor
 	/** Setter functions */
 	void setX();
 	void setY(int);
