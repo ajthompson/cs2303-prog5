@@ -45,6 +45,19 @@ Packet::Packet(Sender *original, int t) {
 	this->copyQueue(*original);
 }
 
+/** Destructor */
+Packet::~Packet() {
+	Node *a, *b;
+
+	// destruct the list of nodes
+	a = headPtr;
+	while (a != NULL) {
+		b = a->nextPtr;
+		delete a;
+		a = b;
+	}
+}
+
 /** Sets the packets ID */
 void Packet::setID(int nID) {
 	source_id = nID;

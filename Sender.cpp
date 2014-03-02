@@ -2,7 +2,7 @@
 * @Author: ajthompson
 * @Date:   2014-02-25 10:16:11
 * @Last Modified by:   ajthompson
-* @Last Modified time: 2014-02-28 17:05:49
+* @Last Modified time: 2014-03-02 13:02:28
 */
 
 #include <iostream>
@@ -53,6 +53,28 @@ Sender::Sender(int s_id, int t, int count, int size) {
 	pktHeadPtr = NULL;
 	pktTailPtr = NULL;
     num_senders++;
+}
+
+/** Destructor */
+Sender::~Sender() {
+	Node *a, *b;
+	Packet *c, *d;
+
+	// deconstruct the node list
+	a = srHeadPtr;
+	while (a != NULL) {
+		b = a->nextPtr;
+		delete a;
+		a = b;
+	}
+
+	// deconstruct the packet list
+	c = pktHeadPtr;
+	while (c != NULL) {
+		d  = c->nextPtr;
+		delete c;
+		c = d;
+	}
 }
 
 ////////////////////////

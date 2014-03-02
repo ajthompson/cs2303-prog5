@@ -39,6 +39,7 @@ private:
 public:
 	Sender(int);				// constructor
 	Sender(int, int, int, int);	// constructor
+	~Sender();					// destructor
 	/** Setter functions */
 	void setX();
 	void setY(int);

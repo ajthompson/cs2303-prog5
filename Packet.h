@@ -24,9 +24,12 @@ private:
 	Node *tailPtr;		// pointer to the tail of the SR
 	Packet *nextPtr;	// pointer to the next packet in the queue
 public:
+	// constructors
 	Packet();
-	Packet(int, int, int);			// constructor
+	Packet(int, int, int);	
 	Packet(Sender*, int);
+	// destructor
+	~Packet();
 	// setters and getters
 	void setID(int);
 	int getID();

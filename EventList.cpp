@@ -2,7 +2,7 @@
 * @Author: ajthompson
 * @Date:   2014-02-27 09:41:37
 * @Last Modified by:   ajthompson
-* @Last Modified time: 2014-03-01 19:52:59
+* @Last Modified time: 2014-03-02 13:05:33
 */
 
 #include <iostream>
@@ -423,7 +423,7 @@ void tEndSender(Event *ePtr) {
 		// set the pointer in the array to NULL
 		senderList[sPtr->getID() - 1] = NULL;
 		// delete the sender
-		delete *sPtr;
+		delete sPtr;
 	}
 }
 
