@@ -2,7 +2,7 @@
 * @Author: ajthompson
 * @Date:   2014-02-27 09:41:37
 * @Last Modified by:   ajthompson
-* @Last Modified time: 2014-03-02 16:14:14
+* @Last Modified time: 2014-03-02 17:17:41
 */
 
 #include <iostream>
@@ -283,9 +283,17 @@ void EventList::insertEvent(EventType eT, Sender *sPtr, Mule *mPtr, Receiver *rP
 			}
 		}
 
+		if (previousPtr == NULL) {
+			previousPtr = currentPtr;
+			currentPtr = currentPtr->nextPtr;
+		}
+		#if DEBUG
+			cout << "Target location reached" << endl;
+			cout << "currentPtr = " << currentPtr << endl;
+			cout << "previousPtr = " << previousPtr << endl;
+		#endif
 		// create the new event
 		previousPtr->nextPtr = new Event();
-
 		if (previousPtr->nextPtr != NULL) {
 			// memory allocation was successful
 			previousPtr->nextPtr->setType(eT);
@@ -295,6 +303,11 @@ void EventList::insertEvent(EventType eT, Sender *sPtr, Mule *mPtr, Receiver *rP
 			previousPtr->nextPtr->setPacket(pPtr);
 			previousPtr->nextPtr->setTime(tL);
 			previousPtr->nextPtr->setNext(currentPtr);
+
+			#if DEBUG
+				cout << "Event added" << endl;
+				previousPtr->nextPtr->printEvent();
+			#endif
 		} else {
 			cout << "Memory allocation failed - event not created" << endl;
 		}
@@ -325,30 +338,37 @@ int EventList::calcPropagation(int x1, int y1, int x2, int y2) {
 /** Processes the event list */
 void EventList::processList() {
 	Event *currentPtr = headPtr;
-	Event *tempPtr;
 
 	while ((!sendersEmpty()) || (!onlyMove())) {
 	// iterate through the list
 		while (currentPtr != NULL) {
+			cout << "Event List at time " << t << endl;
+			printEventList();
 			if (currentPtr->getTime() == 0){
 			// if the event's timer is complete
 				switch (currentPtr->getType()) {
 					case SENDER_INIT:
+						cout << "Sender Initialization Event at time " << t << endl;
 						senderInit(currentPtr);
 						break;
 					case T_END_FROM_S:
+						cout << "Sender Transmission End at time " << t << endl;
 						tEndSender(currentPtr);
 						break;
 					case T_END_FROM_M:
+						cout << "Mule Transmission End at time " << t << endl;
 						tEndMule(currentPtr);
 						break;
 					case P_END_TO_M:
+						cout << "Propagation To Mule End at time " << t << endl;
 						pEndMule(currentPtr);
 						break;
 					case P_END_TO_R:
+						cout << "Propagation To Receiver End at time " << t << endl;
 						pEndReceiver(currentPtr);
 						break;
 					case MOVE:
+						cout << "Moving mules at time " << t << endl;
 						eListMove();
 						break;
 					default:
@@ -356,7 +376,7 @@ void EventList::processList() {
 				}
 			// change the head pointer
 				headPtr = currentPtr->nextPtr;
-			// delete currentPtr; 
+				delete currentPtr;
 				currentPtr = headPtr;
 			} else {
 			// the event's timer is still going
@@ -364,6 +384,8 @@ void EventList::processList() {
 				currentPtr = currentPtr->nextPtr;
 			}
 		}
+		++t;
+		currentPtr = headPtr;
 	}
 	printReceivers();
 	fieldPtr->printField();
@@ -581,7 +603,12 @@ bool EventList::sendersEmpty() {
 	for (int i = 0; i < numSenders; ++i) {
 		if (senderList[i] != NULL) {
 			val = false;
+			
 		}
+	}
+
+	if (val) {
+		cout << "All Senders Complete" << endl;
 	}
 	return val;
 }
@@ -603,6 +630,29 @@ bool EventList::onlyMove() {
 			val = false;
 		}
 		currentPtr = currentPtr->nextPtr;
+	}
+	if (val) {
+		cout << "Only Movement Events remain" << endl;
+	}
+	return val;
+}
+
+bool EventList::checkNULLlessThanEqual(Event *ePtr, int t) {
+	bool val = true;
+	if (ePtr == NULL) {
+		val = false;
+	} else if (ePtr->getTime() > t) {
+		val = false;
+	}
+	return val;
+}
+
+bool EventList::checkNULLlessThan(Event *ePtr, int t) {
+	bool val = true;
+	if (ePtr == NULL) {
+		val = false;
+	} else if (ePtr->getTime() >= t) {
+		val = false;
 	}
 	return val;
 }
@@ -629,22 +679,11 @@ void EventList::printReceivers() {
 	cout << "Overall Average Delay: " << totalAvg << endl;
 }
 
-bool EventList::checkNULLlessThanEqual(Event *ePtr, int t) {
-	bool val = true;
-	if (ePtr == NULL) {
-		val = false;
-	} else if (ePtr->getTime() > t) {
-		val = false;
-	}
-	return val;
-}
+void EventList::printEventList() {
+	Event *currentPtr = headPtr;
 
-bool EventList::checkNULLlessThan(Event *ePtr, int t) {
-	bool val = true;
-	if (ePtr == NULL) {
-		val = false;
-	} else if (ePtr->getTime() >= t) {
-		val = false;
+	while (currentPtr != NULL) {
+		currentPtr->printEvent();
+		currentPtr = currentPtr->nextPtr;
 	}
-	return val;
 }

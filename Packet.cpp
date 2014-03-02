@@ -41,6 +41,9 @@ Packet::Packet(Sender *original, int t) {
 	source_id = original->getID();
 	timestamp = t;
 	pkt_size = original->getPktSize();
+	headPtr = NULL;
+	tailPtr = NULL;
+	nextPtr = NULL;
 	// copy the Sender's SR queue to the packet
 	this->copyQueue(*original);
 }
@@ -144,10 +147,10 @@ void Packet::copyQueue(Sender original) {
 void Packet::enqueue(int sr_id) {
 	#if DEBUG
 		cout << "Enquing SR ID" << endl;
-		cout << "HeadPtr: " << this->headPtr << endl;
 		cout << "HeadPtr: " << headPtr << endl;
+		cout << "TailPtr: " << tailPtr << endl;
 	#endif
-	if ((headPtr == NULL) || (tailPtr == NULL)) {
+	if (headPtr == NULL) {
 		#if DEBUG
 			cout << "SR List is empty" << endl;
 		#endif
@@ -157,7 +160,12 @@ void Packet::enqueue(int sr_id) {
 			cout << "New HeadPtr: " << headPtr << endl;
 		#endif
 		// the memory was successfully allocated
-		tailPtr = headPtr;
+		#if DEBUG
+			cout << "New TailPtr: " << tailPtr << endl;
+		#endif
+	} else if (tailPtr == NULL) {
+		headPtr->nextPtr = new Node(sr_id);
+		tailPtr = headPtr->nextPtr;
 		#if DEBUG
 			cout << "New TailPtr: " << tailPtr << endl;
 		#endif

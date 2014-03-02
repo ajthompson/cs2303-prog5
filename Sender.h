@@ -11,7 +11,6 @@ class Node;
 
 #include "Shared.h"
 
-
 class Sender {
     friend class Event;
 	friend class Packet;

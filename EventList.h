@@ -4,12 +4,12 @@
  * Header file for the event list.  This is the class that controls the
  * simulation, and where the bulk of the processing takes place
  */
-#ifndef DEBUG
- #define DEBUG 1
-#endif
-
 #ifndef EVENTLIST_H_
 #define EVENTLIST_H_
+
+#ifndef DEBUG
+ #define DEBUG 0
+#endif
 
 #include <vector>
 #include "Field.h"
@@ -75,6 +75,7 @@ public:
 	bool checkNULLlessThan(Event*, int);
 	/** Printing */
 	void printReceivers();
+	void printEventList();
 };
 
 #endif
