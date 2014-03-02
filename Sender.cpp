@@ -1,8 +1,8 @@
 /* 
 * @Author: ajthompson
 * @Date:   2014-02-25 10:16:11
-* @Last Modified by:   alecthompson
-* @Last Modified time: 2014-02-26 13:40:17
+* @Last Modified by:   ajthompson
+* @Last Modified time: 2014-02-27 21:26:46
 */
 
 #include <iostream>
@@ -18,10 +18,15 @@ using namespace std;
 /**
  * Constructs an empty sender
  */
-Sender::Sender() {
+Sender::Sender(int s_id) {
 	setX();
+<<<<<<< HEAD
 	setY(l_op[num_senders].yPoint);
 	setID(0);
+=======
+	setY(0);
+	setID(s_id);
+>>>>>>> 540f4ace2f8d529784ac008375cdce61a4961801
 	setArrivalTime(0);
 	setPktCount(0);
 	setPktSize(1);

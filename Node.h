@@ -8,6 +8,7 @@
 #define NODE_H_
 
 class Node {
+	friend class Event;
 	friend class Packet;
 	friend class Sender;
 private:

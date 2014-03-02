@@ -38,6 +38,8 @@ Receiver::Receiver(int ID_input, int num_senders) {
     
 }
 
+
+
 Receiver::Receiver(){
     rec_num = num_receivers;
     setID(0);

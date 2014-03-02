@@ -13,7 +13,11 @@ class Node;
 
 
 class Sender {
+<<<<<<< HEAD
     
+=======
+	friend class Event;
+>>>>>>> 540f4ace2f8d529784ac008375cdce61a4961801
 	friend class Packet;
 	friend class Node;
     friend class Receiver;
@@ -37,8 +41,13 @@ private:
 	Packet *pktHeadPtr;	// pointer to the head of the packet queue
 	Packet *pktTailPtr;	// pointer to the tail of the packet queue
 public:
+<<<<<<< HEAD
 	Sender();							// constructor
 	Sender( int, int, int, int);        // constructor
+=======
+	Sender(int);							// constructor
+	Sender(int, int, int, int, int);	// constructor
+>>>>>>> 540f4ace2f8d529784ac008375cdce61a4961801
 	/** Setter functions */
 	void setX();
 	void setY(int);
