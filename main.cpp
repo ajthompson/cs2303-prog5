@@ -38,7 +38,10 @@ int main(int argc, char *argv[]) {
 		dimension = atoi(dimStr);
 
 		// TROY PUT RANDOMIZATION STUFF HERE
-
+        Sender::init_sender(senders, dimension);
+        Receiver::make_FieldVals(receivers, dimension);
+        Mule::make_FieldVals(mules, dimension);
+        Mule::fill_listOP();
 
 		// create the event list
 		EList = new EventList(senders, mules, receivers, dimension);
