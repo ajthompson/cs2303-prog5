@@ -67,4 +67,6 @@ public:
 	void pEndMule(Event*);
 	void pEndReceiver(Event*);
 	void eListMove();
-}
+};
+
+#endif

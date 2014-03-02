@@ -2,7 +2,7 @@
 * @Author: ajthompson
 * @Date:   2014-02-27 09:41:37
 * @Last Modified by:   ajthompson
-* @Last Modified time: 2014-02-28 16:54:54
+* @Last Modified time: 2014-03-01 19:52:59
 */
 
 #include <iostream>
@@ -503,5 +503,7 @@ void pEndReceiver(Event *ePtr) {
  * it is a mule, they "hop" over it to the spot on the other size.
  */
 void eListMove() {
-	
+	for (int i = 0; i < numMules; ++i) {
+		muleList[i]->moveMule();
+	}
 }

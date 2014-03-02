@@ -2,7 +2,7 @@
 * @Author: ajthompson
 * @Date:   2014-02-25 10:16:11
 * @Last Modified by:   ajthompson
-* @Last Modified time: 2014-02-28 14:06:46
+* @Last Modified time: 2014-02-28 17:05:49
 */
 
 #include <iostream>
@@ -430,7 +430,7 @@ void Sender::fill_listOP(){
 void Sender::getPoint(int *point2){
     if (field_length > num_senders){
         *point2 = yVals[rand() % (total_senders)];
-    }else{
+    } else {
         *point2 = yVals[rand() % (total_senders)];
     }
 }
@@ -442,7 +442,7 @@ int Sender::not_used(int ypt){
             returnVal = 0;
             break;
         }
-        else{
+        else {
             returnVal = 1;
         }
     }
@@ -461,6 +461,3 @@ int Sender::getTotNumSend(){
     return total_senders;
     
 }
-
-
-

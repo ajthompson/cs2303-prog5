@@ -419,14 +419,3 @@ void Mule::print_MuleLoc(){
         cout << "(" << l_op[i].xPoint << "," << l_op[i].yPoint << ")" << endl;
     }
 }
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
