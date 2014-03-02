@@ -55,9 +55,7 @@ public:
 	/** List Operations */
 	void insertEvent(EventType, Sender*, Mule*, Receiver*, Packet*, int);
 	/** Processing */
-	bool checkSenderPos(int, int, int);
-	bool checkMulePos(int, int, int);
-	bool checkReceiverPos(int, int, int);
+	
 	int calcPropagation(int, int, int, int);
 	void processList();
 	/** Process submethods */
@@ -67,6 +65,14 @@ public:
 	void pEndMule(Event*);
 	void pEndReceiver(Event*);
 	void eListMove();
+	/** Checkers */
+	bool checkSenderPos(int, int, int);
+	bool checkMulePos(int, int, int);
+	bool checkReceiverPos(int, int, int);
+	bool sendersEmpty();
+	bool onlyMove();
+	/** Printing */
+	void printReceivers();
 };
 
 #endif

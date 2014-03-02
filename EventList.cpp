@@ -2,7 +2,7 @@
 * @Author: ajthompson
 * @Date:   2014-02-27 09:41:37
 * @Last Modified by:   ajthompson
-* @Last Modified time: 2014-03-02 13:38:29
+* @Last Modified time: 2014-03-02 14:25:00
 */
 
 #include <iostream>
@@ -260,44 +260,7 @@ void EventList::insertEvent(EventType eT, Sender *sPtr, Mule *mPtr, Receiver *rP
 /// PROCESSING ///
 //////////////////
 
-/** Checks if the current position is held by a sender */
-bool EventList::checkSenderPos(int x, int y, int num) {
-	bool isSame = true;
-	for (int i = 0; i < num; ++i) {
-		if (senderList[i] != NULL) {
-			if ((x == (senderList[i]->getX())) && y == ((senderList[i]->getY()))) {
-				returnVal &= false;
-			}
-		}
-	}
-	return isSame;
-}
 
-/** Checks if the current position is held by a mule */
-bool EventList::checkMulePos(int x, int y, int num) {
-	bool isSame = true;
-	for (int i = 0; i < num; ++i) {
-		if (muleList[i] != NULL) {
-			if ((x == (muleList[i]->getX())) && y == ((muleList[i]->getY()))) {
-				returnVal &= false;
-			}
-		}
-	}
-	return isSame;
-}
-
-/** Checks if the current position is held by a receiver */
-bool EventList::checkReceiverPos(int x, int y, int num) {
-	bool isSame = true;
-	for (int i = 0; i < num; ++i) {
-		if (receiverList[i] != NULL) {
-			if ((x == (receiverList[i]->getX())) && (y == (receiverList[i]->getY()))) {
-				returnVal &= false;
-			}
-		}
-	}
-	return isSame;
-}
 
 /**
  * Calculates the propagation time of the packet using the formula:
@@ -319,42 +282,46 @@ void EventList::processList(Event) {
 	Event *currentPtr = headPtr;
 	Event *tempPtr;
 
+	while ((!sendersEmpty()) || (!onlyMove())) {
 	// iterate through the list
-	while (currentPtr != NULL) {
-		if (currentPtr->getTime() == 0){
+		while (currentPtr != NULL) {
+			if (currentPtr->getTime() == 0){
 			// if the event's timer is complete
-			switch (currentPtr->getType()) {
-				case SENDER_INIT:
-					senderInit(currentPtr);
-					break;
-				case T_END_FROM_S:
-					tEndSender(currentPtr);
-					break;
-				case T_END_FROM_M:
-					tEndMule(currentPtr);
-					break;
-				case P_END_TO_M:
-					pEndMule(currentPtr);
-					break;
-				case P_END_TO_R:
-					pEndReceiver(currentPtr);
-					break;
-				case MOVE:
-					eListMove();
-					break;
-				default:
-					break;
-			}
+				switch (currentPtr->getType()) {
+					case SENDER_INIT:
+						senderInit(currentPtr);
+						break;
+					case T_END_FROM_S:
+						tEndSender(currentPtr);
+						break;
+					case T_END_FROM_M:
+						tEndMule(currentPtr);
+						break;
+					case P_END_TO_M:
+						pEndMule(currentPtr);
+						break;
+					case P_END_TO_R:
+						pEndReceiver(currentPtr);
+						break;
+					case MOVE:
+						eListMove();
+						break;
+					default:
+						break;
+				}
 			// change the head pointer
-			headPtr = currentPtr->nextPtr;
-			delete currentPtr; 
-			currentPtr = headPtr;
-		} else {
+				headPtr = currentPtr->nextPtr;
+			// delete currentPtr; 
+				currentPtr = headPtr;
+			} else {
 			// the event's timer is still going
-			currentPtr->setTime(currentPtr->getTime() - 1);
-			currentPtr = currentPtr->nextPtr;
+				currentPtr->setTime(currentPtr->getTime() - 1);
+				currentPtr = currentPtr->nextPtr;
+			}
 		}
 	}
+	printReceivers();
+	field->printField();
 }
 
 /** Initializes the sender with a packet and sets up a transmission finish event */
@@ -493,8 +460,9 @@ void pEndMule(Event *ePtr) {
 	insertEvent(T_END_FROM_M, NULL, mPtr, NULL, NULL, pPtr->getSize());
 }
 
+/** Passes the packet to the target redeiver that then processes it */
 void pEndReceiver(Event *ePtr) {
-
+	ePtr->getReceiver()->pPacketDelay(ePtr->getPacket());
 }
 
 /**
@@ -504,6 +472,114 @@ void pEndReceiver(Event *ePtr) {
  */
 void eListMove() {
 	for (int i = 0; i < numMules; ++i) {
+		// clear the current position of the mule in the field map
+		field->setPos(muleList[i]->m_getX(), muleList[i]->m_getY());
+		// move the mule
 		muleList[i]->moveMule();
+		// set new position in the map
+		field->setPos(muleList[i]->m_getX(), muleList[i]->m_getY(), muleList[i]->m_getID());
 	}
+	// print the field
+	field->printField();
+}
+
+/////////////////////////
+/// CHECKER FUNCTIONS ///
+/////////////////////////
+
+/** Checks if the current position is held by a sender */
+bool EventList::checkSenderPos(int x, int y, int num) {
+	bool isSame = true;
+	for (int i = 0; i < num; ++i) {
+		if (senderList[i] != NULL) {
+			if ((x == (senderList[i]->getX())) && y == ((senderList[i]->getY()))) {
+				returnVal &= false;
+			}
+		}
+	}
+	return isSame;
+}
+
+/** Checks if the current position is held by a mule */
+bool EventList::checkMulePos(int x, int y, int num) {
+	bool isSame = true;
+	for (int i = 0; i < num; ++i) {
+		if (muleList[i] != NULL) {
+			if ((x == (muleList[i]->getX())) && y == ((muleList[i]->getY()))) {
+				returnVal &= false;
+			}
+		}
+	}
+	return isSame;
+}
+
+/** Checks if the current position is held by a receiver */
+bool EventList::checkReceiverPos(int x, int y, int num) {
+	bool isSame = true;
+	for (int i = 0; i < num; ++i) {
+		if (receiverList[i] != NULL) {
+			if ((x == (receiverList[i]->getX())) && (y == (receiverList[i]->getY()))) {
+				returnVal &= false;
+			}
+		}
+	}
+	return isSame;
+}
+
+/**
+ * Checks if the sender list only has pointers to NULL.
+ * 
+ * @return True if all values NULL, otherwise false
+ */
+bool EventList::sendersEmpty() {
+	bool val = true;
+	for (int i = 0; i < numSenders; ++i) {
+		if (senderList[i] != NULL) {
+			val = false;
+		}
+	}
+	return val;
+}
+
+/**
+ * Checks if the event list only contains move events.  If so, there are no packets
+ * currently propagating, and the program is finished if all senders are also gone.
+ * 
+ * @return Return true if only move events, otherwise false.
+ */
+bool EventList::onlyMove() {
+	Event *currentPtr = headPtr;
+	bool val = true;
+
+	while (currentPtr != NULL) {
+		if (currentPtr->type == MOVE) {
+			// do nothing
+		} else {
+			val = false;
+		}
+		currentPtr = currentPtr->nextPtr;
+	}
+	return val;
+}
+
+///////////////////////
+/// PRINT FUNCTIONS ///
+///////////////////////
+
+void EventList::printReceivers() {
+	double TADweighted = 0;
+	long totalNumPackets = 0;
+	double totalAvg;
+
+	// iterate through the receiver list
+	for (int i = 0; i < numReceivers; ++i) {
+		TADweighted += receiverList[i]->getTAD() * receiverList[i]->getTNP();
+		totalNumPackets += receiverList[i]->getTNP();
+		receiverList[i]->print_R_Data();
+	}
+
+	// calculate total average delay
+	totalAvg = TADweighted / totalNumPackets;
+
+	cout << "Overall Average Delay: " << totalAvg << endl;
 }
