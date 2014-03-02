@@ -6,12 +6,4 @@ struct point{
   int yPoint;
 };
 
-
-
-
-
-
-
-
-
 #endif

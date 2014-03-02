@@ -2,7 +2,7 @@
 * @Author: ajthompson
 * @Date:   2014-02-26 20:54:43
 * @Last Modified by:   ajthompson
-* @Last Modified time: 2014-02-27 20:43:59
+* @Last Modified time: 2014-02-27 21:51:49
 */
 
 #include <iostream>
@@ -36,6 +36,8 @@ int main(int argc, char *argv[]) {
 		receivers = atoi(receiverStr);
 		mules = atoi(muleStr);
 		dimension = atoi(dimStr);
+
+		// TROY PUT RANDOMIZATION STUFF HERE
 
 		// create the event list
 		EList = new EventList(senders, mules, receivers, dimension);
