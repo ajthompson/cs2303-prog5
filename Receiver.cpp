@@ -22,8 +22,8 @@ Receiver::Receiver(int ID_input, int num_senders) {
     setID(ID_input);                                  /* Sets the input ID                    */
     setX();                                           /* Sets the X                           */
     setY();                                           /* Sets the Y                           */
-    avgDpS = new float[num_senders];                  /* Initializes the Average D per Sendr  */
-    numPacketsPS = new int[num_senders];              /* Initializes the Num Pkts per Sendr   */
+    avgDpS = new double[num_senders];                  /* Initializes the Average D per Sendr  */
+    numPacketsPS = new long[num_senders];              /* Initializes the Num Pkts per Sendr   */
     senderNumber = new int[num_senders];              /* List of all the senders numbers      */
     for (int i = 0; i < num_senders; i++){
         avgDpS[i] = -1;                                /*   Initializes the lists to -1 */
@@ -45,8 +45,8 @@ Receiver::Receiver(){
     setID(0);
     setX();
     setY();
-    avgDpS = new float[1];
-    numPacketsPS = new int[1];
+    avgDpS = new double[1];
+    numPacketsPS = new long[1];
     senderNumber = new int[1];
     for (int i = 0; i < 1; i++){
         avgDpS[i] = -1;
@@ -78,10 +78,10 @@ int Receiver::getNumSenders(){
 int Receiver::getTotNumSenders(){
     return tot_numSenders;
 }
-float Receiver::getTAD(){
+double Receiver::getTAD(){
     return totalAvgDelay;
 }
-int Receiver::getTNP(){
+long Receiver::getTNP(){
     return numPackets;
 }
 
@@ -94,17 +94,23 @@ int Receiver::getTNP(){
 
 void Receiver::print_Receiver(){
 /*  This prints some the receiver's fields   */
-    cout << "(" << getX() << "," << getY() << ")" << "ID: " << getID() << " Numm of Senders: " << getTotNumSenders() << endl;
+    cout<< "Receiver ID: " << getID()<< " Location: " << "(" << getX() << "," << getY() << ") "  << " Number of Senders: " << getTotNumSenders() << endl;
 }
 void Receiver::print_R_Data(){
     int last_sender;
+    cout << "---------------------------------------" << endl;
+    cout << "---------------------------------------" << endl;
+    print_Receiver();
+    cout << "---------------------------------------" << endl;
     cout << "Overall Average Packet Delay Time: "   << getTAD() << endl;
     cout << "Overall Number of Received Packets: "  << getTNP() << endl;
     for (int i = 0; i < tot_numSenders; i++){
+        cout << "---------------------------------------" << endl;
         cout << "Sender Number: " << senderNumber[i] << endl;
         cout << "   Number of Packets: " << numPacketsPS[i] << endl;
         cout << "   Average Delay/Sender: "<< avgDpS[i] << endl;
     }
+    cout << "---------------------------------------" << endl;
 }
 
 /*---------------------------------Setters---------------------------------*/
@@ -199,7 +205,7 @@ void Receiver::print_FieldVals(){
 
 void Receiver::pPacketDelay(Packet *toProcess, int time){
 /*  Calculates the delay of one packet  -   Does not return becuae of how much more neeeds to be done   */
-    int timeStamp, delay;
+    double timeStamp, delay;
     int found = 0;
     int senderLocation = -1;
     timeStamp = toProcess->getTimestamp();              /*  Get the timestamp from the packet   */

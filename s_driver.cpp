@@ -23,7 +23,7 @@ int main(){
 	int t = 100;
 
 	cout << "CREATING SENDERS" << endl;
-    Sender *emptySender = new Sender();
+    Sender *emptySender = new Sender(source_id);
     Sender *fillSender = new Sender(source_id, t_arrive, pkt_count, pkt_size);
     cout << "SENDERS CREATED" << endl;
 
@@ -123,7 +123,6 @@ int main(){
     
     cout << "Testing Static Placement of all the Senders" << endl;
     Sender::init_sender(10, 10);
-    Sender::fill_listOP();
     Sender::print_SendLoc();
     
     cout << "-------------------------------------------------------------------------" << endl;

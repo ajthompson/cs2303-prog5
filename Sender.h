@@ -22,6 +22,8 @@ private:
     static int total_senders;    /*  Total number of senders */
     static int field_length;     /*  Total height of the field   */
     static int *yVals;           /* A static field of all the possible y positions of the senders  */
+    static int *xVals;           /* A static field of all the possible x positions of the senders  */
+
     
     
     
@@ -78,11 +80,8 @@ public:
     static int num_senders;
     
     // Functions
-    static int getTotNumSend();
     static void init_sender(int, int);
-    static void fill_listOP();
-    static void getPoint(int *);
-    static int not_used(int );
+    static int getTotNumSend();
     static void print_SendLoc();
 };
 

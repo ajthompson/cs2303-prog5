@@ -47,6 +47,11 @@ int Mule::m_getY(){
     return (yPos);
 }
 
+int Mule::m_getID(){
+    return SR_ID;
+}
+
+
 Packet *Mule::getHead(){
     /*	Author: Troy Hughes
      * 		This function returns the head node

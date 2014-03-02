@@ -29,10 +29,10 @@ private:
     static int *xVals;           /* A static field of all the possible y positions of the mules  */
 
     // Statics done
-    float *avgDpS;              /*Pointer to an array of floats that represent the average delay time per sender    */
-    float totalAvgDelay;        /*  Total average delay time of all the packets from any sender */
-    int numPackets;             /*  Total number of packets sent to this receiver   */
-    int *numPacketsPS;           /*  Pointer to an array of int's that represent the number of packets per Sender    */
+    double *avgDpS;              /*Pointer to an array of floats that represent the average delay time per sender    */
+    double totalAvgDelay;        /*  Total average delay time of all the packets from any sender */
+    long numPackets;             /*  Total number of packets sent to this receiver   */
+    long *numPacketsPS;           /*  Pointer to an array of int's that represent the number of packets per Sender    */
     int *senderNumber;          /*  List of all the numbers for each of the senders, used as a reference for storage of the average delay and the sender number */
 	int xPos;                   /*  The X position of this receiver     */
 	int yPos;                   /*  The Y position of this receiver     */
@@ -56,8 +56,8 @@ public:
 	int getID();
     int getNumSenders();         /*  This works though                   */
     int getTotNumSenders();
-    float getTAD();             /*  Get the total average delay of all the points in this receiver  */
-    int getTNP();               /*  Get the total number of points in this receiver */
+    double getTAD();             /*  Get the total average delay of all the points in this receiver  */
+    long getTNP();               /*  Get the total number of points in this receiver */
 	
 	/** Miscellaneous Operations */
     void print_Receiver();

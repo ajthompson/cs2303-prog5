@@ -52,6 +52,7 @@ public:
     void changeDir();           /*  Changes the direction of the mule                           */
     int m_getX();               /*  Get's the x value of the mule                               */
     int m_getY();               /*  Get's the y value of the mule                               */
+    int m_getID();              /*  Get's the ID of a Mule                                      */
     int pLength();              /*  gets the length of the queue of the mule                    */
     void pPrint();              /*  Prints the queue of the mule                                */
     void pktEnqueue(Packet *);  /*  Queue's a packet                                            */
