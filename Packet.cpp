@@ -142,20 +142,34 @@ void Packet::copyQueue(Sender original) {
  * @param sr_id ID of the router to be enqueued
  */
 void Packet::enqueue(int sr_id) {
-	if (headPtr == NULL) {
+	#if DEBUG
+		cout << "Enquing SR ID" << endl;
+		cout << "HeadPtr: " << this->headPtr << endl;
+		cout << "HeadPtr: " << headPtr << endl;
+	#endif
+	if ((headPtr == NULL) || (tailPtr == NULL)) {
+		#if DEBUG
+			cout << "SR List is empty" << endl;
+		#endif
 		// the router list is empty
 		headPtr = new Node(sr_id);
-
-		if (headPtr != NULL) {
-			// the memory was successfully allocated
-			tailPtr = headPtr;
-		} else {
-			cout << "Memory Allocation Failed. Router " << sr_id;
-			cout << " Not Added." << endl;
-		}
+		#if DEBUG
+			cout << "New HeadPtr: " << headPtr << endl;
+		#endif
+		// the memory was successfully allocated
+		tailPtr = headPtr;
+		#if DEBUG
+			cout << "New TailPtr: " << tailPtr << endl;
+		#endif
 	} else {
+		#if DEBUG
+			cout << "SR List is not empty" << endl;
+		#endif
 		// the router list is not empty
 		tailPtr->nextPtr = new Node(sr_id);
+		#if DEBUG
+			cout << "New TailPtr: " << tailPtr << endl;
+		#endif
 
 		if (tailPtr->nextPtr != NULL) {
 			// memory successfully allocated

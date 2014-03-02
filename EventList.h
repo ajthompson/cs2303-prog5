@@ -5,7 +5,7 @@
  * simulation, and where the bulk of the processing takes place
  */
 #ifndef DEBUG
- #define DEBUG 0
+ #define DEBUG 1
 #endif
 
 #ifndef EVENTLIST_H_
@@ -71,6 +71,8 @@ public:
 	bool checkReceiverPos(int, int, int);
 	bool sendersEmpty();
 	bool onlyMove();
+	bool checkNULLlessThanEqual(Event*, int);
+	bool checkNULLlessThan(Event*, int);
 	/** Printing */
 	void printReceivers();
 };

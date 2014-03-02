@@ -2,7 +2,7 @@
 * @Author: ajthompson
 * @Date:   2014-02-27 09:41:37
 * @Last Modified by:   ajthompson
-* @Last Modified time: 2014-03-02 15:09:57
+* @Last Modified time: 2014-03-02 16:14:14
 */
 
 #include <iostream>
@@ -93,8 +93,8 @@ EventList::EventList(int s, int m, int r, int d) {
 		for (int i = 0; i < sr_size; ++i) {
 			in >> sr_val;
 			updatePtr->srEnqueue(sr_val);
-			insertEvent(SENDER_INIT, updatePtr, NULL, NULL, NULL, a_time);
 		}
+		insertEvent(SENDER_INIT, updatePtr, NULL, NULL, NULL, a_time);
 	}
 
 	// set the first move event
@@ -121,6 +121,9 @@ void EventList::incTime() {
 
 /** Gets the simulation time */
 int EventList::getTime() {
+	#if DEBUG
+		cout << "Returning time" << endl;
+	#endif
 	return t;
 }
 
@@ -200,39 +203,81 @@ Receiver *EventList::findReceiver(int id) {
  * @param tL   	Propagation time			10
  */
 void EventList::insertEvent(EventType eT, Sender *sPtr, Mule *mPtr, Receiver *rPtr, Packet *pPtr, int tL) {
-	Event *currentPtr = headPtr;
+	Event *currentPtr = this->headPtr;
 	Event *previousPtr = NULL;
 
-	if (headPtr == NULL) {
+	if (currentPtr == NULL) {
+
+		#if DEBUG
+			cout << "HeadPtr: " << headPtr << endl;
+		#endif
 		// if the list is empty
-		headPtr = new Event();
+		this->headPtr = new Event();
+
+		#if DEBUG
+			cout << "New event created" << endl;
+			cout << "HeadPtr: " << headPtr << endl;
+		#endif
 
 		if (headPtr != NULL) {
+			#if DEBUG
+				cout << "Memory successfully allocated" << endl;
+			#endif
 			// memory was successfully allocated
 			// set the event's fields
 			headPtr->setType(eT);
+			#if DEBUG
+				cout << "Type Set to " << headPtr->getType() << endl;
+			#endif
 			headPtr->setSender(sPtr);
+			#if DEBUG
+				cout << "SenderPtr set to " << headPtr->getSender() << endl;
+			#endif
 			headPtr->setMule(mPtr);
+			#if DEBUG
+				cout << "MulePtr set to " << headPtr->getMule() << endl;
+			#endif
 			headPtr->setReceiver(rPtr);
+			#if DEBUG
+				cout << "ReceiverPtr set to " << headPtr->getReceiver() << endl;
+			#endif
 			headPtr->setPacket(pPtr);
+			#if DEBUG
+				cout << "PacketPtr set to " << headPtr->getPacket() << endl;
+			#endif
 			headPtr->setTime(tL);
+			#if DEBUG
+				cout << "Time left set to " << headPtr->getTime() << endl;
+			#endif
 			headPtr->setNext(NULL);
+			#if DEBUG
+				cout << "NextPtr set to " << headPtr->getNext() << endl;
+			#endif
 		} else {
 			cout << "Memory allocation failed - event not created" << endl;
 		}
 	} else {
+		#if DEBUG
+			cout << "The list is not empty" << endl;
+		#endif
 		// the list is not empty
 		if (eT == MOVE) {
+			#if DEBUG
+				cout << "Event is a MOVE" << endl;
+			#endif
 			// iterator for MOVE events
 			// places events after all events with the same time left
-			while ((currentPtr->getTime() <= tL) && (currentPtr != NULL)) {
+			while (checkNULLlessThanEqual(currentPtr, tL)) {
 				previousPtr = currentPtr;
 				currentPtr = currentPtr->nextPtr;
 			}
 		} else {
+			#if DEBUG
+				cout << "Event is not a MOVE" << endl;
+			#endif
 			// iterator for non-move events, 
 			// places them before all events with the same time left
-			while ((currentPtr->getTime() < tL) && (currentPtr != NULL)) {
+			while (checkNULLlessThan(currentPtr, tL)) {
 				previousPtr = currentPtr;
 				currentPtr = currentPtr->nextPtr;
 			}
@@ -582,4 +627,24 @@ void EventList::printReceivers() {
 	totalAvg = TADweighted / totalNumPackets;
 
 	cout << "Overall Average Delay: " << totalAvg << endl;
+}
+
+bool EventList::checkNULLlessThanEqual(Event *ePtr, int t) {
+	bool val = true;
+	if (ePtr == NULL) {
+		val = false;
+	} else if (ePtr->getTime() > t) {
+		val = false;
+	}
+	return val;
+}
+
+bool EventList::checkNULLlessThan(Event *ePtr, int t) {
+	bool val = true;
+	if (ePtr == NULL) {
+		val = false;
+	} else if (ePtr->getTime() >= t) {
+		val = false;
+	}
+	return val;
 }
