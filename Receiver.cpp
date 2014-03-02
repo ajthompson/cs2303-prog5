@@ -35,7 +35,6 @@ Receiver::Receiver(int ID_input, int num_senders) {
     tot_numSenders = num_senders;                           /* Stores the number of senders to this */
     numSenders = 0;
     num_receivers++;                                  /* Increments for next construction     */
-    
 }
 
 
