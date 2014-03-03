@@ -2,7 +2,7 @@
 * @Author: ajthompson
 * @Date:   2014-02-27 09:41:37
 * @Last Modified by:   ajthompson
-* @Last Modified time: 2014-03-02 17:17:41
+* @Last Modified time: 2014-03-02 19:32:53
 */
 
 #include <iostream>
@@ -340,10 +340,13 @@ void EventList::processList() {
 	Event *currentPtr = headPtr;
 
 	while ((!sendersEmpty()) || (!onlyMove())) {
+		#if DEBUG
+			cout << "Event List at time " << t << endl;
+			cout << "Before event processing" << endl;
+			printEventList();
+		#endif
 	// iterate through the list
 		while (currentPtr != NULL) {
-			cout << "Event List at time " << t << endl;
-			printEventList();
 			if (currentPtr->getTime() == 0){
 			// if the event's timer is complete
 				switch (currentPtr->getType()) {
@@ -376,7 +379,7 @@ void EventList::processList() {
 				}
 			// change the head pointer
 				headPtr = currentPtr->nextPtr;
-				delete currentPtr;
+				// delete currentPtr;
 				currentPtr = headPtr;
 			} else {
 			// the event's timer is still going
@@ -384,6 +387,11 @@ void EventList::processList() {
 				currentPtr = currentPtr->nextPtr;
 			}
 		}
+		#if DEBUG
+			cout << "Event List at time " << t << endl;
+			cout << "After event processing" << endl;
+			printEventList();
+		#endif
 		++t;
 		currentPtr = headPtr;
 	}
@@ -422,35 +430,79 @@ void EventList::senderInit(Event *ePtr) {
  * @param ePtr Pointer to sender transmission end event
  */
 void EventList::tEndSender(Event *ePtr) {
+	#if DEBUG
+		cout << "Entered tEndSender" << endl;
+	#endif
 	// set up object pointers
 	Sender *sPtr = ePtr->getSender();
 	Packet *pPtr = sPtr->pktDequeue();
 	int Sx, Sy, Mx, My;	// to store x and y values of the sender and goal mule
 	Mule *mPtr = findMule(pPtr->dequeue());	// removes the first SR value from the list
+	#if DEBUG
+		cout << "Set up object pointers" << endl;
+		cout << "sPtr = " << sPtr << endl;
+		cout << "pPtr = " << pPtr << endl;
+		cout << "mPtr = " << mPtr << endl;
+		cout << "Sender's packet count = " << sPtr->getPktCount() << endl;
+	#endif
 
 	// decrement sender's packet counter
 	sPtr->setPktCount(sPtr->getPktCount() - 1);
+	#if DEBUG
+		cout << "Decremented Packet Count" << endl;
+		cout << "pktCount = " << sPtr->getPktCount() << endl;
+		cout << "Creating a new propagation event" << endl;
+	#endif
 
 	// create a new propagation event
 	insertEvent(P_END_TO_M, NULL, mPtr, NULL, pPtr, pPtr->getDelay());
-
+	#if DEBUG
+		cout << "Created a new propagation event" << endl;
+	#endif
 	// determine what the sender does next
 	if (sPtr->getPktCount() > 0) {
 		// sender still has more packets to send, create a new packet
+		#if DEBUG
+			cout << "Sender has " << sPtr->getPktCount() << " packets remaining" << endl;
+			cout << "Enqueuing new packet" << endl;
+		#endif
 		sPtr->pktEnqueue(t);
 		// dequeue first node of the packet's SR queue
+		#if DEBUG
+			cout << "New Packet enqueued" << endl;
+			cout << "First SR node (sender ID) dequeuing" << endl;
+		#endif
 		sPtr->getPktHead()->dequeue();
+		#if DEBUG
+			cout << "First SR Node dequeued" << endl;
+			cout << "Getting Sender Coordinates" << endl;
+		#endif
 		// get sender coordinates
 		Sx = sPtr->getX();
 		Sy = sPtr->getY();
+		#if DEBUG
+			cout << "(Sx, Sy) = (" << Sx <<  ", " << Sy << ")" << endl;
+			cout << "Getting Mule Coordinates" << endl;
+		#endif
 		// get new target mule and find its position
 		mPtr = findMule(sPtr->getPktHead()->getHead()->getData());
 		Mx = mPtr->m_getX();
 		My = mPtr->m_getY();
+		#if DEBUG
+			cout << "(Mx, My) = (" << Mx <<  ", " << My << ")" << endl;
+			cout << "Inserting Propagation Delay" << endl;
+		#endif
 		// insert propagation time into packet delay fieldPtr
 		sPtr->getPktHead()->setProp(calcPropagation(Sx, Sy, Mx, My));
+		#if DEBUG
+			cout << "Propagation delay inserted" << endl;
+			cout << "Inserting transmission complete event" << endl;
+		#endif
 		// insert a transmission complete event
 		insertEvent(T_END_FROM_S, sPtr, NULL, NULL, NULL, sPtr->getPktSize());
+		#if DEBUG
+			cout << "Transmission complete event inserted" << endl;
+		#endif
 	} else {
 		// set the sender's position in the fieldPtr to 0
 		fieldPtr->setPos(sPtr->getX(), sPtr->getY());

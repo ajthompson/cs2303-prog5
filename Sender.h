@@ -6,6 +6,10 @@
 #ifndef SENDER_H
 #define SENDER_H
 
+#ifndef DEBUG
+ #define DEBUG 1
+#endif
+
 class Packet;
 class Node;
 

@@ -8,7 +8,7 @@
 #define EVENTLIST_H_
 
 #ifndef DEBUG
- #define DEBUG 0
+ #define DEBUG 1
 #endif
 
 #include <vector>

@@ -2,7 +2,7 @@
 * @Author: ajthompson
 * @Date:   2014-02-25 10:16:11
 * @Last Modified by:   ajthompson
-* @Last Modified time: 2014-03-02 16:50:10
+* @Last Modified time: 2014-03-02 19:28:02
 */
 
 #include <iostream>
@@ -206,29 +206,13 @@ void Sender::srEnqueue(int nVal) {
 	if (srHeadPtr == NULL) {
 		// the router list is empty
 		srHeadPtr = new Node(nVal);
-
-		if (srHeadPtr != NULL) {
-			// the memory was successfully allocated
-			srTailPtr = srHeadPtr;
-		} else {
-			cout << "Memory Allocation Failed. Router " << nVal;
-			cout << " Not Added." << endl;
-			cout << "Quitting the program." << endl;
-			exit(1);
-		}
+	} else if (srTailPtr == NULL) {
+		srHeadPtr->nextPtr = new Node(nVal);
+		srTailPtr = srHeadPtr->nextPtr;
 	} else {
 		// the router list is not empty
 		srTailPtr->nextPtr = new Node(nVal);
-
-		if (srTailPtr->nextPtr != NULL) {
-			// memory successfully allocated
-			srTailPtr = srTailPtr->nextPtr;
-		} else {
-			cout << "Memory Allocation Failed. Router " << nVal;
-			cout << " Not Added." << endl;
-			cout << "Quitting the program." << endl;
-			exit(1);
-		}
+		srTailPtr = srTailPtr->nextPtr;
 	}
 }
 
@@ -269,9 +253,18 @@ int Sender::srDequeue() {
  * @param t System time, time of packet creation
  */
 void Sender::pktEnqueue(int t) {
+	#if DEBUG
+		cout << "Enqueuing new packet" << endl;
+	#endif
 	if (pktHeadPtr == NULL) {
+		#if DEBUG
+			cout << "Packet Queue Empty" << endl;
+		#endif
 		// the queue is empty
 		pktHeadPtr = new Packet(this, t);
+		#if DEBUG
+			cout << "New packet created" << endl;
+		#endif
 
 		if (pktHeadPtr == NULL) {
 			cout << "Memory Allocation Failed. Packet Not Added." << endl;
@@ -279,9 +272,15 @@ void Sender::pktEnqueue(int t) {
 			exit(1);
 		}
 	} else if (pktTailPtr == NULL) {
+		#if DEBUG
+			cout << "Packet Queue has one packet" << endl;
+		#endif
 		pktHeadPtr->nextPtr = new Packet(this, t);
 		pktTailPtr = pktHeadPtr->nextPtr;
 	} else {
+		#if DEBUG
+			cout << "Packet Queue has multiple packets" << endl;
+		#endif
 		// the queue is not empty
 		pktTailPtr->nextPtr = new Packet(this, t);
 

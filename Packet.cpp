@@ -38,14 +38,27 @@ Packet::Packet(int id, int s_time, int size) {
 	nextPtr = NULL;
 }
 Packet::Packet(Sender *original, int t) {
+	#if DEBUG
+		cout << "Creating new packet based off of Sender " << original << endl;
+		original->printSender();
+	#endif
 	source_id = original->getID();
 	timestamp = t;
 	pkt_size = original->getPktSize();
 	headPtr = NULL;
 	tailPtr = NULL;
 	nextPtr = NULL;
+	#if DEBUG
+		cout << "Packet without SR queue" << endl;
+		printPacket();
+		cout << "Copying queue now" << endl;
+	#endif
 	// copy the Sender's SR queue to the packet
 	this->copyQueue(*original);
+	#if DEBUG
+		cout << "Packet with SR queue" << endl;
+		printPacket();
+	#endif
 }
 
 /** Destructor */
@@ -134,7 +147,13 @@ void Packet::copyQueue(Sender original) {
 	Node *currentPtr = original.getSRHead();
 
 	while (currentPtr != NULL) {
+		#if DEBUG
+			cout << "Enqueuing " << currentPtr->getData() << endl;
+		#endif
 		this->enqueue(currentPtr->getData());
+		#if DEBUG
+			cout << currentPtr->getData() << " enqueued" << endl;
+		#endif
 		currentPtr = currentPtr->getNext();
 	}
 }
@@ -146,7 +165,7 @@ void Packet::copyQueue(Sender original) {
  */
 void Packet::enqueue(int sr_id) {
 	#if DEBUG
-		cout << "Enquing SR ID" << endl;
+		cout << "Enquing SR ID " << sr_id << endl;
 		cout << "HeadPtr: " << headPtr << endl;
 		cout << "TailPtr: " << tailPtr << endl;
 	#endif
