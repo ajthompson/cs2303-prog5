@@ -11,9 +11,14 @@ How To Build -
 
 	This will result in an executable under the name of program5
 
-	NOTE: A compiler warning about a double being cast to an integer will occur.  This is because we make use of the <cmath> function pow, which only operates on doubles in versions of C++ earlier than C++11.
+	NOTE: A compiler warning about a double being cast to an integer will occur.  This is
+	because we make use of the <cmath> function pow, which only operates on doubles in versions
+	of C++ earlier than C++11.
 
-	We cast integer values to doubles in the function that uses this, and the result gets cast back to an integer.  This was necessary to ensure compatibility with the woefully outdated version of gcc on all but one of the CCC servers.  Why they would update only one is beyond me...
+	We cast integer values to doubles in the function that uses this, and the result gets cast
+	back to an integer.  This was necessary to ensure compatibility with the woefully outdated
+	version of gcc on all but one of the CCC servers.  Why they would update only one is beyond
+	me...
 
 How To Run -
 	Enter the following into terminal:
@@ -25,7 +30,8 @@ How To Run -
 		sources - number of source routers
 		receivers - number of receiver routers
 		mules - number of mule routers - MUST BE A MULTIPLE OF 4
-		dimension - one side of the square area a mule maneuvers on - MUST BE GREATER THAN BOTH THE NUMBER OF SOURCES AND RECEIVERS
+		dimension - one side of the square area a mule maneuvers on - MUST BE GREATER THAN BOTH
+		THE NUMBER OF SOURCES AND RECEIVERS
 
 		input.txt - text file of data in the following format
 
@@ -38,11 +44,90 @@ How To Run -
 			packets - number of packets to be transmitted
 			pkt_size - size of the packets to be transmitted
 			SR_size - length of the route the packets will take, including the source
-			SR - list of sourceIDs of length SR_size starting with the source node and ending with a receiver node
+			SR - list of sourceIDs of length SR_size starting with the source node and ending
+			with a receiver node
 
-		The number of lines of text in the file must be no more than the number of fields, and there must be no more than one line with the same sourceID
+		The number of lines of text in the file must be no more than the number of fields, and
+		there must be no more than one line with the same sourceID
 
 Program Notes:
 	
 	Main: 
-		Reads in the arguments, and uses three methods to create the randomized positions for the sources receivers and nodes. Then the program creates the event list, initialized with the command line arguments.  After this, the method process() is called on the event list. This function controls the entirety of the rest of the program.
+		Reads in the arguments, and uses three methods to create the randomized positions for
+		the sources receivers and nodes. Then the program creates the event list, initialized
+		with the command line arguments.  After this, the method process() is called on the
+		event list. This function controls the entirety of the rest of the program.
+
+	EventList:
+		This class contains all of the information relevant to the program. It contains the
+		field to be displayed, vectors containing the sources, receivers, and nodes, and
+		pointers to the list of events itself. The class constructor sets up the entire
+		simulation, and then the process() function runs the simulation.
+
+		When the simulation completes, it prints the statistics each receiver has gathered as
+		well as the overall average packet delay.  For the receiver statistics, if the receiver
+		has received no packets from a particular sender, then all sender specific statistics,
+		including that sender's id will be listed as -1, indicating that there is no data
+		present.
+
+		Then, the final layout of the mule array will be printed.
+
+		One particular design quirk to note is that we have separated the propagation events
+		from the transmitting node.  We transfer the pointer to the propagating packet to the
+		event object itself, instead of keeping it tied to the sender.
+
+		Event types -
+			Sender Initialization - At the time specified by the Sender's arrival time,
+			enqueues a new packet and creates a transmission event, as well as calculating the
+			propagation time of the first packet and storing it within the packet's delay
+			field.
+
+				This event contains the event type, a pointer to initializing sender, and the
+				time remaining until the event occurs.
+
+			Transmission End - There are two versions of this event, T_END_FROM_S for Senders,
+			and T_END_FROM_M for Mules.  Both dequeue the packet from the transmitting router,
+			and create a propagation event based off of the pointer to the packet and it's
+			propagation delay, and a pointer to its targer router, either a mule or a
+			receiver. Then the mule transmission is complete. The sender however, then
+			decrements the amount of packets remaining to be transmitting, and if the number
+			is still greater than zero, enqueues another packet. If the number of packets
+			still to be transmitted is 0, the sender is deleted.
+
+				This event contains the event type, a pointer to either the transmitting
+				sender or the transmitting mule, and the amount of time remaining until the
+				transmission is complete.
+
+			Propagation End - This event has two versions as well, P_END_TO_M for propagation
+			to mules, and P_END_TO_R, for propagation to receivers.  For mules, the contained
+			packet is enqueued in the target node, a new propagation delay is calculated, and
+			a new transmission event is created. For receivers, the packet is passed to a
+			function called on the contained pointer to a receiver that strips the packet of
+			the information relevant to the receiver's statistics, and the statistics are
+			updated. The packet is then deleted.
+
+				This event contains the event type, a pointer to either the receiving mule or
+				the receiving receiver, a pointer to the propagating packet, and the time
+				remaining until the propagation is complete.
+
+			Mule Movement - This event iterates through the list of mules, moves them using a
+			function contained in the mule class, and then prints the field.
+
+	Senders - Are essentially a queue plus more stuff.  They contain the the sender's x and y
+	positions, source id, arrival time, the number of packets to be send, and the packet size
+	of the packets to be sent.  There are also four static fields, for the total number of
+	senders, the dimension of the field, and the possible x and y positions for the senders.
+	These static fields are used in the randomization, explained in the randomization section.
+	Senders also include pointers to the heads and tails of two queues.  The first is a queue
+	of nodes, containing the SR values that the packets sent by this router will follow.
+
+	Mules - 
+
+	Receivers -
+
+	Packets - Packets contain the source id of the sender that sent them, the timestamp
+	representing the time that the packet was created, the size of the packet, and delay. 
+	Delay was originally intended to store the delay when we planned on just enqueuing all
+	received packets at a receiver, and processing them at the end of the program. However,
+	when when we switched to immediate processing upon reception, the delay field was
+	maintained
