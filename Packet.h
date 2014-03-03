@@ -7,7 +7,7 @@
 #define PACKET_H
 
 #ifndef DEBUG
- #define DEBUG 1
+ #define DEBUG 0
 #endif
 
 class Node;
@@ -48,7 +48,7 @@ public:
 	Node *getTail();
 	Packet *getNext();
 	void copyQueue(Packet);					// copies a queue from the argument packet to this packet
-	void copyQueue(Sender);
+	void copyQueue(Sender *);
 	// queue operations
 	void enqueue(int);						// enqueues another item in the SR
 	int dequeue();							// dequeues the first item in the SR

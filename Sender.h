@@ -7,7 +7,7 @@
 #define SENDER_H
 
 #ifndef DEBUG
- #define DEBUG 1
+ #define DEBUG 0
 #endif
 
 class Packet;
@@ -26,9 +26,6 @@ private:
     static int field_length;     /*  Total height of the field   */
     static int *yVals;           /* A static field of all the possible y positions of the senders  */
     static int *xVals;           /* A static field of all the possible x positions of the senders  */
-
-    
-    
     
     // Statics done
 	int xPos;			// x position of sender, initializes to 0

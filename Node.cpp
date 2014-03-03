@@ -48,4 +48,5 @@ Node *Node::getNext() {
  */
 void Node::printNode() {
 	cout << "Data: " << data << endl;
+	cout << "Next Node: " << nextPtr << endl;
 }

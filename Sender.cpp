@@ -2,7 +2,7 @@
 * @Author: ajthompson
 * @Date:   2014-02-25 10:16:11
 * @Last Modified by:   ajthompson
-* @Last Modified time: 2014-03-02 19:28:02
+* @Last Modified time: 2014-03-02 20:46:22
 */
 
 #include <iostream>
@@ -253,15 +253,20 @@ int Sender::srDequeue() {
  * @param t System time, time of packet creation
  */
 void Sender::pktEnqueue(int t) {
+
 	#if DEBUG
 		cout << "Enqueuing new packet" << endl;
 	#endif
+
 	if (pktHeadPtr == NULL) {
+
 		#if DEBUG
 			cout << "Packet Queue Empty" << endl;
 		#endif
+
 		// the queue is empty
 		pktHeadPtr = new Packet(this, t);
+
 		#if DEBUG
 			cout << "New packet created" << endl;
 		#endif
@@ -272,15 +277,19 @@ void Sender::pktEnqueue(int t) {
 			exit(1);
 		}
 	} else if (pktTailPtr == NULL) {
+
 		#if DEBUG
 			cout << "Packet Queue has one packet" << endl;
 		#endif
+
 		pktHeadPtr->nextPtr = new Packet(this, t);
 		pktTailPtr = pktHeadPtr->nextPtr;
 	} else {
+
 		#if DEBUG
 			cout << "Packet Queue has multiple packets" << endl;
 		#endif
+			
 		// the queue is not empty
 		pktTailPtr->nextPtr = new Packet(this, t);
 

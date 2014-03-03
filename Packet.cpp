@@ -54,7 +54,7 @@ Packet::Packet(Sender *original, int t) {
 		cout << "Copying queue now" << endl;
 	#endif
 	// copy the Sender's SR queue to the packet
-	this->copyQueue(*original);
+	this->copyQueue(original);
 	#if DEBUG
 		cout << "Packet with SR queue" << endl;
 		printPacket();
@@ -134,6 +134,7 @@ Packet *Packet::getNext() {
 	return this->nextPtr;
 }
 
+/** Copies the node queue from a template packet */
 void Packet::copyQueue(Packet original) {
 	Node *currentPtr = original.getHead();
 
@@ -143,18 +144,34 @@ void Packet::copyQueue(Packet original) {
 	}
 }
 
-void Packet::copyQueue(Sender original) {
-	Node *currentPtr = original.getSRHead();
+/** Copies the node queue from a template sender */
+void Packet::copyQueue(Sender *original) {
+	Node *currentPtr = original->getSRHead();
 
 	while (currentPtr != NULL) {
+		
 		#if DEBUG
+			cout << "---------------------------------------------" << endl;
+			original->printNodes();
+			cout << "---------------------------------------------" << endl;
 			cout << "Enqueuing " << currentPtr->getData() << endl;
+			currentPtr->printNode();
 		#endif
+		
 		this->enqueue(currentPtr->getData());
+		
 		#if DEBUG
 			cout << currentPtr->getData() << " enqueued" << endl;
+			currentPtr->printNode();
 		#endif
+		
 		currentPtr = currentPtr->getNext();
+		
+		#if DEBUG
+			cout << "---------------------------------------------" << endl;
+			original->printNodes();
+			cout << "---------------------------------------------" << endl;
+		#endif
 	}
 }
 
@@ -164,36 +181,49 @@ void Packet::copyQueue(Sender original) {
  * @param sr_id ID of the router to be enqueued
  */
 void Packet::enqueue(int sr_id) {
+	
 	#if DEBUG
 		cout << "Enquing SR ID " << sr_id << endl;
 		cout << "HeadPtr: " << headPtr << endl;
 		cout << "TailPtr: " << tailPtr << endl;
 	#endif
+	
 	if (headPtr == NULL) {
+		
 		#if DEBUG
 			cout << "SR List is empty" << endl;
 		#endif
+		
 		// the router list is empty
 		headPtr = new Node(sr_id);
+		
 		#if DEBUG
 			cout << "New HeadPtr: " << headPtr << endl;
 		#endif
+		
 		// the memory was successfully allocated
+		
 		#if DEBUG
 			cout << "New TailPtr: " << tailPtr << endl;
 		#endif
+
 	} else if (tailPtr == NULL) {
 		headPtr->nextPtr = new Node(sr_id);
 		tailPtr = headPtr->nextPtr;
+		
 		#if DEBUG
 			cout << "New TailPtr: " << tailPtr << endl;
 		#endif
+
 	} else {
+		
 		#if DEBUG
 			cout << "SR List is not empty" << endl;
 		#endif
+
 		// the router list is not empty
 		tailPtr->nextPtr = new Node(sr_id);
+		
 		#if DEBUG
 			cout << "New TailPtr: " << tailPtr << endl;
 		#endif
@@ -239,6 +269,11 @@ int Packet::dequeue() {
 	}
 }
 
+/**
+ * Dequeues the first node in the queue and returns a pointer  to it
+ * 
+ * @return Pointer to the just dequeued node
+ */
 Node *Packet::dequeueNode() {
 	Node *tempPtr;
 
@@ -260,6 +295,7 @@ Node *Packet::dequeueNode() {
 	}
 }
 
+/** Finds the length of the node queue */
 int Packet::nLength() {
 	Node *currentPtr = headPtr;
 	int length = 0;
@@ -271,6 +307,7 @@ int Packet::nLength() {
 	return length;
 }
 
+/** Prints the packet queue */
 void Packet::printPacket() {
 	Node *currentPtr = headPtr;
 

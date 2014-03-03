@@ -222,7 +222,9 @@ void Receiver::pPacketDelay(Packet *toProcess, int time){
         }
         
     }
-    cout << "Made it to this part of the program" << endl;
+    #if DEBUG
+    	cout << "Made it to this part of the program" << endl;
+    #endif
     /*  Setting the overall values  */
     if (getTNP() == 0){
         totalAvgDelay = delay;

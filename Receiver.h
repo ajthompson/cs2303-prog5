@@ -14,7 +14,9 @@ class Sender;
 
 #include "Shared.h"
 
-
+#ifndef DEBUG
+#define DEBUG 0
+#endif
 
 class Receiver {
     

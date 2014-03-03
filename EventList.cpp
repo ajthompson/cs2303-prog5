@@ -2,7 +2,7 @@
 * @Author: ajthompson
 * @Date:   2014-02-27 09:41:37
 * @Last Modified by:   ajthompson
-* @Last Modified time: 2014-03-02 19:32:53
+* @Last Modified time: 2014-03-02 20:39:42
 */
 
 #include <iostream>
@@ -47,18 +47,24 @@ EventList::EventList(int s, int m, int r, int d) {
 	// iterate through the vector creating the senders
 	for (int i = 0; i < s; ++i) {
 		senderList[i] = new Sender(counter);
+		fieldPtr->setPos(senderList[i]->getX(), senderList[i]->getY(), 
+						 senderList[i]->getID());
 		++counter;	// increment counter
 	}
 
 	// iterate through the vector creating the mules
 	for (int i = 0; i < m; ++i) {
 		muleList[i] = new Mule(counter);
+		fieldPtr->setPos(muleList[i]->m_getX(), muleList[i]->m_getY(), 
+						 muleList[i]->m_getID());
 		++counter;	// increment counter
 	}
 
 	// iterate through the vector creating the receivers
 	for (int i = 0; i < r; ++i) {
 		receiverList[i] = new Receiver(counter, s);
+		fieldPtr->setPos(receiverList[i]->getX(), receiverList[i]->getY(), 
+						 receiverList[i]->getID());
 		++counter;	// increment counter
 	}
 	
@@ -99,6 +105,8 @@ EventList::EventList(int s, int m, int r, int d) {
 
 	// set the first move event
 	insertEvent(MOVE, NULL, NULL, NULL, NULL, 10);
+	// print the field
+	fieldPtr->printField();
 }
 
 ////////////////////////
@@ -340,38 +348,65 @@ void EventList::processList() {
 	Event *currentPtr = headPtr;
 
 	while ((!sendersEmpty()) || (!onlyMove())) {
+
 		#if DEBUG
 			cout << "Event List at time " << t << endl;
 			cout << "Before event processing" << endl;
 			printEventList();
+			cout << "Time: " << t << endl;
 		#endif
-	// iterate through the list
+
+		// iterate through the list
 		while (currentPtr != NULL) {
 			if (currentPtr->getTime() == 0){
 			// if the event's timer is complete
 				switch (currentPtr->getType()) {
 					case SENDER_INIT:
-						cout << "Sender Initialization Event at time " << t << endl;
+
+						#if DEBUG
+							cout << "Sender Initialization Event at time " << t << endl;
+						#endif
+
 						senderInit(currentPtr);
 						break;
 					case T_END_FROM_S:
-						cout << "Sender Transmission End at time " << t << endl;
+
+						#if DEBUG
+							cout << "Sender Transmission End at time " << t << endl;
+						#endif
+
 						tEndSender(currentPtr);
 						break;
 					case T_END_FROM_M:
-						cout << "Mule Transmission End at time " << t << endl;
+
+						#if DEBUG
+							cout << "Mule Transmission End at time " << t << endl;
+						#endif
+
 						tEndMule(currentPtr);
 						break;
 					case P_END_TO_M:
-						cout << "Propagation To Mule End at time " << t << endl;
+
+						#if DEBUG
+							cout << "Propagation To Mule End at time " << t << endl;
+						#endif
+
 						pEndMule(currentPtr);
 						break;
 					case P_END_TO_R:
-						cout << "Propagation To Receiver End at time " << t << endl;
+
+						#if DEBUG
+							cout << "Propagation To Receiver End at time " << t << endl;
+						#endif
+
 						pEndReceiver(currentPtr);
 						break;
 					case MOVE:
-						cout << "Moving mules at time " << t << endl;
+
+						#if DEBUG
+							cout << "Moving mules at time " << t << endl;
+						#endif
+
 						eListMove();
 						break;
 					default:
@@ -387,11 +422,13 @@ void EventList::processList() {
 				currentPtr = currentPtr->nextPtr;
 			}
 		}
+
 		#if DEBUG
 			cout << "Event List at time " << t << endl;
 			cout << "After event processing" << endl;
 			printEventList();
 		#endif
+
 		++t;
 		currentPtr = headPtr;
 	}
@@ -430,14 +467,17 @@ void EventList::senderInit(Event *ePtr) {
  * @param ePtr Pointer to sender transmission end event
  */
 void EventList::tEndSender(Event *ePtr) {
+
 	#if DEBUG
 		cout << "Entered tEndSender" << endl;
 	#endif
+
 	// set up object pointers
 	Sender *sPtr = ePtr->getSender();
 	Packet *pPtr = sPtr->pktDequeue();
 	int Sx, Sy, Mx, My;	// to store x and y values of the sender and goal mule
 	Mule *mPtr = findMule(pPtr->dequeue());	// removes the first SR value from the list
+
 	#if DEBUG
 		cout << "Set up object pointers" << endl;
 		cout << "sPtr = " << sPtr << endl;
@@ -448,6 +488,7 @@ void EventList::tEndSender(Event *ePtr) {
 
 	// decrement sender's packet counter
 	sPtr->setPktCount(sPtr->getPktCount() - 1);
+
 	#if DEBUG
 		cout << "Decremented Packet Count" << endl;
 		cout << "pktCount = " << sPtr->getPktCount() << endl;
@@ -456,50 +497,65 @@ void EventList::tEndSender(Event *ePtr) {
 
 	// create a new propagation event
 	insertEvent(P_END_TO_M, NULL, mPtr, NULL, pPtr, pPtr->getDelay());
+
 	#if DEBUG
 		cout << "Created a new propagation event" << endl;
 	#endif
+
 	// determine what the sender does next
 	if (sPtr->getPktCount() > 0) {
 		// sender still has more packets to send, create a new packet
+
 		#if DEBUG
 			cout << "Sender has " << sPtr->getPktCount() << " packets remaining" << endl;
 			cout << "Enqueuing new packet" << endl;
 		#endif
+
 		sPtr->pktEnqueue(t);
 		// dequeue first node of the packet's SR queue
+		
 		#if DEBUG
 			cout << "New Packet enqueued" << endl;
 			cout << "First SR node (sender ID) dequeuing" << endl;
 		#endif
+		
 		sPtr->getPktHead()->dequeue();
+		
 		#if DEBUG
 			cout << "First SR Node dequeued" << endl;
 			cout << "Getting Sender Coordinates" << endl;
 		#endif
+		
 		// get sender coordinates
 		Sx = sPtr->getX();
 		Sy = sPtr->getY();
+		
 		#if DEBUG
 			cout << "(Sx, Sy) = (" << Sx <<  ", " << Sy << ")" << endl;
 			cout << "Getting Mule Coordinates" << endl;
 		#endif
+		
 		// get new target mule and find its position
 		mPtr = findMule(sPtr->getPktHead()->getHead()->getData());
 		Mx = mPtr->m_getX();
 		My = mPtr->m_getY();
+		
 		#if DEBUG
 			cout << "(Mx, My) = (" << Mx <<  ", " << My << ")" << endl;
 			cout << "Inserting Propagation Delay" << endl;
 		#endif
+		
 		// insert propagation time into packet delay fieldPtr
 		sPtr->getPktHead()->setProp(calcPropagation(Sx, Sy, Mx, My));
+		
 		#if DEBUG
 			cout << "Propagation delay inserted" << endl;
 			cout << "Inserting transmission complete event" << endl;
 		#endif
+		
 		// insert a transmission complete event
 		insertEvent(T_END_FROM_S, sPtr, NULL, NULL, NULL, sPtr->getPktSize());
+		
 		#if DEBUG
 			cout << "Transmission complete event inserted" << endl;
 		#endif
@@ -600,6 +656,9 @@ void EventList::eListMove() {
 	}
 	// print the fieldPtr
 	fieldPtr->printField();
+
+	// create new movement event
+	insertEvent(MOVE, NULL, NULL, NULL, NULL, 10);
 }
 
 /////////////////////////
@@ -660,7 +719,9 @@ bool EventList::sendersEmpty() {
 	}
 
 	if (val) {
-		cout << "All Senders Complete" << endl;
+		#if DEBUG
+			cout << "All Senders Complete" << endl;
+		#endif
 	}
 	return val;
 }
@@ -684,7 +745,9 @@ bool EventList::onlyMove() {
 		currentPtr = currentPtr->nextPtr;
 	}
 	if (val) {
-		cout << "Only Movement Events remain" << endl;
+		#if DEBUG
+			cout << "Only Movement Events remain" << endl;
+		#endif
 	}
 	return val;
 }
