@@ -1,63 +1,161 @@
-Required Classes:
-	Queue - Use templates to use for multiple applications?
-		headPtr
-		tailPtr
-	QueueNode - Use templates to use for multiple applications?
-		NODETYPE data - could be a packet, or a number (for SR)
-		nextPtr
+Author - Alec Thompson - ajthompson@wpi.edu
+Author - Troy Hughes - thhughes@wpi.edu
+Class - CS2303 - Systems Programming Concepts
+Assignment - Program 5 - A Simulation of MANET Source Routing in C++
+Language - C++
 
-	Sources - 
-		position[y][0]
-		id
-		arrival_time -  time the source begins transmitting
-		packets - amount of packets remaining to be sent
-		packet size
-		SR - List of nodes it must travel through
-		   - possibly remove the first item (the source id) as the source id of the packet
-		Packet Queue
+How To Build - 
+	Enter the following into terminal:
+		
+		make && make clean
 
-	Mules -
-		position[y][x]
-		id
-		direction
-		Packet Queue
+	This will result in an executable under the name of program5
 
-	Receiver -
-		positon[y][DIMENSION]
-		id
-		average delay
-		packet queue
+	NOTE: A compiler warning about a double being cast to an integer will occur.  This is
+	because we make use of the <cmath> function pow, which only operates on doubles in versions
+	of C++ earlier than C++11.
 
-	Packet -
-		source id
-		timestamp
-		packet size
-		SR
-		delay - not used until reaches a receiver - receiver's enqueue accepts this
+	We cast integer values to doubles in the function that uses this, and the result gets cast
+	back to an integer.  This was necessary to ensure compatibility with the woefully outdated
+	version of gcc on all but one of the CCC servers.  Why they would update only one is beyond
+	me...
 
-	EventList - For main event list, and secondary movement event list, and propagation list
-			  - Use sorted enqueue, so only have to iterate until the node's time remaining is no longer 0.
-		time
-		headPtr
-	EventListNode 
-		time remaining
-		- two options here 
-			1. Pointers to a target node, and a receiving list - fragmented option
-				- transmission - target is the transmitting node
-							   - receiver is the propagation list
-				- propagation - target is the propagation list
-							  - receiver is the next router on the SR, found at time
-							  	of placement on the propagation list
-				- movement - pointer to field map
-			2. Use templates to have a timeRemaining, and the type would be determined
-			   by the object in the list - more unified
-			   	- transmissionEnd - pointer to transmitting node
-			   					  - creates a propagation end event on the event list
-			   	- propagationEnd - pointer to receiving node
-			   					 - source id
-			   					 - timestamp
-			   					 - packet size
-			   					 - SR
-			   	- movement - pointer to field map
+How To Run -
+	Enter the following into terminal:
 
-	We still need two event lists to ensure that movement events always occur after any other events, and creating two would be simpler than trying to make sure movement events
+		./program5 sources receivers mules dimension < input.txt
+
+	Where the fields are as follows:
+
+		sources - number of source routers
+		receivers - number of receiver routers
+		mules - number of mule routers - MUST BE A MULTIPLE OF 4
+		dimension - one side of the square area a mule maneuvers on - MUST BE GREATER THAN BOTH
+		THE NUMBER OF SOURCES AND RECEIVERS
+
+		input.txt - text file of data in the following format
+
+			sourceID arrival_time packets pkt_size SR_size SR
+
+		Where the fields are as follows:
+
+			sourceID - ID of the source this applies to
+			arrival_time - time the source begins transmitting
+			packets - number of packets to be transmitted
+			pkt_size - size of the packets to be transmitted
+			SR_size - length of the route the packets will take, including the source
+			SR - list of sourceIDs of length SR_size starting with the source node and ending
+			with a receiver node
+
+		The number of lines of text in the file must be no more than the number of fields, and
+		there must be no more than one line with the same sourceID
+
+Program Notes:
+	
+	Main: 
+		Reads in the arguments, and uses three methods to create the randomized positions for
+		the sources receivers and nodes. Then the program creates the event list, initialized
+		with the command line arguments.  After this, the method process() is called on the
+		event list. This function controls the entirety of the rest of the program.
+
+	EventList:
+		This class contains all of the information relevant to the program. It contains the
+		field to be displayed, vectors containing the sources, receivers, and nodes, and
+		pointers to the list of events itself. The class constructor sets up the entire
+		simulation, and then the process() function runs the simulation.
+
+		When the simulation completes, it prints the statistics each receiver has gathered as
+		well as the overall average packet delay.  For the receiver statistics, if the receiver
+		has received no packets from a particular sender, then all sender specific statistics,
+		including that sender's id will be listed as -1, indicating that there is no data
+		present.
+
+		Then, the final layout of the mule array will be printed.
+
+		One particular design quirk to note is that we have separated the propagation events
+		from the transmitting node.  We transfer the pointer to the propagating packet to the
+		event object itself, instead of keeping it tied to the sender.
+
+		Event types -
+			Sender Initialization - At the time specified by the Sender's arrival time,
+			enqueues a new packet and creates a transmission event, as well as calculating the
+			propagation time of the first packet and storing it within the packet's delay
+			field.
+
+				This event contains the event type, a pointer to initializing sender, and the
+				time remaining until the event occurs.
+
+			Transmission End - There are two versions of this event, T_END_FROM_S for Senders,
+			and T_END_FROM_M for Mules.  Both dequeue the packet from the transmitting router,
+			and create a propagation event based off of the pointer to the packet and it's
+			propagation delay, and a pointer to its targer router, either a mule or a
+			receiver. Then the mule transmission is complete. The sender however, then
+			decrements the amount of packets remaining to be transmitting, and if the number
+			is still greater than zero, enqueues another packet. If the number of packets
+			still to be transmitted is 0, the sender is deleted.
+
+				This event contains the event type, a pointer to either the transmitting
+				sender or the transmitting mule, and the amount of time remaining until the
+				transmission is complete.
+
+			Propagation End - This event has two versions as well, P_END_TO_M for propagation
+			to mules, and P_END_TO_R, for propagation to receivers.  For mules, the contained
+			packet is enqueued in the target node, a new propagation delay is calculated, and
+			a new transmission event is created. For receivers, the packet is passed to a
+			function called on the contained pointer to a receiver that strips the packet of
+			the information relevant to the receiver's statistics, and the statistics are
+			updated. The packet is then deleted.
+
+				This event contains the event type, a pointer to either the receiving mule or
+				the receiving receiver, a pointer to the propagating packet, and the time
+				remaining until the propagation is complete.
+
+			Mule Movement - This event iterates through the list of mules, moves them using a
+			function contained in the mule class, and then prints the field.
+
+	Randomization Methods - 
+
+	Senders - Are essentially a queue plus more stuff.  They contain the the sender's x and y
+	positions, source id, arrival time, the number of packets to be send, and the packet size
+	of the packets to be sent.  There are also four static fields, for the total number of
+	senders, the dimension of the field, and the possible x and y positions for the senders.
+	These static fields are used in the randomization, explained in the randomization section.
+	Senders also include pointers to the heads and tails of two queues.  The first is a queue
+	of nodes, containing the SR values that the packets sent by this router will follow.
+
+	Mules - 
+
+	Receivers -
+
+	Packets - Packets contain the source id of the sender that sent them, the timestamp
+	representing the time that the packet was created, the size of the packet, and delay. 
+	Delay was originally intended to store the delay when we planned on just enqueuing all
+	received packets at a receiver, and processing them at the end of the program. However,
+	when when we switched to immediate processing upon reception, the delay field was
+	maintained as way to store the packet's propagation time between it's calculation at the
+	creation of a transmission event, and it's use at the creation of a propagation event. The
+	packet also contains pointers to the head and tail of a queue of nodes, containing the
+	path the packet has remaining to route through, as well as a pointer to the next packet in
+	the queue the packet itself is currently in.
+
+	Nodes - Nodes are used to represent the SR queue, and contain an integer representing a
+	value in the SR queue, and a pointer to the next node in the queue.
+
+	Field - The field is an abstract used only for printing. It is a two dimensional vector
+	with a with of DIMENSION + 2, where DIMENSION is the dimension command line argument, and
+	a height of DIMENSION. This vector is initialized to 0 for all values.
+
+		Setting/clearing positions - After all senders, receivers, and mules are created, a
+		function in eventList iterates through the vectors of each of them and calls the
+		function setPos on the field. This function sets a given (x,y) position to a given
+		value, and if no value is given it sets the position to 0.
+
+		Printing parametets - using the total number of routers, the program calculates a
+		value maxDigits that is the number of digits necessary to display the number of
+		routers. This ensures the width of the field is correct up to 99999 routers (though it
+		would take only a couple minutes to add support for up to 6-digit router IDs).
+
+		The resulting field looks something like this, given 20 sources, 12 receivers, 16
+		mules, and a dimension of 36:
+
+		

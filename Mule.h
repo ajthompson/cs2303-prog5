@@ -2,6 +2,7 @@
  * Mule.h
  *
  * Header file for mule nodes
+ *  Author: Troy Hughes
  */
 
 #ifndef MULE_H_
@@ -21,6 +22,7 @@ enum NEXT {NOTHING = -1, WALL = -2, MULE = -3, ERROR = -4};
 
 
 class Mule {
+    /*  Author: Troy Hughes */
     friend class Packet;
 	friend class Node;
 private:

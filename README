@@ -18,7 +18,7 @@ How To Build -
 	We cast integer values to doubles in the function that uses this, and the result gets cast
 	back to an integer.  This was necessary to ensure compatibility with the woefully outdated
 	version of gcc on all but one of the CCC servers.  Why they would update only one is beyond
-	me...
+	us...
 
 How To Run -
 	Enter the following into terminal:

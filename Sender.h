@@ -2,6 +2,7 @@
  * Sender.h
  * 
  * Header file for sender routers,
+ * Troy Hughes
  */
 #ifndef SENDER_H
 #define SENDER_H
@@ -16,6 +17,7 @@ class Node;
 #include "Shared.h"
 
 class Sender {
+    /*  Author: Troy Hughes */
     friend class Event;
 	friend class Packet;
 	friend class Node;

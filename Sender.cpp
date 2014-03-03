@@ -1,7 +1,7 @@
 /* 
-* @Author: ajthompson
+* @Author: Troy Hughes
 * @Date:   2014-02-25 10:16:11
-* @Last Modified by:   ajthompson
+* @Last Modified by:   thhughes
 * @Last Modified time: 2014-03-02 20:46:22
 */
 
@@ -19,6 +19,7 @@ using namespace std;
  * Constructs an empty sender
  */
 Sender::Sender(int s_id) {
+    /*  Author: Troy Hughes */
 	setX();
 	setY(yVals[num_senders]);
 	setID(s_id);
@@ -43,6 +44,7 @@ Sender::Sender(int s_id) {
  * @param size  Size of the packets to be sent
  */
 Sender::Sender(int s_id, int t, int count, int size) {
+    /*  Author: Troy Hughes */
 	setX();
 	setY(yVals[num_senders]);
 	setID(s_id);
@@ -58,6 +60,7 @@ Sender::Sender(int s_id, int t, int count, int size) {
 
 /** Destructor */
 Sender::~Sender() {
+    /*  Author: Troy Hughes */
 	Node *a, *b;
 	Packet *c, *d;
 
@@ -86,6 +89,7 @@ Sender::~Sender() {
  * Sets the x position to 0, because senders can only exist on the left side of the field
  */
 void Sender::setX() {
+    /*  Author: Troy Hughes */
 	xPos = 0;
 }
 
@@ -95,6 +99,7 @@ void Sender::setX() {
  * @param y New y position
  */
 void Sender::setY(int y) {
+    /*  Author: Troy Hughes */
 	yPos = y;
 }
 
@@ -104,6 +109,7 @@ void Sender::setY(int y) {
  * @param nID New ID
  */
 void Sender::setID(int nID) {
+    /*  Author: Troy Hughes */
 	id = nID;
 }
 
@@ -113,6 +119,7 @@ void Sender::setID(int nID) {
  * @param t 
  */
 void Sender::setArrivalTime(int t) {
+    /*  Author: Troy Hughes */
 	arrival_time = t;
 }
 
@@ -122,6 +129,7 @@ void Sender::setArrivalTime(int t) {
  * @param c The number of packets to be sent by the node
  */
 void Sender::setPktCount(int c) {
+    /*  Author: Troy Hughes */
 	pkt_count = c;
 }
 
@@ -133,6 +141,7 @@ void Sender::setPktCount(int c) {
  * @param s The new value for packet size
  */
 void Sender::setPktSize(int s) {
+    /*  Author: Troy Hughes */
 	if (s > 0 && s <= 3) {
 		pkt_size = s;
 	} else {
@@ -146,51 +155,61 @@ void Sender::setPktSize(int s) {
 
 /** Gets the x position */
 int Sender::getX() {
+    /*  Author: Troy Hughes */
 	return xPos;
 }
 
 /** Gets the Y position */
 int Sender::getY() {
+    /*  Author: Troy Hughes */
 	return yPos;
 }
 
 /** Gets the ID of the sender */
 int Sender::getID() {
+    /*  Author: Troy Hughes */
 	return id;
 }
 
 /** Gets the time of beginning transmission */
 int Sender::getArrivalTime() {
+    /*  Author: Troy Hughes */
 	return arrival_time;
 }
 
 /** Gets the amount of packets that are remaining to be sent */
 int Sender::getPktCount() {
+    /*  Author: Troy Hughes */
 	return pkt_count;
 }
 
 /** Gets the size of the packets being sent by the node */
 int Sender::getPktSize() {
+    /*  Author: Troy Hughes */
 	return pkt_size;
 }
 
 /** Gets the head of the SR queue */
 Node *Sender::getSRHead() {
+    /*  Author: Troy Hughes */
 	return srHeadPtr;
 }
 
 /** Gets the tail of the SR queue */
 Node *Sender::getSRTail() {
+    /*  Author: Troy Hughes */
 	return srTailPtr;
 }
 
 /** Gets the head of the packet queue */
 Packet *Sender::getPktHead() {
+    /*  Author: Troy Hughes */
 	return pktHeadPtr;
 }
 
 /** Gets the tail of the packet queue */
 Packet *Sender::getPktTail() {
+    /*  Author: Troy Hughes */
 	return pktTailPtr;
 }
 
@@ -204,6 +223,7 @@ Packet *Sender::getPktTail() {
  * @param nVal new SR ID to be added
  */
 void Sender::srEnqueue(int nVal) {
+    /*  Author: Troy Hughes */
 	if (srHeadPtr == NULL) {
 		// the router list is empty
 		srHeadPtr = new Node(nVal);
@@ -224,6 +244,7 @@ void Sender::srEnqueue(int nVal) {
  * @return SR ID contained within first (now deleted) node
  */
 int Sender::srDequeue() {
+    /*  Author: Troy Hughes */
 	Node *tempPtr;
 	int returnVal;
 
@@ -254,7 +275,7 @@ int Sender::srDequeue() {
  * @param t System time, time of packet creation
  */
 void Sender::pktEnqueue(int t) {
-
+    /*  Author: Troy Hughes */
 	#if DEBUG
 		cout << "Enqueuing new packet" << endl;
 	#endif
@@ -311,6 +332,7 @@ void Sender::pktEnqueue(int t) {
  * @return A pointer to the first packet in the queue.
  */
 Packet *Sender::pktDequeue() {
+    /*  Author: Troy Hughes */
 	Packet *tempPtr;
 
 	tempPtr = pktHeadPtr;
@@ -337,6 +359,7 @@ Packet *Sender::pktDequeue() {
  * @return Number of nodes in the queue
  */
 int Sender::nCount() {
+    /*  Author: Troy Hughes */
 	Node *currentPtr = srHeadPtr;
 	int length = 0;
 	while (currentPtr != NULL) {
@@ -353,6 +376,7 @@ int Sender::nCount() {
  * @return Number of packets in the queue
  */
 int Sender::pCount() {
+    /*  Author: Troy Hughes */
 	Packet *currentPtr = pktHeadPtr;
 	int length = 0;
 	while (currentPtr != NULL) {
@@ -365,6 +389,7 @@ int Sender::pCount() {
 
 /** Prints out the queue of SR nodes */
 void Sender::printNodes() {
+    /*  Author: Troy Hughes */
 	Node *currentPtr = srHeadPtr;
 
 	cout << "Beginning of SR queue." << endl;
@@ -377,6 +402,7 @@ void Sender::printNodes() {
 
 /** Prints out the queue of packets */
 void Sender::printPackets() {
+    /*  Author: Troy Hughes */
 	Packet *currentPtr = pktHeadPtr;
 
 	cout << "Beginning of Packet queue." << endl;
@@ -389,6 +415,7 @@ void Sender::printPackets() {
 
 /** Prints out the Sender */
 void Sender::printSender() {
+    /*  Author: Troy Hughes */
 	cout << "Printing Sender " << getID() << endl;
 	cout << "X: " << getX() << endl;
 	cout << "Y: " << getY() << endl;
@@ -418,6 +445,7 @@ int *Sender::xVals = new int[1];
 int Sender::num_senders = 0;
 
 void Sender::init_sender(int tot_sndrs, int fld_lngth){
+    /*  Author: Troy Hughes */
     total_senders = tot_sndrs;
     field_length = fld_lngth;
     delete(yVals);
@@ -438,6 +466,7 @@ void Sender::init_sender(int tot_sndrs, int fld_lngth){
     
 }
 void Sender::print_SendLoc(){
+    /*  Author: Troy Hughes */
     cout << "These are the x values"    << endl;
     for (int i = 0; i < field_length; i++){
         cout << i << ": "<< xVals[i] << endl;
@@ -451,6 +480,7 @@ void Sender::print_SendLoc(){
 
 // STATIC GETTER:
 int Sender::getTotNumSend(){
+    /*  Author: Troy Hughes */
     return total_senders;
     
 }
