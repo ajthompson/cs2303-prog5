@@ -113,6 +113,8 @@ Program Notes:
 			Mule Movement - This event iterates through the list of mules, moves them using a
 			function contained in the mule class, and then prints the field.
 
+	Randomization Methods - 
+
 	Senders - Are essentially a queue plus more stuff.  They contain the the sender's x and y
 	positions, source id, arrival time, the number of packets to be send, and the packet size
 	of the packets to be sent.  There are also four static fields, for the total number of
@@ -130,4 +132,30 @@ Program Notes:
 	Delay was originally intended to store the delay when we planned on just enqueuing all
 	received packets at a receiver, and processing them at the end of the program. However,
 	when when we switched to immediate processing upon reception, the delay field was
-	maintained
+	maintained as way to store the packet's propagation time between it's calculation at the
+	creation of a transmission event, and it's use at the creation of a propagation event. The
+	packet also contains pointers to the head and tail of a queue of nodes, containing the
+	path the packet has remaining to route through, as well as a pointer to the next packet in
+	the queue the packet itself is currently in.
+
+	Nodes - Nodes are used to represent the SR queue, and contain an integer representing a
+	value in the SR queue, and a pointer to the next node in the queue.
+
+	Field - The field is an abstract used only for printing. It is a two dimensional vector
+	with a with of DIMENSION + 2, where DIMENSION is the dimension command line argument, and
+	a height of DIMENSION. This vector is initialized to 0 for all values.
+
+		Setting/clearing positions - After all senders, receivers, and mules are created, a
+		function in eventList iterates through the vectors of each of them and calls the
+		function setPos on the field. This function sets a given (x,y) position to a given
+		value, and if no value is given it sets the position to 0.
+
+		Printing parametets - using the total number of routers, the program calculates a
+		value maxDigits that is the number of digits necessary to display the number of
+		routers. This ensures the width of the field is correct up to 99999 routers (though it
+		would take only a couple minutes to add support for up to 6-digit router IDs).
+
+		The resulting field looks something like this, given 20 sources, 12 receivers, 16
+		mules, and a dimension of 36:
+
+		
