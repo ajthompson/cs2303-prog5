@@ -2,7 +2,7 @@
 * @Author: ajthompson
 * @Date:   2014-02-27 09:41:37
 * @Last Modified by:   ajthompson
-* @Last Modified time: 2014-03-02 21:17:50
+* @Last Modified time: 2014-03-02 21:23:23
 */
 
 #include <iostream>
@@ -654,6 +654,9 @@ void EventList::eListMove() {
 		// set new position in the map
 		fieldPtr->setPos(muleList[i]->m_getX(), muleList[i]->m_getY(), muleList[i]->m_getID());
 	}
+	cout << "---------------------------------------" << endl;
+	cout << "                 TIME " << t << endl;
+	cout << "---------------------------------------"
 	// print the fieldPtr
 	fieldPtr->printField();
 
