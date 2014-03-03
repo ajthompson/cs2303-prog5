@@ -2,7 +2,7 @@
 * @Author: ajthompson
 * @Date:   2014-02-27 09:41:37
 * @Last Modified by:   ajthompson
-* @Last Modified time: 2014-03-02 21:23:23
+* @Last Modified time: 2014-03-02 21:25:32
 */
 
 #include <iostream>
@@ -656,7 +656,7 @@ void EventList::eListMove() {
 	}
 	cout << "---------------------------------------" << endl;
 	cout << "                 TIME " << t << endl;
-	cout << "---------------------------------------"
+	cout << "---------------------------------------" << endl;
 	// print the fieldPtr
 	fieldPtr->printField();
 
