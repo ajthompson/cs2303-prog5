@@ -2,7 +2,7 @@
 * @Author: ajthompson
 * @Date:   2014-02-27 09:41:37
 * @Last Modified by:   ajthompson
-* @Last Modified time: 2014-03-02 21:06:50
+* @Last Modified time: 2014-03-02 21:17:50
 */
 
 #include <iostream>
@@ -340,7 +340,7 @@ void EventList::insertEvent(EventType eT, Sender *sPtr, Mule *mPtr, Receiver *rP
  * @return    Propagation time of packet
  */
 int EventList::calcPropagation(int x1, int y1, int x2, int y2) {
-	return ceil(log2(sqrt(pow(x2-x1, 2) + pow(y2-y1, 2))));
+	return ceil(log2(sqrt(pow((double)x2-x1, (double)2) + pow((double)y2-y1, (double)2))));
 }
 
 /** Processes the event list */
