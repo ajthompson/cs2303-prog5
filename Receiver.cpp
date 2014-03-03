@@ -18,6 +18,7 @@ using std::endl;
 /*---------------------------------Constructors---------------------------------*/
 /*---------------------------------Constructors---------------------------------*/
 Receiver::Receiver(int ID_input, int num_senders) {
+    /*  Author: Troy Hughes */
     rec_num = num_receivers;                          /* Sets what number receiver this is    */
     setID(ID_input);                                  /* Sets the input ID                    */
     setX();                                           /* Sets the X                           */
@@ -40,6 +41,7 @@ Receiver::Receiver(int ID_input, int num_senders) {
 
 
 Receiver::Receiver(){
+    /*  Author: Troy Hughes */
     rec_num = num_receivers;
     setID(0);
     setX();
@@ -63,24 +65,31 @@ Receiver::Receiver(){
 /*---------------------------------Getters---------------------------------*/
 /*---------------------------------Getters---------------------------------*/
 int Receiver::getX(){
+    /*  Author: Troy Hughes */
    return xPos;
 }
 int Receiver::getY(){
+    /*  Author: Troy Hughes */
     return yPos;
 }
 int Receiver::getID(){
+    /*  Author: Troy Hughes */
     return SR_ID;
 }
 int Receiver::getNumSenders(){
+    /*  Author: Troy Hughes */
     return numSenders;
 }
 int Receiver::getTotNumSenders(){
+    /*  Author: Troy Hughes */
     return tot_numSenders;
 }
 double Receiver::getTAD(){
+    /*  Author: Troy Hughes */
     return totalAvgDelay;
 }
 long Receiver::getTNP(){
+    /*  Author: Troy Hughes */
     return numPackets;
 }
 
@@ -92,10 +101,12 @@ long Receiver::getTNP(){
 /*--------------------------------Get_to_Screen(PRINT)---------------------*/
 
 void Receiver::print_Receiver(){
+    /*  Author: Troy Hughes */
 /*  This prints some the receiver's fields   */
     cout<< "Receiver ID: " << getID()<< " Location: " << "(" << getX() << "," << getY() << ") "  << " Number of Senders: " << getTotNumSenders() << endl;
 }
 void Receiver::print_R_Data(){
+    /*  Author: Troy Hughes */
     cout << "---------------------------------------" << endl;
     cout << "---------------------------------------" << endl;
     print_Receiver();
@@ -120,17 +131,20 @@ void Receiver::print_R_Data(){
 /*---------------------------------Setters---------------------------------*/
 
 void Receiver::setX(){
+    /*  Author: Troy Hughes */
 /*  Gets an x value from the list of possible x values  */
     xPos = (xVals[rec_num]);
    
 }
 void Receiver::setY(){
+    /*  Author: Troy Hughes */
 /*  Gets an y value from the list of possible y values  */
    yPos = (yVals[rec_num]);
    
 }
 
 void Receiver::setID(int new_ID){
+    /*  Author: Troy Hughes */
     SR_ID = new_ID;
 }
 
@@ -158,6 +172,7 @@ int Receiver::field_length = 0;
 
 /*  Static Methods  */
 void Receiver::make_FieldVals(int total, int size_field){
+    /*  Author: Troy Hughes */
 /*  Clears the static variables - For lack of better way of knowing how to do it -- */
     delete(xVals);
     delete(yVals);
@@ -185,6 +200,7 @@ void Receiver::make_FieldVals(int total, int size_field){
 
 
 void Receiver::print_FieldVals(){
+    /*  Author: Troy Hughes */
 /*  Print's out the possible values of the field    */
     cout << "These are the x values"    << endl;
     for (int i = 0; i < field_length; i++){
@@ -204,6 +220,7 @@ void Receiver::print_FieldVals(){
 /*---------------------------------PacketManipulator---------------------------------*/
 
 void Receiver::pPacketDelay(Packet *toProcess, int time){
+    /*  Author: Troy Hughes */
 /*  Calculates the delay of one packet  -   Does not return becuae of how much more neeeds to be done   */
     double timeStamp, delay;
     int found = 0;

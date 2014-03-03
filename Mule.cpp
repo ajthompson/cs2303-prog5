@@ -18,6 +18,7 @@ using std::endl;
 /*---------------------------------Constructors---------------------------------*/
 /*---------------------------------Constructors---------------------------------*/
 Mule::Mule(int ID_input) {
+    /*  Author: Troy Hughes */
     SR_ID = ID_input;                   /*  Generates the Mule ID               */
 	init_positions();                   /*  Sets the positions for the Mule     */
     mule_dir = retDirection();          /*  Sets the direction for the Mule     */
@@ -33,27 +34,31 @@ Mule::Mule(int ID_input) {
 /*---------------------------------Destructors----------------------------------*/
 /*---------------------------------Destructors----------------------------------*/
 Mule::~Mule() {
-	
+	/*  Author: Troy Hughes */
 }
 /*---------------------------------Getters---------------------------------*/
 /*---------------------------------Getters---------------------------------*/
 /*---------------------------------Getters---------------------------------*/
 /*---------------------------------Getters---------------------------------*/
 /*---------------------------------Getters---------------------------------*/
-int Mule::m_getX(){                      /* Returns the X position for the Mule */
+int Mule::m_getX(){
+    /*  Author: Troy Hughes *//* Returns the X position for the Mule */
     return (xPos + 1);                   /* Adds one to reflect full field locale*/
     
 }
 int Mule::m_getY(){
+    /*  Author: Troy Hughes */
     return (yPos);
 }
 
 int Mule::m_getID(){
+    /*  Author: Troy Hughes */
     return SR_ID;
 }
 
 
 Packet *Mule::getHead(){
+    
     /*	Author: Troy Hughes
      * 		This function returns the head node
      */
@@ -73,6 +78,7 @@ Packet *Mule::getTail(){
 /*---------------------------------init_Function---------------------------------*/
 /*---------------------------------init_Function---------------------------------*/
 void Mule::init_positions(){
+    /*  Author: Troy Hughes */
     int tempX, tempY;
     tempX = Mule::l_op[Mule::count].xPoint;
     tempY = Mule::l_op[Mule::count].yPoint;
@@ -81,6 +87,7 @@ void Mule::init_positions(){
 }
 
 direction Mule::retDirection(){
+    /*  Author: Troy Hughes */
     int dir = count % 4;
     switch(dir){
         case 0:
@@ -104,6 +111,7 @@ direction Mule::retDirection(){
 /*---------------------------------automatic Printers---------------------------------*/
 
 void Mule::print_Mule(){
+    /*  Author: Troy Hughes */
     cout<< "Mule: Xpos: " << xPos << " Ypos: " << yPos << endl;
 }
 /*---------------------------------Mover_Functions---------------------------------*/
@@ -113,6 +121,7 @@ void Mule::print_Mule(){
 /*---------------------------------Mover_Functions---------------------------------*/
 
 NEXT Mule::check_NSpace(){
+    /*  Author: Troy Hughes */
 /*  Creates an x and y position and the current direction   */
     int xPt = this->xPos;
     int yPt = this->yPos;
@@ -159,6 +168,7 @@ NEXT Mule::check_NSpace(){
 }
 
 void Mule::moveMule(){
+    /*  Author: Troy Hughes */
     switch (check_NSpace()) {
         case WALL:                          /*  If you're at a wall change direction    */
             this->changeDir();
@@ -176,6 +186,7 @@ void Mule::moveMule(){
     }
 }
 void Mule::mule_Inc(){
+    /*  Author: Troy Hughes */
     direction dir = this->mule_dir;
     int xPt = this->xPos;
     int yPt = this->yPos;
@@ -210,6 +221,7 @@ void Mule::mule_Inc(){
     }
 }
 void Mule::changeDir(){
+    /*  Author: Troy Hughes */
     direction dir = this->mule_dir;
     switch (dir) {
         case NORTH:
@@ -237,6 +249,7 @@ void Mule::changeDir(){
 /*---------------------------------Packet_Queue---------------------------------*/
 
 void Mule::pktEnqueue(Packet *toQueue) {
+    /*  Author: Troy Hughes */
     Packet *h_packet = getHead();
 	Packet *t_packet = getTail();
 	if (h_packet == NULL){
@@ -259,6 +272,7 @@ void Mule::pktEnqueue(Packet *toQueue) {
  * @return A pointer to the first packet in the queue.
  */
 Packet *Mule::pktDequeue() {
+    /*  Author: Troy Hughes */
 	Packet *to_return = NULL;
 	if(pLength() == 1){
 		to_return = (getHead());
@@ -328,6 +342,7 @@ int Mule::field_length = 0;
 
 /*  Static Methods  */
 void Mule::make_FieldVals(int total, int size_field){
+    /*  Author: Troy Hughes */
     delete(xVals);
     delete(yVals);
     delete(l_op);
@@ -355,6 +370,7 @@ void Mule::make_FieldVals(int total, int size_field){
 
 
 void Mule::print_FieldVals(){
+    /*  Author: Troy Hughes */
     cout << "These are the x values"    << endl;
     for (int i = 0; i < field_length; i++){
         cout << i << ": "<< xVals[i] << endl;
@@ -367,6 +383,7 @@ void Mule::print_FieldVals(){
 }
 
 void Mule::fill_listOP(){
+    /*  Author: Troy Hughes */
     int tempX;
     int tempY;
     //Initalize the struct to all -2
@@ -393,6 +410,7 @@ void Mule::fill_listOP(){
 }
 
 void Mule::getPoint(int *point1, int *point2){
+    /*  Author: Troy Hughes */
     /*  modulo off the smaller of the two values to avoid a later seg vault */
     if (field_length > total_mules){
         *point1 = xVals[rand() % (total_mules)];
@@ -408,6 +426,7 @@ void Mule::getPoint(int *point1, int *point2){
 }
 
 int Mule::not_used(int xpt, int ypt){
+    /*  Author: Troy Hughes */
     int returnVal;
     for (int i = 0; i < total_mules; i++){
         if (xpt == l_op[i].xPoint && ypt == l_op[i].yPoint){    /*Checks if the point has been used yet, if so return 0 */
@@ -422,6 +441,7 @@ int Mule::not_used(int xpt, int ypt){
 }
 
 void Mule::print_MuleLoc(){
+    /*  Author: Troy Hughes */
     for (int i = 0; i < total_mules; i++){
         cout << "(" << l_op[i].xPoint << "," << l_op[i].yPoint << ")" << endl;
     }

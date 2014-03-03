@@ -2,6 +2,7 @@
  * Receiver.h
  *
  * Header file for receiving routers,
+ *  Author: Troy Hughes *
  */
 #ifndef RECEIVER_H_
 #define RECEIVER_H_
@@ -19,7 +20,7 @@ class Sender;
 #endif
 
 class Receiver {
-    
+    /*  Author: Troy Hughes */
     
 	friend class Packet;
 	friend class Node;
