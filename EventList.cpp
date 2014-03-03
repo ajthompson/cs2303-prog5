@@ -2,7 +2,7 @@
 * @Author: ajthompson
 * @Date:   2014-02-27 09:41:37
 * @Last Modified by:   ajthompson
-* @Last Modified time: 2014-03-02 21:25:32
+* @Last Modified time: 2014-03-03 16:16:05
 */
 
 #include <iostream>
@@ -794,6 +794,7 @@ void EventList::printReceivers() {
 	// calculate total average delay
 	totalAvg = TADweighted / totalNumPackets;
 
+	cout << "Total Number of Packets Printed: " << totalNumPackets << endl;
 	cout << "Overall Average Delay: " << totalAvg << endl;
 }
 

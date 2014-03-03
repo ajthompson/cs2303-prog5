@@ -2,7 +2,7 @@
 * @Author: ajthompson
 * @Date:   2014-02-25 10:16:11
 * @Last Modified by:   ajthompson
-* @Last Modified time: 2014-03-02 21:08:01
+* @Last Modified time: 2014-03-03 16:20:57
 */
 
 #include <iostream>
@@ -179,7 +179,7 @@ void Field::getPos(int val, int &x, int &y) {
  */
 void Field::printField() {
 	/** Print out the top border of the field */
-	cout << "/";
+	cout << endl << "/";
 	for (int w = 0; w < getWidth(); ++w) {
 		for (int m = 0; m < getMaxDigits(); ++m) {
 			cout << "-";
@@ -211,5 +211,5 @@ void Field::printField() {
 			cout << "-";
 		}
 	}
-	cout << "/" << endl;
+	cout << "/" << endl << endl;
 }

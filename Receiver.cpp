@@ -103,10 +103,12 @@ void Receiver::print_R_Data(){
     cout << "Overall Average Packet Delay Time: "   << getTAD() << endl;
     cout << "Overall Number of Received Packets: "  << getTNP() << endl;
     for (int i = 0; i < tot_numSenders; i++){
-        cout << "---------------------------------------" << endl;
-        cout << "Sender Number: " << senderNumber[i] << endl;
-        cout << "   Number of Packets: " << numPacketsPS[i] << endl;
-        cout << "   Average Delay/Sender: "<< avgDpS[i] << endl;
+        if (senderNumber[i] > 0) {
+            cout << "---------------------------------------" << endl;
+            cout << "Sender Number: " << senderNumber[i] << endl;
+            cout << "   Number of Packets: " << numPacketsPS[i] << endl;
+            cout << "   Average Delay/Sender: "<< avgDpS[i] << endl;
+        }
     }
     cout << "---------------------------------------" << endl;
 }

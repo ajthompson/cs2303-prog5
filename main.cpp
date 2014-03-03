@@ -2,11 +2,12 @@
 * @Author: ajthompson
 * @Date:   2014-02-26 20:54:43
 * @Last Modified by:   ajthompson
-* @Last Modified time: 2014-03-02 21:08:14
+* @Last Modified time: 2014-03-03 16:23:17
 */
 
 #include <iostream>
 #include <cstdlib>
+#include <ctime>
 #include "EventList.h"
 using std::cout;
 using std::endl;
@@ -36,6 +37,8 @@ int main(int argc, char *argv[]) {
 		receivers = atoi(receiverStr);
 		mules = atoi(muleStr);
 		dimension = atoi(dimStr);
+
+		srand(time(NULL));
 
 		// TROY PUT RANDOMIZATION STUFF HERE
         Sender::init_sender(senders, dimension);
