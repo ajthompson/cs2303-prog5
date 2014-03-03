@@ -1,65 +1,48 @@
-Please, something happen 
+Author - Alec Thompson - ajthompson@wpi.edu
+Author - Troy Hughes - thhughes@wpi.edu
+Class - CS2303 - Systems Programming Concepts
+Assignment - Program 5 - A Simulation of MANET Source Routing in C++
+Language - C++
 
-Required Classes:
-	Queue - Use templates to use for multiple applications?
-		headPtr
-		tailPtr
-	QueueNode - Use templates to use for multiple applications?
-		NODETYPE data - could be a packet, or a number (for SR)
-		nextPtr
+How To Build - 
+	Enter the following into terminal:
+		
+		make && make clean
 
-	Sources - 
-		position[y][0]
-		id
-		arrival_time -  time the source begins transmitting
-		packets - amount of packets remaining to be sent
-		packet size
-		SR - List of nodes it must travel through
-		   - possibly remove the first item (the source id) as the source id of the packet
-		Packet Queue
+	This will result in an executable under the name of program5
 
-	Mules -
-		position[y][x]
-		id
-		direction
-		Packet Queue
+	NOTE: A compiler warning about a double being cast to an integer will occur.  This is because we make use of the <cmath> function pow, which only operates on doubles in versions of C++ earlier than C++11.
 
-	Receiver -
-		positon[y][DIMENSION]
-		id
-		average delay
-		packet queue
+	We cast integer values to doubles in the function that uses this, and the result gets cast back to an integer.  This was necessary to ensure compatibility with the woefully outdated version of gcc on all but one of the CCC servers.  Why they would update only one is beyond me...
 
-	Packet -
-		source id
-		timestamp
-		packet size
-		SR
-		delay - not used until reaches a receiver - receiver's enqueue accepts this
+How To Run -
+	Enter the following into terminal:
 
-	EventList - For main event list, and secondary movement event list, and propagation list
-			  - Use sorted enqueue, so only have to iterate until the node's time remaining is no longer 0.
-		time
-		headPtr
-	EventListNode 
-		time remaining
-		- two options here 
-			1. Pointers to a target node, and a receiving list - fragmented option
-				- transmission - target is the transmitting node
-							   - receiver is the propagation list
-				- propagation - target is the propagation list
-							  - receiver is the next router on the SR, found at time
-							  	of placement on the propagation list
-				- movement - pointer to field map
-			2. Use templates to have a timeRemaining, and the type would be determined
-			   by the object in the list - more unified
-			   	- transmissionEnd - pointer to transmitting node
-			   					  - creates a propagation end event on the event list
-			   	- propagationEnd - pointer to receiving node
-			   					 - source id
-			   					 - timestamp
-			   					 - packet size
-			   					 - SR
-			   	- movement - pointer to field map
+		./program5 sources receivers mules dimension < input.txt
 
-	We still need two event lists to ensure that movement events always occur after any other events, and creating two would be simpler than trying to make sure movement events
+	Where the fields are as follows:
+
+		sources - number of source routers
+		receivers - number of receiver routers
+		mules - number of mule routers - MUST BE A MULTIPLE OF 4
+		dimension - one side of the square area a mule maneuvers on - MUST BE GREATER THAN BOTH THE NUMBER OF SOURCES AND RECEIVERS
+
+		input.txt - text file of data in the following format
+
+			sourceID arrival_time packets pkt_size SR_size SR
+
+		Where the fields are as follows:
+
+			sourceID - ID of the source this applies to
+			arrival_time - time the source begins transmitting
+			packets - number of packets to be transmitted
+			pkt_size - size of the packets to be transmitted
+			SR_size - length of the route the packets will take, including the source
+			SR - list of sourceIDs of length SR_size starting with the source node and ending with a receiver node
+
+		The number of lines of text in the file must be no more than the number of fields, and there must be no more than one line with the same sourceID
+
+Program Notes:
+	
+	Main: 
+		Reads in the arguments, and uses three methods to create the randomized positions for the sources receivers and nodes. Then the program creates the event list, initialized with the command line arguments.  After this, the method process() is called on the event list. This function controls the entirety of the rest of the program.
