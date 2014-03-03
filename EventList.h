@@ -1,4 +1,6 @@
 /**
+ * @Author: Alec Thompson
+ *
  * EventList.h
  *
  * Header file for the event list.  This is the class that controls the

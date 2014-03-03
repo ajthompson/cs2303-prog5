@@ -1,4 +1,6 @@
 /**
+ * @Author: Alec Thompson
+ *
  * Packet.h
  *
  * Contains data being sent by the routers.

@@ -1,8 +1,8 @@
 /* 
-* @Author: ajthompson
+* @Author: Alec Thompson
 * @Date:   2014-02-27 09:41:37
 * @Last Modified by:   ajthompson
-* @Last Modified time: 2014-03-03 16:32:54
+* @Last Modified time: 2014-03-03 16:43:01
 */
 
 #include <iostream>
@@ -16,6 +16,8 @@
 using namespace std;
 
 /**
+ * @Author: Alec Thompson
+ *
  * Constructor for the event list class.  Creates and initializes the object
  * 
  * @param s Amount of senders
@@ -113,6 +115,9 @@ EventList::EventList(int s, int m, int r, int d) {
 /// SETTER FUNCTIONS ///
 ////////////////////////
 
+// @author Alec Thompson
+// I don't feel like breaking my inline comments to sign them, so you get this instead
+
 /** Sets the time to the given value */
 void EventList::setTime(int nTime) {
 	t = nTime;
@@ -126,6 +131,9 @@ void EventList::incTime() {
 ////////////////////////
 /// GETTER FUNCTIONS ///
 ////////////////////////
+
+// @author Alec Thompson
+// I don't feel like breaking my inline comments to sign them, so you get this instead
 
 /** Gets the simulation time */
 int EventList::getTime() {
@@ -183,6 +191,8 @@ Receiver *EventList::findReceiver(int id) {
 ///////////////////////
 
 /**
+ * @Author: Alec Thompson
+ *
  * Creates an event and adds it to the list.  No event needs all data fields.
  * The fields to use for each event type are below:
  *
@@ -329,6 +339,8 @@ void EventList::insertEvent(EventType eT, Sender *sPtr, Mule *mPtr, Receiver *rP
 
 
 /**
+ * @Author: Alec Thompson
+ *
  * Calculates the propagation time of the packet using the formula:
  *
  * 		pTime = ceil (log2(sqrt((x2-x1)^2 + (y2-y1)^2))));
@@ -435,7 +447,8 @@ void EventList::processList() {
 	printReceivers();
 	fieldPtr->printField();
 }
-
+// @Author: Alec Thompson
+// I don't feel like breaking my inline comments to sign them, so you get this instead
 /** Initializes the sender with a packet and sets up a transmission finish event */
 void EventList::senderInit(Event *ePtr) {
 	Sender *sPtr = ePtr->getSender();
@@ -570,6 +583,8 @@ void EventList::tEndSender(Event *ePtr) {
 }
 
 /**
+ * @Author: Alec Thompson
+ *
  * Determines whether the target router of the packet in the event is a
  * reveiver or mule, and then inserts the appropriate propagation event
  * 
@@ -598,6 +613,8 @@ void EventList::tEndMule(Event *ePtr) {
 }
 
 /**
+ * @Author: Alec Thompson
+ *
  * Calculates the propagation time to the next target router, sets the delay
  * as that and enqueues it in the mule.  It then creates a transmission from
  * mule end event.
@@ -641,6 +658,8 @@ void EventList::pEndReceiver(Event *ePtr) {
 }
 
 /**
+ * @Author: Alec Thompson
+ *
  * Iterate through all the mules and move them in the appropriate direction.
  * If the new position is a wall, they bounce off in the other direction, if
  * it is a mule, they "hop" over it to the spot on the other size.
@@ -708,6 +727,8 @@ bool EventList::checkReceiverPos(int x, int y, int num) {
 }
 
 /**
+ * @Author: Alec Thompson
+ *
  * Checks if the sender list only has pointers to NULL.
  * 
  * @return True if all values NULL, otherwise false
@@ -730,6 +751,8 @@ bool EventList::sendersEmpty() {
 }
 
 /**
+ * @Author: Alec Thompson
+ *
  * Checks if the event list only contains move events.  If so, there are no packets
  * currently propagating, and the program is finished if all senders are also gone.
  * 
@@ -779,6 +802,11 @@ bool EventList::checkNULLlessThan(Event *ePtr, int t) {
 /// PRINT FUNCTIONS ///
 ///////////////////////
 
+/**
+ * @Author: Alec Thompson
+ *
+ * Prints the receivers and the final data for the program
+ */
 void EventList::printReceivers() {
 	double TADweighted = 0;
 	long totalNumPackets = 0;
@@ -804,6 +832,11 @@ void EventList::printReceivers() {
 	cout << "---------------------------------------" << endl;
 }
 
+/**
+ * @Author: Alec Thompson
+ *
+ * Prints the event list - for debugging purposes
+ */
 void EventList::printEventList() {
 	Event *currentPtr = headPtr;
 

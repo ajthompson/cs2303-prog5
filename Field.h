@@ -1,4 +1,6 @@
 /**
+ * @Author: Alec Thompson
+ *
  * Field.h
  *
  * Container class for the field that will be printed out.

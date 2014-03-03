@@ -1,8 +1,8 @@
 /* 
-* @Author: ajthompson
+* @Author: Alec Thompson
 * @Date:   2014-02-25 10:16:11
 * @Last Modified by:   ajthompson
-* @Last Modified time: 2014-03-03 16:20:57
+* @Last Modified time: 2014-03-03 16:39:25
 */
 
 #include <iostream>
@@ -17,6 +17,8 @@ using std::exit;
 using namespace std;
 
 /**
+ * @Author: Alec Thompson
+ * 
  * Field constructor
  * 
  * @param dim  Dimension of the field read into the program
@@ -41,6 +43,8 @@ Field::Field(int dim, int dMax) {
 ////////////////////////
 
 /**
+ * @Author: Alec Thompson
+ * 
  * Sets the maximum number of digits a router ID has to control printing
  * of the field.
  * 
@@ -61,6 +65,8 @@ void Field::setMaxDigits(int dMax) {
 }
 
 /**
+ * @Author: Alec Thompson
+ * 
  * Sets the width of the field given the dimension input into the program.
  * This adds 2 to account for the sender and receiver columns
  * 
@@ -71,6 +77,8 @@ void Field::setWidth(int dimension) {
 }
 
 /**
+ * @Author: Alec Thompson
+ * 
  * Sets the height of the field given the dimension
  * 
  * @param dimension Dimension argument of the program
@@ -80,6 +88,8 @@ void Field::setHeight(int dimension) {
 }
 
 /**
+ * @Author: Alec Thompson
+ * 
  * Sets the position specified to the given value.  If no value is
  * given, sets the position to 0.
  * 
@@ -100,6 +110,8 @@ void Field::setPos(int x, int y, int newVal) {
 }
 
 /**
+ * @Author: Alec Thompson
+ *
  * Updates the size of the 2D vector to be consistent with the height
  * and width settings.
  *
@@ -115,6 +127,9 @@ void Field::updateSize() {
 ////////////////////////
 /// GETTER FUNCTIONS ///
 ////////////////////////
+
+// @author Alec Thompson
+// I don't feel like breaking my inline comments to sign them, so you get this instead
 
 /** Gets the maximum router id digits */
 int Field::getMaxDigits() {
@@ -137,6 +152,8 @@ int Field::getVal(int x, int y) {
 }
 
 /**
+ * @Author: Alec Thompson
+ *
  * Returns the position of the given value by reference.
  * Exits the program if a val of less than 1 is used, as
  * 0 is the empty space specifier, and negative values
@@ -175,6 +192,8 @@ void Field::getPos(int val, int &x, int &y) {
 //////////////////////
 
 /**
+ * @Author: Alec Thompson
+ *
  * Prints the field
  */
 void Field::printField() {

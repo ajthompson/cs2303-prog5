@@ -1,4 +1,8 @@
 /**
+ * @Author: Alec Thompson
+ *
+ * Yes I wrote all the functions in here.  No, I don't want to put individual
+ * @Author tags on each one.
  * Node.cpp
  */
 #include <iostream>

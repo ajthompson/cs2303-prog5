@@ -1,4 +1,6 @@
 /**
+ * @Author: Alec Thompson
+ *
  * Node.h
  *
  * Nodes are used as a container class for anything stored in a queue or event

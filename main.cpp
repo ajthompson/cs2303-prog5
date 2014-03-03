@@ -1,8 +1,9 @@
 /* 
-* @Author: ajthompson
+* @Author: Alec Thompson
+* @Author: Troy Hughes
 * @Date:   2014-02-26 20:54:43
 * @Last Modified by:   ajthompson
-* @Last Modified time: 2014-03-03 16:23:17
+* @Last Modified time: 2014-03-03 16:36:40
 */
 
 #include <iostream>

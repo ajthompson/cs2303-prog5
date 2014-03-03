@@ -1,4 +1,6 @@
 /** 
+ * @Author: Alec Thompson
+ *
  * Packet.cpp
  *
  * Source file for packets
@@ -14,6 +16,8 @@ using std::exit;
 using namespace std;
 
 /**
+ * @Author: Alec Thompson
+ *
  * Packet Constructor
  * 
  * @param id     ID of the source router
@@ -61,7 +65,11 @@ Packet::Packet(Sender *original, int t) {
 	#endif
 }
 
-/** Destructor */
+/**
+ * @Author: Alec Thompson
+ * 
+ * Destructor
+ */
 Packet::~Packet() {
 	Node *a, *b;
 
@@ -74,42 +82,57 @@ Packet::~Packet() {
 	}
 }
 
-/** Sets the packets ID */
+/**
+ * @Author: Alec Thompson
+ * 
+ * Sets the packets ID
+ */
 void Packet::setID(int nID) {
 	source_id = nID;
 }
 
-/** Gets the packets ID */
+/** 
+ * @Author: Alec Thompson
+ *
+ * Gets the packets ID
+ */
 int Packet::getID() {
 	return source_id;
 }
 
+/** @Author: Alec Thompson */
 /** Sets the packets timestamp */
 void Packet::setTimestamp(int t) {
 	timestamp = t;
 }
 
+/** @Author: Alec Thompson */
 /** Gets the packets timestamp */
 int Packet::getTimestamp() {
 	return timestamp;
 }
 
+/** @Author: Alec Thompson */
 /** Sets the packets size */
 void Packet::setSize(int s) {
 	pkt_size = s;
 }
 
+/** @Author: Alec Thompson */
 /** Gets the packets size */
 int Packet::getSize() {
 	return pkt_size;
 }
 
+/** @Author: Alec Thompson */
 /** Sets the packets propagation time (calculated in EventList) */
 void Packet::setProp(int pTime) {
 	delay = pTime;
 }
 
 /**
+ * @Author: Alec Thompson
+ *
  * Sets the delay (time of arrival at receiver - timestamp)
  * 
  * @param t time of arrival at receiver
@@ -118,22 +141,31 @@ void Packet::setDelay(int t) {
 	delay = t - timestamp;
 }
 
+/** @Author: Alec Thompson */
+/** Gets the delay */
 int Packet::getDelay() {
 	return delay;
 }
 
+/** @Author: Alec Thompson */
+/** Gets the pointer to the head of the SR queue */
 Node *Packet::getHead() {
 	return headPtr;
 }
 
+/** @Author: Alec Thompson */
+/** Gets the pointer to the tail of the SR queue */
 Node *Packet::getTail() {
     return tailPtr;
 }
 
+/** @Author: Alec Thompson */
+/** Gets the pointer to the next  */
 Packet *Packet::getNext() {
 	return this->nextPtr;
 }
 
+/** @Author: Alec Thompson */
 /** Copies the node queue from a template packet */
 void Packet::copyQueue(Packet original) {
 	Node *currentPtr = original.getHead();
@@ -144,6 +176,7 @@ void Packet::copyQueue(Packet original) {
 	}
 }
 
+/** @Author: Alec Thompson */
 /** Copies the node queue from a template sender */
 void Packet::copyQueue(Sender *original) {
 	Node *currentPtr = original->getSRHead();
@@ -176,6 +209,8 @@ void Packet::copyQueue(Sender *original) {
 }
 
 /**
+ * @Author: Alec Thompson
+ *
  * Enqueues the integer in the SR queue
  * 
  * @param sr_id ID of the router to be enqueued
@@ -239,6 +274,8 @@ void Packet::enqueue(int sr_id) {
 }
 
 /**
+ * @Author: Alec Thompson
+ *
  * Dequeues the first router ID in the queue and returns it.
  * 
  * @return Router ID
@@ -270,6 +307,8 @@ int Packet::dequeue() {
 }
 
 /**
+ * @Author: Alec Thompson
+ *
  * Dequeues the first node in the queue and returns a pointer  to it
  * 
  * @return Pointer to the just dequeued node
@@ -295,6 +334,7 @@ Node *Packet::dequeueNode() {
 	}
 }
 
+/** @Author: Alec Thompson */
 /** Finds the length of the node queue */
 int Packet::nLength() {
 	Node *currentPtr = headPtr;
@@ -307,6 +347,7 @@ int Packet::nLength() {
 	return length;
 }
 
+/** @Author: Alec Thompson */
 /** Prints the packet queue */
 void Packet::printPacket() {
 	Node *currentPtr = headPtr;
