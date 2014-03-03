@@ -29,6 +29,7 @@ Sender::Sender(int s_id) {
 	srTailPtr = NULL;
 	pktHeadPtr = NULL;
 	pktTailPtr = NULL;
+    num_senders++;
     
 }
 
