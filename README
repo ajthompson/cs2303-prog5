@@ -113,7 +113,26 @@ Program Notes:
 			Mule Movement - This event iterates through the list of mules, moves them using a
 			function contained in the mule class, and then prints the field.
 
-	Randomization Methods - 
+	Randomization Methods - Are a set of functions that 2 two types of randomization. First is in the 
+	Senders and Receivers. In the Senders and Receivers there are static methods that create a list of 
+	all the possible values that a Sender or Receiver could have (different for the senders and the receiver). 
+	For the senders, they're always planted on the x=0 wall, while having varrying y values. The receiver is 
+	similar, with the exception that their x values are set to the length of the field + 1 (because of 0 indexing). 
+	The randomization methods create a list of all the possible values, 0 -> max_length - 1 and then they 
+	perform a 'shuffle' on the list. This 'shuffle' is called a Fisher-Yates shuffle. This takes the fianite
+	set of values that we have, and puts them in a random order by indexing through the list and replacing
+	the ith value with a random value in the list (the best and simplest example of randomness that we could create).
+	The mules do a very similar setup, except for they have an x and a y value that are random. This creates a 
+	much larger subset of possible values - it also creates the idea that there could be more mules 
+	than the value of the height of the field. In this scenario we have to ensure that the mules are 
+	able to exist in not only random x,y points, such that there are no doubles, but we also can allow 
+	one of the two values to be the same in the point, but not both. In this scenario, after all the x
+	and y values are shuffled (again using a fisher yates shuffle) the mules go through and select a constant
+	x point and a random y point - compare this to a static list of points that other mules are using, and if both 
+	points are picked, it goes through and picks again. This setup is an improvement on how the program ran 
+	for smashball, where there had to always be a square field, and the number of players had to be less than
+	the length of any size of the field. 
+ 
 
 	Senders - Are essentially a queue plus more stuff.  They contain the the sender's x and y
 	positions, source id, arrival time, the number of packets to be send, and the packet size
@@ -123,9 +142,17 @@ Program Notes:
 	Senders also include pointers to the heads and tails of two queues.  The first is a queue
 	of nodes, containing the SR values that the packets sent by this router will follow.
 
-	Mules - 
+	Mules - Contain a queue of packets, an id, and a location on the field. They use a simple location checking
+	setup (identical to smashball) that checks what is around them and moves accordingly. They autoupdate their locaiton
+	in a statically shared list to allow for easy access to the data where all the mules are located. 
 
-	Receivers -
+	Receivers - Are simple math calculation, and data storing objects. Upon construction, they initialize a number
+	of lists to be the length of the number of senders that there are. From here, we focus on adding data
+	to them by passing a pointer to a packet to the receiver. From here, it strips the data needed from 
+	the packet, and runs calculations based off the past data it has and the data it just got. 
+	Receiver setup is written such that we could have implemented a static background method that kept track of 
+	rolling overall calculations etc. But, we chose not to do this, because static methods and fields were 
+	driving us crazy with weird errors.  
 
 	Packets - Packets contain the source id of the sender that sent them, the timestamp
 	representing the time that the packet was created, the size of the packet, and delay. 
